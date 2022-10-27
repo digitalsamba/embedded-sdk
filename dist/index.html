@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/@digitalsamba/embedded-sdk@0.0.1"></script>
+</head>
+<body>
+<div class="ifp" style="display: flex">
+
+<!--<iframe allow="camera; microphone; display-capture; autoplay;" src="https://localhost:3000/Public" class="if"></iframe>-->
+
+  <div class="log">
+
+  </div>
+
+</div>
+<div class="div" style=" border: 1px solid yellow">
+  <button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>
+  <button class="c1">toggleVideo</button>
+  <button class="c2">enableVideo</button>
+  <button class="c3">disableVideo</button>
+  <button class="c4">toggleAudio</button>
+  <button class="c5">enableAudio</button>
+  <button class="c6">disableAudio</button>
+  <button class="c7">startScreenshare</button>
+  <button class="c8">stopScreenshare</button>
+</div>
+<script async defer>
+  const parent = document.querySelector('.isfp');
+  const frame = document.querySelector('.if');
+  const btn0 = document.querySelector('.c0');
+  const btn1 = document.querySelector('.c1');
+  const btn2 = document.querySelector('.c2');
+  const btn3 = document.querySelector('.c3');
+  const btn4 = document.querySelector('.c4');
+  const btn5 = document.querySelector('.c5');
+  const btn6 = document.querySelector('.c6');
+  const btn7 = document.querySelector('.c7');
+  const btn8 = document.querySelector('.c8');
+
+   const api = new DigitalSambaEmbedded({ root: parent, team: 'alex.dev.monza', room: 'Public' });
+//const api = new DigitalSambaEmbedded({ frame});
+//const api = new DigitalSambaEmbedded({ url: 'https://localhost:3000/Public'}, {reportErrors: true});
+
+//const api = DigitalSambaEmbedded.createControl({ url: 'https://localhost:3000/Public'});
+
+  const log = document.querySelector('.log');
+
+  api.frame.width = 700;
+  api.frame.height = 500;
+
+  btn0.onclick = () => {api.load({ frameAttributes: {style: "border: 5px solid red"}, reportErrors: true })}
+  btn1.onclick = () => {api.toggleVideo()}
+  btn2.onclick = () => {api.enableVideo()}
+  btn3.onclick = () => {api.disableVideo()}
+  btn4.onclick = () => {api.toggleAudio()}
+  btn5.onclick = () => {api.enableAudio()}
+  btn6.onclick = () => {api.disableAudio()}
+  btn7.onclick = () => {api.startScreenshare()}
+  btn8.onclick = () => {api.stopScreenshare()}
+
+  api.on('*', (data) => {
+    log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`
+  });
+
+
+  api.on('userJoined', (data) => {
+    log.innerHTML += `<p>${Number(new Date)}: USER JOINED: ${JSON.stringify(data)}</p>`
+  });
+
+  api.on('userLeft', (data) => {
+    log.innerHTML += `<p>${Number(new Date)}: USER JOINED: ${JSON.stringify(data)}</p>`
+  });
+
+
+
+</script>
+
+</body>
+</html>
