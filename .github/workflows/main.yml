@@ -1,0 +1,32 @@
+name: Publish Package to npmjs
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v3
+
+    - name: Setup .npmrc file to publish to npm
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Setup git identity
+      run: |
+        git config --global user.email "github@digitalsamba.com"
+        git config --global user.name "Digital Samba"
+
+    - name: execute yarn
+      run: yarn
+
+    - name: yarn publish
+      run: yarn publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.EMBEDDED_SDK_NPM_TOKEN }}
