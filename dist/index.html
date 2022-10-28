@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="https://unpkg.com/@digitalsamba/embedded-sdk@0.0.3"></script>
+  <script src="https://unpkg.com/@digitalsamba/embedded-sdk@0.0.5"></script>
 </head>
 <body>
 <div class="ifp" style="display: flex">
 
-<!--<iframe allow="camera; microphone; display-capture; autoplay;" src="https://localhost:3000/Public" class="if"></iframe>-->
+<!--<iframe allow="camera; microphone; display-capture; autoplay;" src="<>" class="if"></iframe>-->
 
-  <div class="log">
+<div class="log">
 
-  </div>
+</div>
 
 </div>
 <div class="div" style=" border: 1px solid yellow">
@@ -40,17 +40,22 @@
   const btn6 = document.querySelector('.c6');
   const btn7 = document.querySelector('.c7');
   const btn8 = document.querySelector('.c8');
+  
+  // change these values to connect to your room
+  const TEAM = 'some-team';
+  const ROOM = 'some-room';
+  const ROOM_URL = 'https://localhost:3000/Public'
 
-   const api = new DigitalSambaEmbedded({ root: parent, team: 'alex.dev.monza', room: 'Public' });
-//const api = new DigitalSambaEmbedded({ frame});
-//const api = new DigitalSambaEmbedded({ url: 'https://localhost:3000/Public'}, {reportErrors: true});
-
-//const api = DigitalSambaEmbedded.createControl({ url: 'https://localhost:3000/Public'});
+  //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
+  //const api = new DigitalSambaEmbedded({ frame});
+  //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
+  
+  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
 
   const log = document.querySelector('.log');
 
-  api.frame.width = 700;
-  api.frame.height = 500;
+  api.frame.width = 900;
+  api.frame.height = 700;
 
   btn0.onclick = () => {api.load({ frameAttributes: {style: "border: 5px solid red"}, reportErrors: true })}
   btn1.onclick = () => {api.toggleVideo()}
@@ -72,10 +77,8 @@
   });
 
   api.on('userLeft', (data) => {
-    log.innerHTML += `<p>${Number(new Date)}: USER JOINED: ${JSON.stringify(data)}</p>`
+    log.innerHTML += `<p>${Number(new Date)}: USER LEFT: ${JSON.stringify(data)}</p>`
   });
-
-
 
 </script>
 
