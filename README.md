@@ -21,7 +21,7 @@ const DigitalSambaEmbedded = require('@digitalsamba/embedded-sdk')
 import DigitalSambaEmbedded from '@digitalsamba/embedded-sdk'
 ```
 
-This package is written in TypeScript, so type defintitions are also available:
+This package is written in TypeScript, so type definitions are also available:
 
 ```ts 
 import { SendMessageType, ReceiveMessageType, /* ...etc */} from '@digitalsamba/embedded-sdk'
@@ -56,9 +56,9 @@ api.load(InstanceProperties /* optional */)
 * `url` - full URL to be applied as frame src. Must include protocol and `token` query param for private rooms;
 * `team` - team name string
 * `room` - room identifier string
-* `token` - optional string, for private rooms
+* `token` - optional string for authentication, mainly for private rooms
 
-To successfuly initialize an instance of the wrapper one of following combinations needs to be used:
+To successfully initialize an instance of the wrapper one of following combinations needs to be used:
 
 * `root + team + room` - will create a controlled frame inside `root` element
 * `frame + team + room` - will attach to existing frame
@@ -77,14 +77,19 @@ Remember to always specify `allow="camera; microphone; display-capture; autoplay
 To listen for events, attach listener for any of supported events:
 
 ```js
+api.on('userJoined', (data) => {
+  // ...
+});
+
+api.on('userLeft', (data) => {
+  // ...
+});
+
+// you can also listen to all events simultaneously 
 api.on('*', (data) => {
   console.log(data)
 });
 
-
-api.on('userJoined', (data) => {
-  // ...
-});
 ```
 Also see `dist/index.html` for more examples.
 
