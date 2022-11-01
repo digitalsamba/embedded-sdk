@@ -99,6 +99,7 @@ export class DigitalSambaEmbedded {
     loadImmediately = true
   ) {
     this.initOptions = options;
+    this.reportErrors = instanceProperties.reportErrors || false;
 
     this.frame.allow = "camera; microphone; display-capture; autoplay;";
     this.frame.setAttribute("allowFullscreen", "true");
@@ -133,9 +134,9 @@ export class DigitalSambaEmbedded {
       document.body.appendChild(this.frame);
     }
 
-    if (url) {
+    if (url || (this.frame.src && this.frame.src !== window.location.href)) {
       try {
-        const frameSrc = new URL(url).toString();
+        const frameSrc = new URL(url || this.frame.src).toString();
 
         this.frame.src = frameSrc;
         this.savedIframeSrc = frameSrc;
@@ -185,19 +186,25 @@ export class DigitalSambaEmbedded {
 
   private setFrameSrc = () => {
     let url = this.savedIframeSrc;
+
     const { team, room, token } = this.initOptions;
 
     if (team && room) {
       url = `https://${team}.digitalsamba.com/${room}`;
-      if (token) {
-        const params = new URLSearchParams({ token });
+    }
 
-        url = `${url}?${params}`;
-      }
+    if (url && token) {
+      const urlObj = new URL(url);
+      urlObj.searchParams.append("token", token);
 
+      url = urlObj.toString();
+    }
+
+    if (url) {
       this.frame.src = url;
     } else {
       this.logError(INVALID_CONFIG);
+
       return;
     }
 

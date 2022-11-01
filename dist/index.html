@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="https://unpkg.com/@digitalsamba/embedded-sdk@0.0.5"></script>
+  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>
 </head>
 <body>
 <div class="ifp" style="display: flex">
@@ -40,7 +40,7 @@
   const btn6 = document.querySelector('.c6');
   const btn7 = document.querySelector('.c7');
   const btn8 = document.querySelector('.c8');
-  
+
   // change these values to connect to your room
   const TEAM = 'some-team';
   const ROOM = 'some-room';
@@ -49,7 +49,7 @@
   //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
   //const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
-  
+
   const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
 
   const log = document.querySelector('.log');

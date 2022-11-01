@@ -48,9 +48,9 @@ var DigitalSambaEmbedded = /** @class */ (function () {
             else {
                 document.body.appendChild(_this.frame);
             }
-            if (url) {
+            if (url || (_this.frame.src && _this.frame.src !== window.location.href)) {
                 try {
-                    var frameSrc = new URL(url).toString();
+                    var frameSrc = new URL(url || _this.frame.src).toString();
                     _this.frame.src = frameSrc;
                     _this.savedIframeSrc = frameSrc;
                 }
@@ -93,10 +93,13 @@ var DigitalSambaEmbedded = /** @class */ (function () {
             var _b = _this.initOptions, team = _b.team, room = _b.room, token = _b.token;
             if (team && room) {
                 url = "https://".concat(team, ".digitalsamba.com/").concat(room);
-                if (token) {
-                    var params = new URLSearchParams({ token: token });
-                    url = "".concat(url, "?").concat(params);
-                }
+            }
+            if (url && token) {
+                var urlObj = new URL(url);
+                urlObj.searchParams.append("token", token);
+                url = urlObj.toString(); //`${urlObj.origin}${urlObj.pathname}?${params}`;
+            }
+            if (url) {
                 _this.frame.src = url;
             }
             else {
@@ -175,6 +178,7 @@ var DigitalSambaEmbedded = /** @class */ (function () {
             _this.sendMessage({ type: "stopScreenshare" });
         };
         this.initOptions = options;
+        this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = "camera; microphone; display-capture; autoplay;";
         this.frame.setAttribute("allowFullscreen", "true");
         this.mountFrame(loadImmediately);
