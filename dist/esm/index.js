@@ -1,178 +1,163 @@
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
+var _a;
 import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, UNKNOWN_TARGET, } from "./utils/errors";
-var CONNECT_TIMEOUT = 5000;
+const CONNECT_TIMEOUT = 5000;
 function isFunction(func) {
     return func instanceof Function;
 }
-var DigitalSambaEmbedded = /** @class */ (function () {
-    function DigitalSambaEmbedded(options, instanceProperties, loadImmediately) {
-        if (options === void 0) { options = {}; }
-        if (instanceProperties === void 0) { instanceProperties = {}; }
-        if (loadImmediately === void 0) { loadImmediately = true; }
-        var _this = this;
+export class DigitalSambaEmbedded {
+    constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         this.savedIframeSrc = "";
         this.allowedOrigin = "*";
         this.connected = false;
         this.frame = document.createElement("iframe");
         this.eventHandlers = {};
         this.reportErrors = false;
-        this.mountFrame = function (loadImmediately) {
-            var _b = _this.initOptions, url = _b.url, frame = _b.frame, root = _b.root;
+        this.mountFrame = (loadImmediately) => {
+            const { url, frame, root } = this.initOptions;
             if (root) {
-                root.appendChild(_this.frame);
+                root.appendChild(this.frame);
             }
             else if (frame) {
-                _this.frame = frame;
+                this.frame = frame;
                 if (!frame.allow) {
-                    _this.logError(ALLOW_ATTRIBUTE_MISSING);
+                    this.logError(ALLOW_ATTRIBUTE_MISSING);
                 }
             }
             else {
-                document.body.appendChild(_this.frame);
+                document.body.appendChild(this.frame);
             }
-            if (url || (_this.frame.src && _this.frame.src !== window.location.href)) {
+            if (url || (this.frame.src && this.frame.src !== window.location.href)) {
                 try {
-                    var frameSrc = new URL(url || _this.frame.src).toString();
-                    _this.frame.src = frameSrc;
-                    _this.savedIframeSrc = frameSrc;
+                    const frameSrc = new URL(url || this.frame.src).toString();
+                    this.frame.src = frameSrc;
+                    this.savedIframeSrc = frameSrc;
                 }
-                catch (_c) {
-                    _this.logError(INVALID_URL);
+                catch (_b) {
+                    this.logError(INVALID_URL);
                 }
             }
             if (!loadImmediately) {
-                _this.savedIframeSrc = _this.frame.src;
-                _this.frame.src = "";
+                this.savedIframeSrc = this.frame.src;
+                this.frame.src = "";
             }
         };
-        this.load = function (instanceProperties) {
-            if (instanceProperties === void 0) { instanceProperties = {}; }
-            _this.reportErrors = instanceProperties.reportErrors || false;
-            _this.setFrameSrc();
-            _this.applyFrameProperties(instanceProperties);
-            _this.frame.style.display = "block";
+        this.load = (instanceProperties = {}) => {
+            this.reportErrors = instanceProperties.reportErrors || false;
+            this.setFrameSrc();
+            this.applyFrameProperties(instanceProperties);
+            this.frame.style.display = "block";
         };
-        this.on = function (type, handler) {
-            _this.eventHandlers[type] = handler;
+        this.on = (type, handler) => {
+            this.eventHandlers[type] = handler;
         };
-        this.onMessage = function (event) {
+        this.onMessage = (event) => {
             //     if (event.origin !== this.allowedOrigin) {
             //       // ignore messages from other sources;
             //       return;
             //     }
-            if (typeof _this.eventHandlers["*"] === "function") {
-                _this.eventHandlers["*"](event.data);
+            if (typeof this.eventHandlers["*"] === "function") {
+                this.eventHandlers["*"](event.data);
             }
             if (event.data.type) {
-                var callback = _this.eventHandlers[event.data.type];
+                const callback = this.eventHandlers[event.data.type];
                 if (isFunction(callback)) {
                     callback(event.data);
                 }
             }
         };
-        this.setFrameSrc = function () {
-            var url = _this.savedIframeSrc;
-            var _b = _this.initOptions, team = _b.team, room = _b.room, token = _b.token;
+        this.setFrameSrc = () => {
+            let url = this.savedIframeSrc;
+            const { team, room, token } = this.initOptions;
             if (team && room) {
-                url = "https://".concat(team, ".digitalsamba.com/").concat(room);
+                url = `https://${team}.digitalsamba.com/${room}`;
             }
             if (url && token) {
-                var urlObj = new URL(url);
+                const urlObj = new URL(url);
                 urlObj.searchParams.append("token", token);
-                url = urlObj.toString(); //`${urlObj.origin}${urlObj.pathname}?${params}`;
+                url = urlObj.toString();
             }
             if (url) {
-                _this.frame.src = url;
+                this.frame.src = url;
             }
             else {
-                _this.logError(INVALID_CONFIG);
+                this.logError(INVALID_CONFIG);
                 return;
             }
-            var allowedURL = new URL(_this.frame.src);
-            _this.allowedOrigin = allowedURL.origin;
-            _this.frame.onload = function () { return _this.checkTarget(); };
+            const allowedURL = new URL(this.frame.src);
+            this.allowedOrigin = allowedURL.origin;
+            this.frame.onload = () => this.checkTarget();
         };
-        this.logError = function (error) {
-            if (_this.reportErrors) {
+        this.logError = (error) => {
+            if (this.reportErrors) {
                 throw error;
             }
         };
-        this.applyFrameProperties = function (instanceProperties) {
+        this.applyFrameProperties = (instanceProperties) => {
             if (instanceProperties.frameAttributes) {
                 // TODO: only allow specific attrs here; This is a heck to support
-                Object.entries(instanceProperties.frameAttributes).forEach(function (_b) {
-                    var _c = __read(_b, 2), attr = _c[0], value = _c[1];
+                Object.entries(instanceProperties.frameAttributes).forEach(([attr, value]) => {
                     if (value !== null && typeof value !== "undefined") {
-                        _this.frame.setAttribute(attr, value.toString());
+                        this.frame.setAttribute(attr, value.toString());
                     }
                     else {
-                        _this.frame.removeAttribute(attr);
+                        this.frame.removeAttribute(attr);
                     }
                 });
             }
             if (instanceProperties.reportErrors) {
-                _this.reportErrors = true;
+                this.reportErrors = true;
             }
         };
         // commands
-        this.enableVideo = function () {
-            _this.sendMessage({ type: "enableVideo" });
+        this.enableVideo = () => {
+            this.sendMessage({ type: "enableVideo" });
         };
-        this.disableVideo = function () {
-            _this.sendMessage({ type: "disableVideo" });
+        this.disableVideo = () => {
+            this.sendMessage({ type: "disableVideo" });
         };
-        this.toggleVideo = function (enable) {
+        this.toggleVideo = (enable) => {
             if (typeof enable === "undefined") {
-                _this.sendMessage({ type: "toggleVideo" });
+                this.sendMessage({ type: "toggleVideo" });
             }
             else {
                 if (enable) {
-                    _this.enableVideo();
+                    this.enableVideo();
                 }
                 else {
-                    _this.disableVideo();
+                    this.disableVideo();
                 }
             }
         };
-        this.enableAudio = function () {
-            _this.sendMessage({ type: "enableAudio" });
+        this.enableAudio = () => {
+            this.sendMessage({ type: "enableAudio" });
         };
-        this.disableAudio = function () {
-            _this.sendMessage({ type: "disableAudio" });
+        this.disableAudio = () => {
+            this.sendMessage({ type: "disableAudio" });
         };
-        this.toggleAudio = function (enable) {
+        this.toggleAudio = (enable) => {
             if (typeof enable === "undefined") {
-                _this.sendMessage({ type: "toggleAudio" });
+                this.sendMessage({ type: "toggleAudio" });
             }
             else {
                 if (enable) {
-                    _this.enableAudio();
+                    this.enableAudio();
                 }
                 else {
-                    _this.disableAudio();
+                    this.disableAudio();
                 }
             }
         };
-        this.startScreenshare = function () {
-            _this.sendMessage({ type: "startScreenshare" });
+        this.startScreenshare = () => {
+            this.sendMessage({ type: "startScreenshare" });
         };
-        this.stopScreenshare = function () {
-            _this.sendMessage({ type: "stopScreenshare" });
+        this.stopScreenshare = () => {
+            this.sendMessage({ type: "stopScreenshare" });
+        };
+        this.startRecording = () => {
+            this.sendMessage({ type: "startRecording" });
+        };
+        this.stopRecording = () => {
+            this.sendMessage({ type: "stopRecording" });
         };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
@@ -187,29 +172,25 @@ var DigitalSambaEmbedded = /** @class */ (function () {
         }
         window.addEventListener("message", this.onMessage);
     }
-    DigitalSambaEmbedded.prototype.checkTarget = function () {
-        var _this = this;
+    checkTarget() {
         this.sendMessage({ type: "connect" });
-        var confirmationTimeout = window.setTimeout(function () {
-            _this.logError(UNKNOWN_TARGET);
+        const confirmationTimeout = window.setTimeout(() => {
+            this.logError(UNKNOWN_TARGET);
         }, CONNECT_TIMEOUT);
-        this.on("connected", function () {
-            _this.connected = true;
+        this.on("connected", () => {
+            this.connected = true;
             clearTimeout(confirmationTimeout);
         });
-    };
-    DigitalSambaEmbedded.prototype.sendMessage = function (message) {
+    }
+    sendMessage(message) {
         if (this.frame.contentWindow) {
             this.frame.contentWindow.postMessage(message, {
                 targetOrigin: this.allowedOrigin,
             });
         }
-    };
-    var _a;
-    _a = DigitalSambaEmbedded;
-    DigitalSambaEmbedded.createControl = function (initOptions) {
-        return new _a(initOptions, {}, false);
-    };
-    return DigitalSambaEmbedded;
-}());
-export { DigitalSambaEmbedded };
+    }
+}
+_a = DigitalSambaEmbedded;
+DigitalSambaEmbedded.createControl = (initOptions) => {
+    return new _a(initOptions, {}, false);
+};
