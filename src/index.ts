@@ -49,7 +49,9 @@ export type SendMessageType =
   | "toggleVideo"
   | "toggleAudio"
   | "startScreenshare"
-  | "stopScreenshare";
+  | "stopScreenshare"
+  | "startRecording"
+  | "stopRecording";
 
 export type ReceiveMessageType =
   | "connected"
@@ -60,7 +62,10 @@ export type ReceiveMessageType =
   | "audioEnabled"
   | "audioDisabled"
   | "screenshareStarted"
-  | "screenshareStopped";
+  | "screenshareStopped"
+  | "recordingStarted"
+  | "recordingStopped"
+  | "recordingFailed";
 
 export interface SendMessage<P> {
   type: SendMessageType;
@@ -310,5 +315,13 @@ export class DigitalSambaEmbedded {
 
   stopScreenshare = () => {
     this.sendMessage({ type: "stopScreenshare" });
+  };
+
+  startRecording = () => {
+    this.sendMessage({ type: "startRecording" });
+  };
+
+  stopRecording = () => {
+    this.sendMessage({ type: "stopRecording" });
   };
 }

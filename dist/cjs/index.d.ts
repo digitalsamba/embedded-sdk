@@ -26,8 +26,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export declare type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare";
-export declare type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped";
+export declare type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare" | "startRecording" | "stopRecording";
+export declare type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped" | "recordingStarted" | "recordingStopped" | "recordingFailed";
 export interface SendMessage<P> {
     type: SendMessageType;
     payload?: P;
@@ -63,4 +63,6 @@ export declare class DigitalSambaEmbedded {
     toggleAudio: (enable?: boolean) => void;
     startScreenshare: () => void;
     stopScreenshare: () => void;
+    startRecording: () => void;
+    stopRecording: () => void;
 }

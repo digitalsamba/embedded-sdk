@@ -10,11 +10,11 @@
 <body>
 <div class="ifp" style="display: flex">
 
-<!--<iframe allow="camera; microphone; display-capture; autoplay;" src="<>" class="if"></iframe>-->
+  <!--<iframe allow="camera; microphone; display-capture; autoplay;" src="<>" class="if"></iframe>-->
 
-<div class="log">
+  <div class="log">
 
-</div>
+  </div>
 
 </div>
 <div class="div" style=" border: 1px solid yellow">
@@ -27,6 +27,8 @@
   <button class="c6">disableAudio</button>
   <button class="c7">startScreenshare</button>
   <button class="c8">stopScreenshare</button>
+  <button class="c9">startRecording</button>
+  <button class="c10">stopRecording</button>
 </div>
 <script async defer>
   const parent = document.querySelector('.ifp');
@@ -40,6 +42,8 @@
   const btn6 = document.querySelector('.c6');
   const btn7 = document.querySelector('.c7');
   const btn8 = document.querySelector('.c8');
+  const btn9 = document.querySelector('.c9');
+  const btn10 = document.querySelector('.c10');
 
   // change these values to connect to your room
   const TEAM = 'some-team';
@@ -66,6 +70,8 @@
   btn6.onclick = () => {api.disableAudio()}
   btn7.onclick = () => {api.startScreenshare()}
   btn8.onclick = () => {api.stopScreenshare()}
+  btn9.onclick = () => {api.startRecording()}
+  btn10.onclick = () => {api.stopRecording()}
 
   api.on('*', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`

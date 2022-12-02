@@ -114,6 +114,9 @@ api.disableAudio();
 * `audioDisabled`
 * `screenshareStarted`
 * `screenshareStopped`
+* `recordingStarted`
+* `recordingStopped`
+* `recordingFailed`
 
 ### Available commands:
 
@@ -125,3 +128,5 @@ api.disableAudio();
 * `toggleAudio(newState?: boolean)`
 * `startScreenshare()`
 * `stopScreenshare()`
+* `startRecording()`
+* `stopRecording()`

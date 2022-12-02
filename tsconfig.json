@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "declaration": true,
     "allowJs": true,
     "incremental": true,
@@ -15,6 +15,11 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ]
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]
