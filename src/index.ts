@@ -1,4 +1,12 @@
 import {
+  InitOptions,
+  InstanceProperties,
+  ReceiveMessage,
+  ReceiveMessageType,
+  SendMessage,
+} from "./types";
+
+import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
   INVALID_URL,
@@ -6,76 +14,7 @@ import {
   UNKNOWN_TARGET,
 } from "./utils/errors";
 
-export interface InitOptions {
-  root: HTMLElement;
-  frame: HTMLIFrameElement;
-
-  url: string;
-  team: string;
-  room: string;
-  token?: string;
-}
-
-export type FrameAttributes = {
-  align: string;
-  allow: string;
-  allowFullscreen: boolean;
-  frameBorder: string;
-  height: string;
-  longDesc: string;
-  marginHeight: string;
-  marginWidth: string;
-  name: string;
-  referrerPolicy: ReferrerPolicy;
-  scrolling: string;
-  src: string;
-  srcdoc: string;
-  width: string;
-} & HTMLElement;
-
-export interface InstanceProperties {
-  frameAttributes?: Partial<FrameAttributes>;
-  reportErrors?: boolean;
-}
-
 const CONNECT_TIMEOUT = 5000;
-
-export type SendMessageType =
-  | "connect"
-  | "enableVideo"
-  | "enableAudio"
-  | "disableVideo"
-  | "disableAudio"
-  | "toggleVideo"
-  | "toggleAudio"
-  | "startScreenshare"
-  | "stopScreenshare"
-  | "startRecording"
-  | "stopRecording";
-
-export type ReceiveMessageType =
-  | "connected"
-  | "userJoined"
-  | "userLeft"
-  | "videoEnabled"
-  | "videoDisabled"
-  | "audioEnabled"
-  | "audioDisabled"
-  | "screenshareStarted"
-  | "screenshareStopped"
-  | "recordingStarted"
-  | "recordingStopped"
-  | "recordingFailed";
-
-export interface SendMessage<P> {
-  type: SendMessageType;
-  payload?: P;
-}
-
-export interface ReceiveMessage {
-  type: ReceiveMessageType;
-  payload: unknown;
-}
 
 function isFunction(func: any): func is (payload: any) => void {
   return func instanceof Function;
@@ -323,5 +262,25 @@ export class DigitalSambaEmbedded {
 
   stopRecording = () => {
     this.sendMessage({ type: "stopRecording" });
+  };
+
+  showToolbar = () => {
+    this.sendMessage({ type: "showToolbar" });
+  };
+
+  hideToolbar = () => {
+    this.sendMessage({ type: "hideToolbar" });
+  };
+
+  toggleToolbar = (show?: boolean) => {
+    if (typeof show === "undefined") {
+      this.sendMessage({ type: "toggleToolbar" });
+    } else {
+      if (show) {
+        this.showToolbar();
+      } else {
+        this.hideToolbar();
+      }
+    }
   };
 }

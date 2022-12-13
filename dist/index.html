@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>
+  <!--  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>-->
+  <script src="./umd/index.js"></script>
 </head>
 <body>
 <div class="ifp" style="display: flex">
-
-  <!--<iframe allow="camera; microphone; display-capture; autoplay;" src="<>" class="if"></iframe>-->
+  <iframe allow="camera; microphone; display-capture; autoplay;" src="https://localhost:3000/Public" width="700" height="500" class="if"></iframe>
 
   <div class="log">
 
@@ -29,7 +29,11 @@
   <button class="c8">stopScreenshare</button>
   <button class="c9">startRecording</button>
   <button class="c10">stopRecording</button>
+  <button class="c11">showToolbar</button>
+  <button class="c12">hideToolbar</button>
+  <button class="c13">hideToolbar</button>
 </div>
+
 <script async defer>
   const parent = document.querySelector('.ifp');
   const frame = document.querySelector('.if');
@@ -44,6 +48,9 @@
   const btn8 = document.querySelector('.c8');
   const btn9 = document.querySelector('.c9');
   const btn10 = document.querySelector('.c10');
+  const btn11 = document.querySelector('.c11');
+  const btn12 = document.querySelector('.c12');
+  const btn13 = document.querySelector('.c13');
 
   // change these values to connect to your room
   const TEAM = 'some-team';
@@ -51,10 +58,10 @@
   const ROOM_URL = 'https://localhost:3000/Public'
 
   //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
-  //const api = new DigitalSambaEmbedded({ frame});
+  const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
+  // const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
 
   const log = document.querySelector('.log');
 
@@ -72,6 +79,9 @@
   btn8.onclick = () => {api.stopScreenshare()}
   btn9.onclick = () => {api.startRecording()}
   btn10.onclick = () => {api.stopRecording()}
+  btn11.onclick = () => {api.showToolbar()}
+  btn12.onclick = () => {api.hideToolbar()}
+  btn13.onclick = () => {api.toggleToolbar()}
 
   api.on('*', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`

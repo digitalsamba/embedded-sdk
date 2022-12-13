@@ -162,6 +162,12 @@ class DigitalSambaEmbedded {
         this.stopRecording = () => {
             this.sendMessage({ type: "stopRecording" });
         };
+        this.showToolbar = () => {
+            this.sendMessage({ type: "showToolbar" });
+        };
+        this.hideToolbar = () => {
+            this.sendMessage({ type: "hideToolbar" });
+        };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = "camera; microphone; display-capture; autoplay;";
