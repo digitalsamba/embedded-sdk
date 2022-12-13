@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="ifp" style="display: flex">
-  <iframe allow="camera; microphone; display-capture; autoplay;" src="https://localhost:3000/Public" width="700" height="500" class="if"></iframe>
+  <iframe allow="camera; microphone; display-capture; autoplay;" src="<>" width="700" height="500" class="if"></iframe>
 
   <div class="log">
 
@@ -58,10 +58,10 @@
   const ROOM_URL = 'https://localhost:3000/Public'
 
   //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
-  const api = new DigitalSambaEmbedded({ frame});
+  // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  // const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
+  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
 
   const log = document.querySelector('.log');
 
