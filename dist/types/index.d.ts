@@ -1,41 +1,4 @@
-export interface InitOptions {
-    root: HTMLElement;
-    frame: HTMLIFrameElement;
-    url: string;
-    team: string;
-    room: string;
-    token?: string;
-}
-export declare type FrameAttributes = {
-    align: string;
-    allow: string;
-    allowFullscreen: boolean;
-    frameBorder: string;
-    height: string;
-    longDesc: string;
-    marginHeight: string;
-    marginWidth: string;
-    name: string;
-    referrerPolicy: ReferrerPolicy;
-    scrolling: string;
-    src: string;
-    srcdoc: string;
-    width: string;
-} & HTMLElement;
-export interface InstanceProperties {
-    frameAttributes?: Partial<FrameAttributes>;
-    reportErrors?: boolean;
-}
-export declare type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare";
-export declare type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped";
-export interface SendMessage<P> {
-    type: SendMessageType;
-    payload?: P;
-}
-export interface ReceiveMessage {
-    type: ReceiveMessageType;
-    payload: unknown;
-}
+import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessageType } from "./types";
 export declare class DigitalSambaEmbedded {
     initOptions: Partial<InitOptions>;
     savedIframeSrc: string;
@@ -63,4 +26,10 @@ export declare class DigitalSambaEmbedded {
     toggleAudio: (enable?: boolean) => void;
     startScreenshare: () => void;
     stopScreenshare: () => void;
+    startRecording: () => void;
+    stopRecording: () => void;
+    showToolbar: () => void;
+    hideToolbar: () => void;
+    changeLayoutMode: (mode: LayoutMode) => void;
+    toggleToolbar: (show?: boolean) => void;
 }

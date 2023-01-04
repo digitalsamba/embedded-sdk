@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>
+  <!--  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>-->
+  <script src="./umd/index.js"></script>
 </head>
 <body>
 <div class="ifp" style="display: flex">
+  <iframe allow="camera; microphone; display-capture; autoplay;" src="<>" width="700" height="500" class="if"></iframe>
 
-<!--<iframe allow="camera; microphone; display-capture; autoplay;" src="<>" class="if"></iframe>-->
+  <div class="log">
 
-<div class="log">
-
-</div>
+  </div>
 
 </div>
 <div class="div" style=" border: 1px solid yellow">
@@ -27,7 +27,15 @@
   <button class="c6">disableAudio</button>
   <button class="c7">startScreenshare</button>
   <button class="c8">stopScreenshare</button>
+  <button class="c9">startRecording</button>
+  <button class="c10">stopRecording</button>
+  <button class="c11">showToolbar</button>
+  <button class="c12">hideToolbar</button>
+  <button class="c13">hideToolbar</button>
+  <button class="c14">auto layout</button>
+  <button class="c15">tiled layout</button>
 </div>
+
 <script async defer>
   const parent = document.querySelector('.ifp');
   const frame = document.querySelector('.if');
@@ -40,6 +48,13 @@
   const btn6 = document.querySelector('.c6');
   const btn7 = document.querySelector('.c7');
   const btn8 = document.querySelector('.c8');
+  const btn9 = document.querySelector('.c9');
+  const btn10 = document.querySelector('.c10');
+  const btn11 = document.querySelector('.c11');
+  const btn12 = document.querySelector('.c12');
+  const btn13 = document.querySelector('.c13');
+  const btn14 = document.querySelector('.c14');
+  const btn15 = document.querySelector('.c15');
 
   // change these values to connect to your room
   const TEAM = 'some-team';
@@ -47,7 +62,7 @@
   const ROOM_URL = 'https://localhost:3000/Public'
 
   //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
-  //const api = new DigitalSambaEmbedded({ frame});
+  // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
   const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
@@ -66,6 +81,13 @@
   btn6.onclick = () => {api.disableAudio()}
   btn7.onclick = () => {api.startScreenshare()}
   btn8.onclick = () => {api.stopScreenshare()}
+  btn9.onclick = () => {api.startRecording()}
+  btn10.onclick = () => {api.stopRecording()}
+  btn11.onclick = () => {api.showToolbar()}
+  btn12.onclick = () => {api.hideToolbar()}
+  btn13.onclick = () => {api.toggleToolbar()}
+  btn14.onclick = () => {api.changeLayoutMode('auto')}
+  btn15.onclick = () => {api.changeLayoutMode('tiled')}
 
   api.on('*', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`
