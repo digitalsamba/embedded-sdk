@@ -60,7 +60,8 @@ export type ReceiveMessageType =
   | "recordingStarted"
   | "recordingStopped"
   | "recordingFailed"
-  | "layoutModeChanged";
+  | "layoutModeChanged"
+  | "activeSpeakerChanged";
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -73,6 +74,6 @@ export interface ReceiveMessage {
 }
 
 export enum LayoutMode {
-  tiled = 'tiled',
-  auto = 'auto',
+  tiled = "tiled",
+  auto = "auto",
 }

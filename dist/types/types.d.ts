@@ -6,7 +6,7 @@ export interface InitOptions {
     room: string;
     token?: string;
 }
-export type FrameAttributes = {
+export declare type FrameAttributes = {
     align: string;
     allow: string;
     allowFullscreen: boolean;
@@ -26,8 +26,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare" | "startRecording" | "stopRecording" | "showToolbar" | "hideToolbar" | "toggleToolbar" | "changeLayoutMode";
-export type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped" | "recordingStarted" | "recordingStopped" | "recordingFailed" | "layoutModeChanged";
+export declare type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare" | "startRecording" | "stopRecording" | "showToolbar" | "hideToolbar" | "toggleToolbar" | "changeLayoutMode";
+export declare type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped" | "recordingStarted" | "recordingStopped" | "recordingFailed" | "layoutModeChanged" | "activeSpeakerChanged";
 export interface SendMessage<D> {
     type: SendMessageType;
     data?: D;
