@@ -32,6 +32,8 @@
   <button class="c11">showToolbar</button>
   <button class="c12">hideToolbar</button>
   <button class="c13">hideToolbar</button>
+  <button class="c14">auto layout</button>
+  <button class="c15">tiled layout</button>
 </div>
 
 <script async defer>
@@ -51,6 +53,8 @@
   const btn11 = document.querySelector('.c11');
   const btn12 = document.querySelector('.c12');
   const btn13 = document.querySelector('.c13');
+  const btn14 = document.querySelector('.c14');
+  const btn15 = document.querySelector('.c15');
 
   // change these values to connect to your room
   const TEAM = 'some-team';
@@ -82,6 +86,8 @@
   btn11.onclick = () => {api.showToolbar()}
   btn12.onclick = () => {api.hideToolbar()}
   btn13.onclick = () => {api.toggleToolbar()}
+  btn14.onclick = () => {api.changeLayoutMode('auto')}
+  btn15.onclick = () => {api.changeLayoutMode('tiled')}
 
   api.on('*', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`

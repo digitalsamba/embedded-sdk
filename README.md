@@ -117,6 +117,7 @@ api.disableAudio();
 * `recordingStarted`
 * `recordingStopped`
 * `recordingFailed`
+* `layoutModeChanged`
 * `activeSpeakerChanged`
 
 ### Available commands:
@@ -131,3 +132,4 @@ api.disableAudio();
 * `stopScreenshare()`
 * `startRecording()`
 * `stopRecording()`
+* `changeLayoutMode(mode: 'tiled' | 'auto'')`

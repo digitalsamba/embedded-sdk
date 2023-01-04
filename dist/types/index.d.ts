@@ -1,4 +1,4 @@
-import { InitOptions, InstanceProperties, ReceiveMessageType } from "./types";
+import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessageType } from "./types";
 export declare class DigitalSambaEmbedded {
     initOptions: Partial<InitOptions>;
     savedIframeSrc: string;
@@ -30,4 +30,6 @@ export declare class DigitalSambaEmbedded {
     stopRecording: () => void;
     showToolbar: () => void;
     hideToolbar: () => void;
+    changeLayoutMode: (mode: LayoutMode) => void;
+    toggleToolbar: (show?: boolean) => void;
 }

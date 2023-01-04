@@ -26,13 +26,17 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export declare type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare" | "startRecording" | "stopRecording" | "showToolbar" | "hideToolbar" | "toggleToolbar";
-export declare type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped" | "recordingStarted" | "recordingStopped" | "recordingFailed";
-export interface SendMessage<P> {
+export declare type SendMessageType = "connect" | "enableVideo" | "enableAudio" | "disableVideo" | "disableAudio" | "toggleVideo" | "toggleAudio" | "startScreenshare" | "stopScreenshare" | "startRecording" | "stopRecording" | "showToolbar" | "hideToolbar" | "toggleToolbar" | "changeLayoutMode";
+export declare type ReceiveMessageType = "connected" | "userJoined" | "userLeft" | "videoEnabled" | "videoDisabled" | "audioEnabled" | "audioDisabled" | "screenshareStarted" | "screenshareStopped" | "recordingStarted" | "recordingStopped" | "recordingFailed" | "layoutModeChanged" | "activeSpeakerChanged";
+export interface SendMessage<D> {
     type: SendMessageType;
-    payload?: P;
+    data?: D;
 }
 export interface ReceiveMessage {
     type: ReceiveMessageType;
     payload: unknown;
+}
+export declare enum LayoutMode {
+    tiled = "tiled",
+    auto = "auto"
 }
