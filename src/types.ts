@@ -44,7 +44,8 @@ export type SendMessageType =
   | "stopRecording"
   | "showToolbar"
   | "hideToolbar"
-  | "toggleToolbar";
+  | "toggleToolbar"
+  | "changeLayoutMode";
 
 export type ReceiveMessageType =
   | "connected"
@@ -58,14 +59,20 @@ export type ReceiveMessageType =
   | "screenshareStopped"
   | "recordingStarted"
   | "recordingStopped"
-  | "recordingFailed";
+  | "recordingFailed"
+  | "layoutModeChanged";
 
-export interface SendMessage<P> {
+export interface SendMessage<D> {
   type: SendMessageType;
-  payload?: P;
+  data?: D;
 }
 
 export interface ReceiveMessage {
   type: ReceiveMessageType;
   payload: unknown;
+}
+
+export enum LayoutMode {
+  tiled = 'tiled',
+  auto = 'auto',
 }

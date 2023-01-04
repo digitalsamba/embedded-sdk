@@ -1,6 +1,6 @@
 import {
   InitOptions,
-  InstanceProperties,
+  InstanceProperties, LayoutMode,
   ReceiveMessage,
   ReceiveMessageType,
   SendMessage,
@@ -270,6 +270,10 @@ export class DigitalSambaEmbedded {
 
   hideToolbar = () => {
     this.sendMessage({ type: "hideToolbar" });
+  };
+
+  changeLayoutMode = (mode: LayoutMode) => {
+    this.sendMessage({ type: "changeLayoutMode", data: mode });
   };
 
   toggleToolbar = (show?: boolean) => {

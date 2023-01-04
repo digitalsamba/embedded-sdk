@@ -165,6 +165,22 @@ export class DigitalSambaEmbedded {
         this.hideToolbar = () => {
             this.sendMessage({ type: "hideToolbar" });
         };
+        this.changeLayoutMode = (mode) => {
+            this.sendMessage({ type: "changeLayoutMode", data: mode });
+        };
+        this.toggleToolbar = (show) => {
+            if (typeof show === "undefined") {
+                this.sendMessage({ type: "toggleToolbar" });
+            }
+            else {
+                if (show) {
+                    this.showToolbar();
+                }
+                else {
+                    this.hideToolbar();
+                }
+            }
+        };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = "camera; microphone; display-capture; autoplay;";
