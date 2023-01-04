@@ -117,6 +117,7 @@ api.disableAudio();
 * `recordingStarted`
 * `recordingStopped`
 * `recordingFailed`
+* `activeSpeakerChanged`
 
 ### Available commands:
 

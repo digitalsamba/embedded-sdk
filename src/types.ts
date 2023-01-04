@@ -58,7 +58,8 @@ export type ReceiveMessageType =
   | "screenshareStopped"
   | "recordingStarted"
   | "recordingStopped"
-  | "recordingFailed";
+  | "recordingFailed"
+  | "activeSpeakerChanged";
 
 export interface SendMessage<P> {
   type: SendMessageType;
