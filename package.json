@@ -8,7 +8,8 @@
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "build:umd": "node tools/cleanup umd && webpack --config config/webpack.config.js",
-    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json"
+    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
+    "prepare": "husky install"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -19,10 +20,15 @@
   ],
   "unpkg": "dist/umd/index.js",
   "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "prettier": "2.8.1",
     "ts-loader": "^9.4.1",
     "typescript": "^4.8.3",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,md,html}": ["prettier --write"]
   }
 }
