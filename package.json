@@ -20,6 +20,13 @@
   ],
   "unpkg": "dist/umd/index.js",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.25.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "prettier": "2.8.1",
@@ -29,6 +36,12 @@
     "webpack-cli": "^4.10.0"
   },
   "lint-staged": {
-    "*.{js,ts,md,html}": ["prettier --write"]
+    "*.{js,ts,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "ts-standard": {
+    "project": "./tsconfig.json"
   }
 }
