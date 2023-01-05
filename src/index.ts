@@ -58,9 +58,7 @@ export class DigitalSambaEmbedded {
     window.addEventListener('message', this.onMessage);
   }
 
-  static createControl = (initOptions: InitOptions) => {
-    return new this(initOptions, {}, false);
-  };
+  static createControl = (initOptions: InitOptions) => new this(initOptions, {}, false);
 
   private mountFrame = (loadImmediately: boolean) => {
     const { url, frame, root } = this.initOptions;
@@ -214,12 +212,10 @@ export class DigitalSambaEmbedded {
   toggleVideo = (enable?: boolean) => {
     if (typeof enable === 'undefined') {
       this.sendMessage({ type: 'toggleVideo' });
+    } else if (enable) {
+      this.enableVideo();
     } else {
-      if (enable) {
-        this.enableVideo();
-      } else {
-        this.disableVideo();
-      }
+      this.disableVideo();
     }
   };
 
@@ -234,12 +230,10 @@ export class DigitalSambaEmbedded {
   toggleAudio = (enable?: boolean) => {
     if (typeof enable === 'undefined') {
       this.sendMessage({ type: 'toggleAudio' });
+    } else if (enable) {
+      this.enableAudio();
     } else {
-      if (enable) {
-        this.enableAudio();
-      } else {
-        this.disableAudio();
-      }
+      this.disableAudio();
     }
   };
 
@@ -274,12 +268,10 @@ export class DigitalSambaEmbedded {
   toggleToolbar = (show?: boolean) => {
     if (typeof show === 'undefined') {
       this.sendMessage({ type: 'toggleToolbar' });
+    } else if (show) {
+      this.showToolbar();
     } else {
-      if (show) {
-        this.showToolbar();
-      } else {
-        this.hideToolbar();
-      }
+      this.hideToolbar();
     }
   };
 }

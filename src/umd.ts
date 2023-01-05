@@ -1,5 +1,4 @@
-import { DigitalSambaEmbedded } from './index';
+const { DigitalSambaEmbedded } = require('./index');
 
 // compatibility with script tag
-// @ts-ignore
 module.exports = DigitalSambaEmbedded;
