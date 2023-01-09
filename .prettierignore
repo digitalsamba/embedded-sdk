@@ -1,0 +1,15 @@
+# Ignore artifacts:
+build
+dist
+!dist/index.html
+
+coverage
+
+.github
+.yarn/*
+
+# editors
+.idea
+.vscode
+
+

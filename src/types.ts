@@ -31,37 +31,37 @@ export interface InstanceProperties {
 }
 
 export type SendMessageType =
-  | "connect"
-  | "enableVideo"
-  | "enableAudio"
-  | "disableVideo"
-  | "disableAudio"
-  | "toggleVideo"
-  | "toggleAudio"
-  | "startScreenshare"
-  | "stopScreenshare"
-  | "startRecording"
-  | "stopRecording"
-  | "showToolbar"
-  | "hideToolbar"
-  | "toggleToolbar"
-  | "changeLayoutMode";
+  | 'connect'
+  | 'enableVideo'
+  | 'enableAudio'
+  | 'disableVideo'
+  | 'disableAudio'
+  | 'toggleVideo'
+  | 'toggleAudio'
+  | 'startScreenshare'
+  | 'stopScreenshare'
+  | 'startRecording'
+  | 'stopRecording'
+  | 'showToolbar'
+  | 'hideToolbar'
+  | 'toggleToolbar'
+  | 'changeLayoutMode';
 
 export type ReceiveMessageType =
-  | "connected"
-  | "userJoined"
-  | "userLeft"
-  | "videoEnabled"
-  | "videoDisabled"
-  | "audioEnabled"
-  | "audioDisabled"
-  | "screenshareStarted"
-  | "screenshareStopped"
-  | "recordingStarted"
-  | "recordingStopped"
-  | "recordingFailed"
-  | "layoutModeChanged"
-  | "activeSpeakerChanged";
+  | 'connected'
+  | 'userJoined'
+  | 'userLeft'
+  | 'videoEnabled'
+  | 'videoDisabled'
+  | 'audioEnabled'
+  | 'audioDisabled'
+  | 'screenshareStarted'
+  | 'screenshareStopped'
+  | 'recordingStarted'
+  | 'recordingStopped'
+  | 'recordingFailed'
+  | 'layoutModeChanged'
+  | 'activeSpeakerChanged';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -74,6 +74,6 @@ export interface ReceiveMessage {
 }
 
 export enum LayoutMode {
-  tiled = "tiled",
-  auto = "auto",
+  tiled = 'tiled',
+  auto = 'auto',
 }
