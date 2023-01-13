@@ -53,4 +53,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-createToken.js
+dist/local.index.html

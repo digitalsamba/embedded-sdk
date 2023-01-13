@@ -1,25 +1,47 @@
 {
   "name": "@digitalsamba/embedded-sdk",
   "packageManager": "yarn@3.1.0",
-  "version": "0.0.7",
-  "license" : "BSD-2-Clause",
+  "version": "0.0.8",
+  "license": "BSD-2-Clause",
   "scripts": {
     "build": "npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:types",
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "build:umd": "node tools/cleanup umd && webpack --config config/webpack.config.js",
-    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json"
+    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
+    "prepare": "husky install"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
   "types": "dist/types/index.d.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "unpkg": "dist/umd/index.js",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "prettier": "2.8.1",
     "ts-loader": "^9.4.1",
     "typescript": "^4.8.3",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "ts-standard": {
+    "project": "./tsconfig.json"
   }
 }

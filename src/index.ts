@@ -1,76 +1,21 @@
 import {
+  InitOptions,
+  InstanceProperties,
+  LayoutMode,
+  ReceiveMessage,
+  ReceiveMessageType,
+  SendMessage,
+} from './types';
+
+import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
   INVALID_URL,
   RichError,
   UNKNOWN_TARGET,
-} from "./utils/errors";
-
-export interface InitOptions {
-  root: HTMLElement;
-  frame: HTMLIFrameElement;
-
-  url: string;
-  team: string;
-  room: string;
-  token?: string;
-}
-
-export type FrameAttributes = {
-  align: string;
-  allow: string;
-  allowFullscreen: boolean;
-  frameBorder: string;
-  height: string;
-  longDesc: string;
-  marginHeight: string;
-  marginWidth: string;
-  name: string;
-  referrerPolicy: ReferrerPolicy;
-  scrolling: string;
-  src: string;
-  srcdoc: string;
-  width: string;
-} & HTMLElement;
-
-export interface InstanceProperties {
-  frameAttributes?: Partial<FrameAttributes>;
-  reportErrors?: boolean;
-}
+} from './utils/errors';
 
 const CONNECT_TIMEOUT = 5000;
-
-export type SendMessageType =
-  | "connect"
-  | "enableVideo"
-  | "enableAudio"
-  | "disableVideo"
-  | "disableAudio"
-  | "toggleVideo"
-  | "toggleAudio"
-  | "startScreenshare"
-  | "stopScreenshare";
-
-export type ReceiveMessageType =
-  | "connected"
-  | "userJoined"
-  | "userLeft"
-  | "videoEnabled"
-  | "videoDisabled"
-  | "audioEnabled"
-  | "audioDisabled"
-  | "screenshareStarted"
-  | "screenshareStopped";
-
-export interface SendMessage<P> {
-  type: SendMessageType;
-  payload?: P;
-}
-
-export interface ReceiveMessage {
-  type: ReceiveMessageType;
-  payload: unknown;
-}
 
 function isFunction(func: any): func is (payload: any) => void {
   return func instanceof Function;
@@ -79,17 +24,15 @@ function isFunction(func: any): func is (payload: any) => void {
 export class DigitalSambaEmbedded {
   initOptions: Partial<InitOptions>;
 
-  savedIframeSrc: string = "";
+  savedIframeSrc: string = '';
 
-  allowedOrigin: string = "*";
+  allowedOrigin: string = '*';
 
   connected: boolean = false;
 
-  frame: HTMLIFrameElement = document.createElement("iframe");
+  frame: HTMLIFrameElement = document.createElement('iframe');
 
-  eventHandlers: Partial<
-    Record<ReceiveMessageType | "*", (payload: any) => void>
-  > = {};
+  eventHandlers: Partial<Record<ReceiveMessageType | '*', (payload: any) => void>> = {};
 
   reportErrors: boolean = false;
 
@@ -101,23 +44,21 @@ export class DigitalSambaEmbedded {
     this.initOptions = options;
     this.reportErrors = instanceProperties.reportErrors || false;
 
-    this.frame.allow = "camera; microphone; display-capture; autoplay;";
-    this.frame.setAttribute("allowFullscreen", "true");
+    this.frame.allow = 'camera; microphone; display-capture; autoplay;';
+    this.frame.setAttribute('allowFullscreen', 'true');
 
     this.mountFrame(loadImmediately);
 
     if (loadImmediately) {
       this.load(instanceProperties);
     } else {
-      this.frame.style.display = "none";
+      this.frame.style.display = 'none';
     }
 
-    window.addEventListener("message", this.onMessage);
+    window.addEventListener('message', this.onMessage);
   }
 
-  static createControl = (initOptions: InitOptions) => {
-    return new this(initOptions, {}, false);
-  };
+  static createControl = (initOptions: InitOptions) => new this(initOptions, {}, false);
 
   private mountFrame = (loadImmediately: boolean) => {
     const { url, frame, root } = this.initOptions;
@@ -147,7 +88,7 @@ export class DigitalSambaEmbedded {
 
     if (!loadImmediately) {
       this.savedIframeSrc = this.frame.src;
-      this.frame.src = "";
+      this.frame.src = '';
     }
   };
 
@@ -158,7 +99,7 @@ export class DigitalSambaEmbedded {
 
     this.applyFrameProperties(instanceProperties);
 
-    this.frame.style.display = "block";
+    this.frame.style.display = 'block';
   };
 
   on = (type: ReceiveMessageType, handler: (payload: any) => void) => {
@@ -171,8 +112,8 @@ export class DigitalSambaEmbedded {
     //       return;
     //     }
 
-    if (typeof this.eventHandlers["*"] === "function") {
-      this.eventHandlers["*"](event.data);
+    if (typeof this.eventHandlers['*'] === 'function') {
+      this.eventHandlers['*'](event.data);
     }
 
     if (event.data.type) {
@@ -195,7 +136,7 @@ export class DigitalSambaEmbedded {
 
     if (url && token) {
       const urlObj = new URL(url);
-      urlObj.searchParams.append("token", token);
+      urlObj.searchParams.append('token', token);
 
       url = urlObj.toString();
     }
@@ -216,13 +157,13 @@ export class DigitalSambaEmbedded {
   };
 
   private checkTarget() {
-    this.sendMessage({ type: "connect" });
+    this.sendMessage({ type: 'connect' });
 
     const confirmationTimeout = window.setTimeout(() => {
       this.logError(UNKNOWN_TARGET);
     }, CONNECT_TIMEOUT);
 
-    this.on("connected", () => {
+    this.on('connected', () => {
       this.connected = true;
       clearTimeout(confirmationTimeout);
     });
@@ -242,20 +183,16 @@ export class DigitalSambaEmbedded {
     }
   };
 
-  private applyFrameProperties = (
-    instanceProperties: Partial<InstanceProperties>
-  ) => {
+  private applyFrameProperties = (instanceProperties: Partial<InstanceProperties>) => {
     if (instanceProperties.frameAttributes) {
       // TODO: only allow specific attrs here; This is a heck to support
-      Object.entries(instanceProperties.frameAttributes).forEach(
-        ([attr, value]) => {
-          if (value !== null && typeof value !== "undefined") {
-            this.frame.setAttribute(attr, value.toString());
-          } else {
-            this.frame.removeAttribute(attr);
-          }
+      Object.entries(instanceProperties.frameAttributes).forEach(([attr, value]) => {
+        if (value !== null && typeof value !== 'undefined') {
+          this.frame.setAttribute(attr, value.toString());
+        } else {
+          this.frame.removeAttribute(attr);
         }
-      );
+      });
     }
 
     if (instanceProperties.reportErrors) {
@@ -265,50 +202,76 @@ export class DigitalSambaEmbedded {
 
   // commands
   enableVideo = () => {
-    this.sendMessage({ type: "enableVideo" });
+    this.sendMessage({ type: 'enableVideo' });
   };
 
   disableVideo = () => {
-    this.sendMessage({ type: "disableVideo" });
+    this.sendMessage({ type: 'disableVideo' });
   };
 
   toggleVideo = (enable?: boolean) => {
-    if (typeof enable === "undefined") {
-      this.sendMessage({ type: "toggleVideo" });
+    if (typeof enable === 'undefined') {
+      this.sendMessage({ type: 'toggleVideo' });
+    } else if (enable) {
+      this.enableVideo();
     } else {
-      if (enable) {
-        this.enableVideo();
-      } else {
-        this.disableVideo();
-      }
+      this.disableVideo();
     }
   };
 
   enableAudio = () => {
-    this.sendMessage({ type: "enableAudio" });
+    this.sendMessage({ type: 'enableAudio' });
   };
 
   disableAudio = () => {
-    this.sendMessage({ type: "disableAudio" });
+    this.sendMessage({ type: 'disableAudio' });
   };
 
   toggleAudio = (enable?: boolean) => {
-    if (typeof enable === "undefined") {
-      this.sendMessage({ type: "toggleAudio" });
+    if (typeof enable === 'undefined') {
+      this.sendMessage({ type: 'toggleAudio' });
+    } else if (enable) {
+      this.enableAudio();
     } else {
-      if (enable) {
-        this.enableAudio();
-      } else {
-        this.disableAudio();
-      }
+      this.disableAudio();
     }
   };
 
   startScreenshare = () => {
-    this.sendMessage({ type: "startScreenshare" });
+    this.sendMessage({ type: 'startScreenshare' });
   };
 
   stopScreenshare = () => {
-    this.sendMessage({ type: "stopScreenshare" });
+    this.sendMessage({ type: 'stopScreenshare' });
+  };
+
+  startRecording = () => {
+    this.sendMessage({ type: 'startRecording' });
+  };
+
+  stopRecording = () => {
+    this.sendMessage({ type: 'stopRecording' });
+  };
+
+  showToolbar = () => {
+    this.sendMessage({ type: 'showToolbar' });
+  };
+
+  hideToolbar = () => {
+    this.sendMessage({ type: 'hideToolbar' });
+  };
+
+  changeLayoutMode = (mode: LayoutMode) => {
+    this.sendMessage({ type: 'changeLayoutMode', data: mode });
+  };
+
+  toggleToolbar = (show?: boolean) => {
+    if (typeof show === 'undefined') {
+      this.sendMessage({ type: 'toggleToolbar' });
+    } else if (show) {
+      this.showToolbar();
+    } else {
+      this.hideToolbar();
+    }
   };
 }
