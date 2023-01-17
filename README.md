@@ -84,8 +84,25 @@ api.on('userJoined', (data) => {
 api.on('userLeft', (data) => {
   // ...
 });
+```
 
-// you can also listen to all events simultaneously
+Error event can provide useful details:
+```js
+api.on('appError', (error) => {
+  console.log(error);
+
+  /* outputs  {
+      name: 'recording-not-allowed',
+      message:
+        'Recording disabled. You’ll need to edit this room’s properties to record sessions in this room',
+    }
+  */
+});
+```
+
+
+For debugging purposes, you can also listen to all events simultaneously
+```js
 api.on('*', (data) => {
   console.log(data);
 });
@@ -104,7 +121,7 @@ api.disableAudio();
 ---
 
 ### Available events:
-
+* `appError`
 - `connected`
 - `userJoined`
 - `userLeft`
@@ -132,4 +149,7 @@ api.disableAudio();
 - `stopScreenshare()`
 - `startRecording()`
 - `stopRecording()`
-- `changeLayoutMode(mode: 'tiled' | 'auto'')`
+- `showToolbar()`
+* `hideToolbar()`
+* `toggleToolbar(newState?: boolean)`
+* `changeLayoutMode(mode: 'tiled' | 'auto')`

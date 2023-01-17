@@ -61,7 +61,8 @@ export type ReceiveMessageType =
   | 'recordingStopped'
   | 'recordingFailed'
   | 'layoutModeChanged'
-  | 'activeSpeakerChanged';
+  | 'activeSpeakerChanged'
+  | 'appError'
 
 export interface SendMessage<D> {
   type: SendMessageType;
