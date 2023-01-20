@@ -121,8 +121,7 @@ api.disableAudio();
 ---
 
 ### Available events:
-* `appError`
-- `connected`
+- `appError`
 - `userJoined`
 - `userLeft`
 - `videoEnabled`
@@ -150,6 +149,6 @@ api.disableAudio();
 - `startRecording()`
 - `stopRecording()`
 - `showToolbar()`
-* `hideToolbar()`
-* `toggleToolbar(newState?: boolean)`
-* `changeLayoutMode(mode: 'tiled' | 'auto')`
+- `hideToolbar()`
+- `toggleToolbar(newState?: boolean)`
+- `changeLayoutMode(mode: 'tiled' | 'auto')`
