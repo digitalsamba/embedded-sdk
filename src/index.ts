@@ -15,7 +15,7 @@ import {
   UNKNOWN_TARGET,
 } from './utils/errors';
 
-const CONNECT_TIMEOUT = 5000;
+const CONNECT_TIMEOUT = 10000;
 
 function isFunction(func: any): func is (payload: any) => void {
   return func instanceof Function;
@@ -107,20 +107,26 @@ export class DigitalSambaEmbedded {
   };
 
   private onMessage = (event: MessageEvent<ReceiveMessage>) => {
-    //     if (event.origin !== this.allowedOrigin) {
-    //       // ignore messages from other sources;
-    //       return;
-    //     }
-
-    if (typeof this.eventHandlers['*'] === 'function') {
-      this.eventHandlers['*'](event.data);
+    if (event.origin !== this.allowedOrigin) {
+      // ignore messages from other sources;
+      return;
     }
 
-    if (event.data.type) {
-      const callback = this.eventHandlers[event.data.type];
+    const message = event.data.DSPayload;
+
+    if (!message) {
+      return;
+    }
+
+    if (typeof this.eventHandlers['*'] === 'function') {
+      this.eventHandlers['*'](message);
+    }
+
+    if (message.type) {
+      const callback = this.eventHandlers[message.type];
 
       if (isFunction(callback)) {
-        callback(event.data);
+        callback(message);
       }
     }
   };

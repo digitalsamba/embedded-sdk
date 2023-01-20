@@ -1,11 +1,11 @@
-import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessageType } from "./types";
+import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessageType } from './types';
 export declare class DigitalSambaEmbedded {
     initOptions: Partial<InitOptions>;
     savedIframeSrc: string;
     allowedOrigin: string;
     connected: boolean;
     frame: HTMLIFrameElement;
-    eventHandlers: Partial<Record<ReceiveMessageType | "*", (payload: any) => void>>;
+    eventHandlers: Partial<Record<ReceiveMessageType | '*', (payload: any) => void>>;
     reportErrors: boolean;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;

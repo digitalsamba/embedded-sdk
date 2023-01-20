@@ -62,7 +62,7 @@ export type ReceiveMessageType =
   | 'recordingFailed'
   | 'layoutModeChanged'
   | 'activeSpeakerChanged'
-  | 'appError'
+  | 'appError';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -70,8 +70,10 @@ export interface SendMessage<D> {
 }
 
 export interface ReceiveMessage {
-  type: ReceiveMessageType;
-  payload: unknown;
+  DSPayload: {
+    type: ReceiveMessageType;
+    payload: unknown;
+  };
 }
 
 export enum LayoutMode {
