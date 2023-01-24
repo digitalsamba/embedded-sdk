@@ -1,19 +1,23 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DigitalSambaEmbedded = void 0;
 const errors_1 = require("./utils/errors");
+const events_1 = __importDefault(require("events"));
 const CONNECT_TIMEOUT = 10000;
 function isFunction(func) {
     return func instanceof Function;
 }
-class DigitalSambaEmbedded {
+class DigitalSambaEmbedded extends events_1.default {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
+        super();
         this.savedIframeSrc = '';
         this.allowedOrigin = '*';
         this.connected = false;
         this.frame = document.createElement('iframe');
-        this.eventHandlers = {};
         this.reportErrors = false;
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
@@ -50,9 +54,6 @@ class DigitalSambaEmbedded {
             this.applyFrameProperties(instanceProperties);
             this.frame.style.display = 'block';
         };
-        this.on = (type, handler) => {
-            this.eventHandlers[type] = handler;
-        };
         this.onMessage = (event) => {
             if (event.origin !== this.allowedOrigin) {
                 // ignore messages from other sources;
@@ -62,14 +63,9 @@ class DigitalSambaEmbedded {
             if (!message) {
                 return;
             }
-            if (typeof this.eventHandlers['*'] === 'function') {
-                this.eventHandlers['*'](message);
-            }
+            this.emit('*', message);
             if (message.type) {
-                const callback = this.eventHandlers[message.type];
-                if (isFunction(callback)) {
-                    callback(message);
-                }
+                this.emit(message.type, message);
             }
         };
         this.setFrameSrc = () => {
