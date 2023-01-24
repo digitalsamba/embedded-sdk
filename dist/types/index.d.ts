@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessageType } from './types';
+import { InitOptions, InstanceProperties, LayoutMode } from './types';
 import EventEmitter from 'events';
 export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
@@ -7,7 +7,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     allowedOrigin: string;
     connected: boolean;
     frame: HTMLIFrameElement;
-    eventHandlers: Partial<Record<ReceiveMessageType | '*', (payload: any) => void>>;
     reportErrors: boolean;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;

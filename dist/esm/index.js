@@ -12,7 +12,6 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.allowedOrigin = '*';
         this.connected = false;
         this.frame = document.createElement('iframe');
-        this.eventHandlers = {};
         this.reportErrors = false;
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
@@ -60,7 +59,6 @@ export class DigitalSambaEmbedded extends EventEmitter {
             }
             this.emit('*', message);
             if (message.type) {
-                console.warn(message.type, 'aaaa', message);
                 this.emit(message.type, message);
             }
         };
@@ -193,7 +191,6 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.logError(UNKNOWN_TARGET);
         }, CONNECT_TIMEOUT);
         this.on('connected', () => {
-            console.warn('aaa');
             this.connected = true;
             clearTimeout(confirmationTimeout);
         });
