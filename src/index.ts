@@ -1,11 +1,4 @@
-import {
-  InitOptions,
-  InstanceProperties,
-  LayoutMode,
-  ReceiveMessage,
-  ReceiveMessageType,
-  SendMessage,
-} from './types';
+import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessage, SendMessage } from './types';
 import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
