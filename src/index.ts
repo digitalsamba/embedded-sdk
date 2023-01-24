@@ -6,7 +6,6 @@ import {
   ReceiveMessageType,
   SendMessage,
 } from './types';
-
 import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
@@ -15,13 +14,15 @@ import {
   UNKNOWN_TARGET,
 } from './utils/errors';
 
+import EventEmitter from 'events';
+
 const CONNECT_TIMEOUT = 10000;
 
 function isFunction(func: any): func is (payload: any) => void {
   return func instanceof Function;
 }
 
-export class DigitalSambaEmbedded {
+export class DigitalSambaEmbedded extends EventEmitter {
   initOptions: Partial<InitOptions>;
 
   savedIframeSrc: string = '';
@@ -32,8 +33,6 @@ export class DigitalSambaEmbedded {
 
   frame: HTMLIFrameElement = document.createElement('iframe');
 
-  eventHandlers: Partial<Record<ReceiveMessageType | '*', (payload: any) => void>> = {};
-
   reportErrors: boolean = false;
 
   constructor(
@@ -41,6 +40,8 @@ export class DigitalSambaEmbedded {
     instanceProperties: Partial<InstanceProperties> = {},
     loadImmediately = true
   ) {
+    super();
+
     this.initOptions = options;
     this.reportErrors = instanceProperties.reportErrors || false;
 
@@ -102,10 +103,6 @@ export class DigitalSambaEmbedded {
     this.frame.style.display = 'block';
   };
 
-  on = (type: ReceiveMessageType, handler: (payload: any) => void) => {
-    this.eventHandlers[type] = handler;
-  };
-
   private onMessage = (event: MessageEvent<ReceiveMessage>) => {
     if (event.origin !== this.allowedOrigin) {
       // ignore messages from other sources;
@@ -118,16 +115,10 @@ export class DigitalSambaEmbedded {
       return;
     }
 
-    if (typeof this.eventHandlers['*'] === 'function') {
-      this.eventHandlers['*'](message);
-    }
+    this.emit('*', message);
 
     if (message.type) {
-      const callback = this.eventHandlers[message.type];
-
-      if (isFunction(callback)) {
-        callback(message);
-      }
+      this.emit(message.type, message);
     }
   };
 

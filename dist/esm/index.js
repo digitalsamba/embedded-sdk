@@ -1,11 +1,13 @@
 var _a;
 import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, UNKNOWN_TARGET, } from './utils/errors';
+import EventEmitter from 'events';
 const CONNECT_TIMEOUT = 10000;
 function isFunction(func) {
     return func instanceof Function;
 }
-export class DigitalSambaEmbedded {
+export class DigitalSambaEmbedded extends EventEmitter {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
+        super();
         this.savedIframeSrc = '';
         this.allowedOrigin = '*';
         this.connected = false;
@@ -47,9 +49,6 @@ export class DigitalSambaEmbedded {
             this.applyFrameProperties(instanceProperties);
             this.frame.style.display = 'block';
         };
-        this.on = (type, handler) => {
-            this.eventHandlers[type] = handler;
-        };
         this.onMessage = (event) => {
             if (event.origin !== this.allowedOrigin) {
                 // ignore messages from other sources;
@@ -59,14 +58,10 @@ export class DigitalSambaEmbedded {
             if (!message) {
                 return;
             }
-            if (typeof this.eventHandlers['*'] === 'function') {
-                this.eventHandlers['*'](message);
-            }
+            this.emit('*', message);
             if (message.type) {
-                const callback = this.eventHandlers[message.type];
-                if (isFunction(callback)) {
-                    callback(message);
-                }
+                console.warn(message.type, 'aaaa', message);
+                this.emit(message.type, message);
             }
         };
         this.setFrameSrc = () => {
@@ -198,6 +193,7 @@ export class DigitalSambaEmbedded {
             this.logError(UNKNOWN_TARGET);
         }, CONNECT_TIMEOUT);
         this.on('connected', () => {
+            console.warn('aaa');
             this.connected = true;
             clearTimeout(confirmationTimeout);
         });

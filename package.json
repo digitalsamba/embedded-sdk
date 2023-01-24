@@ -43,5 +43,8 @@
   },
   "ts-standard": {
     "project": "./tsconfig.json"
+  },
+  "dependencies": {
+    "events": "^3.3.0"
   }
 }

@@ -1,5 +1,7 @@
+/// <reference types="node" />
 import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessageType } from './types';
-export declare class DigitalSambaEmbedded {
+import EventEmitter from 'events';
+export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
     savedIframeSrc: string;
     allowedOrigin: string;
@@ -11,7 +13,6 @@ export declare class DigitalSambaEmbedded {
     static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;
     private mountFrame;
     load: (instanceProperties?: InstanceProperties) => void;
-    on: (type: ReceiveMessageType, handler: (payload: any) => void) => void;
     private onMessage;
     private setFrameSrc;
     private checkTarget;
