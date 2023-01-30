@@ -1,12 +1,4 @@
-import {
-  InitOptions,
-  InstanceProperties,
-  LayoutMode,
-  ReceiveMessage,
-  ReceiveMessageType,
-  SendMessage,
-} from './types';
-
+import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessage, SendMessage } from './types';
 import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
@@ -15,13 +7,15 @@ import {
   UNKNOWN_TARGET,
 } from './utils/errors';
 
-const CONNECT_TIMEOUT = 5000;
+import EventEmitter from 'events';
+
+const CONNECT_TIMEOUT = 10000;
 
 function isFunction(func: any): func is (payload: any) => void {
   return func instanceof Function;
 }
 
-export class DigitalSambaEmbedded {
+export class DigitalSambaEmbedded extends EventEmitter {
   initOptions: Partial<InitOptions>;
 
   savedIframeSrc: string = '';
@@ -32,8 +26,6 @@ export class DigitalSambaEmbedded {
 
   frame: HTMLIFrameElement = document.createElement('iframe');
 
-  eventHandlers: Partial<Record<ReceiveMessageType | '*', (payload: any) => void>> = {};
-
   reportErrors: boolean = false;
 
   constructor(
@@ -41,6 +33,8 @@ export class DigitalSambaEmbedded {
     instanceProperties: Partial<InstanceProperties> = {},
     loadImmediately = true
   ) {
+    super();
+
     this.initOptions = options;
     this.reportErrors = instanceProperties.reportErrors || false;
 
@@ -102,26 +96,22 @@ export class DigitalSambaEmbedded {
     this.frame.style.display = 'block';
   };
 
-  on = (type: ReceiveMessageType, handler: (payload: any) => void) => {
-    this.eventHandlers[type] = handler;
-  };
-
   private onMessage = (event: MessageEvent<ReceiveMessage>) => {
-    //     if (event.origin !== this.allowedOrigin) {
-    //       // ignore messages from other sources;
-    //       return;
-    //     }
-
-    if (typeof this.eventHandlers['*'] === 'function') {
-      this.eventHandlers['*'](event.data);
+    if (event.origin !== this.allowedOrigin) {
+      // ignore messages from other sources;
+      return;
     }
 
-    if (event.data.type) {
-      const callback = this.eventHandlers[event.data.type];
+    const message = event.data.DSPayload;
 
-      if (isFunction(callback)) {
-        callback(event.data);
-      }
+    if (!message) {
+      return;
+    }
+
+    this.emit('*', message);
+
+    if (message.type) {
+      this.emit(message.type, message);
     }
   };
 

@@ -10,7 +10,6 @@
 </head>
 <body>
 <div class="ifp" style="display: flex">
-  <iframe allow="camera; microphone; display-capture; autoplay;" src="<>" width="700" height="500" class="if"></iframe>
 
   <div class="log">
 
@@ -31,7 +30,7 @@
   <button class="c10">stopRecording</button>
   <button class="c11">showToolbar</button>
   <button class="c12">hideToolbar</button>
-  <button class="c13">hideToolbar</button>
+  <button class="c13">toggleToolbar</button>
   <button class="c14">auto layout</button>
   <button class="c15">tiled layout</button>
 </div>
@@ -65,7 +64,7 @@
   // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL});
+  const api = DigitalSambaEmbedded.createControl({  url: ROOM_URL});
 
   const log = document.querySelector('.log');
 
