@@ -45,7 +45,9 @@ export type SendMessageType =
   | 'showToolbar'
   | 'hideToolbar'
   | 'toggleToolbar'
-  | 'changeLayoutMode';
+  | 'changeLayoutMode'
+  | 'leaveSession'
+  | 'endSession';
 
 export type ReceiveMessageType =
   | 'connected'

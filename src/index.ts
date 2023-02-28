@@ -255,6 +255,14 @@ export class DigitalSambaEmbedded extends EventEmitter {
     this.sendMessage({ type: 'changeLayoutMode', data: mode });
   };
 
+  leaveSession = () => {
+    this.sendMessage({ type: 'leaveSession' });
+  };
+
+  endSession = () => {
+    this.sendMessage({ type: 'endSession' });
+  };
+
   toggleToolbar = (show?: boolean) => {
     if (typeof show === 'undefined') {
       this.sendMessage({ type: 'toggleToolbar' });

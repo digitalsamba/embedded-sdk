@@ -167,6 +167,12 @@ class DigitalSambaEmbedded extends events_1.default {
         this.changeLayoutMode = (mode) => {
             this.sendMessage({ type: 'changeLayoutMode', data: mode });
         };
+        this.leaveSession = () => {
+            this.sendMessage({ type: 'leaveSession' });
+        };
+        this.endSession = () => {
+            this.sendMessage({ type: 'endSession' });
+        };
         this.toggleToolbar = (show) => {
             if (typeof show === 'undefined') {
                 this.sendMessage({ type: 'toggleToolbar' });
