@@ -140,7 +140,6 @@ api.disableAudio();
 - `activeSpeakerChanged`
 
 ### Available commands:
-- `listParticipants()`
 - `enableVideo()`
 - `disableVideo()`
 - `toggleVideo(newState?: boolean)`

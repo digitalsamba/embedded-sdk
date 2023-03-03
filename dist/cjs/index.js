@@ -184,6 +184,23 @@ class DigitalSambaEmbedded extends events_1.default {
                 this.hideToolbar();
             }
         };
+        this.requestToggleAudio = (userId, shouldMute) => {
+            if (typeof shouldMute === 'undefined') {
+                this.sendMessage({ type: 'requestToggleAudio', data: userId });
+            }
+            else if (shouldMute) {
+                this.requestMute(userId);
+            }
+            else {
+                this.requestUnmute(userId);
+            }
+        };
+        this.requestMute = (userId) => {
+            this.sendMessage({ type: 'requestMute', data: userId });
+        };
+        this.requestUnmute = (userId) => {
+            this.sendMessage({ type: 'requestUnmute', data: userId });
+        };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
