@@ -31,5 +31,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     showToolbar: () => void;
     hideToolbar: () => void;
     changeLayoutMode: (mode: LayoutMode) => void;
+    leaveSession: () => void;
+    endSession: () => void;
     toggleToolbar: (show?: boolean) => void;
 }
