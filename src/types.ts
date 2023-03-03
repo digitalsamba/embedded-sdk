@@ -47,7 +47,10 @@ export type SendMessageType =
   | 'toggleToolbar'
   | 'changeLayoutMode'
   | 'leaveSession'
-  | 'endSession';
+  | 'endSession'
+  | 'requestToggleAudio'
+  | 'requestMute'
+  | 'requestUnmute';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -82,3 +85,5 @@ export enum LayoutMode {
   tiled = 'tiled',
   auto = 'auto',
 }
+
+export type UserId = string;
