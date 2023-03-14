@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode } from './types';
+import { InitOptions, InstanceProperties, LayoutMode, UserId } from './types';
 import EventEmitter from 'events';
 export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
@@ -31,5 +31,10 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     showToolbar: () => void;
     hideToolbar: () => void;
     changeLayoutMode: (mode: LayoutMode) => void;
+    leaveSession: () => void;
+    endSession: () => void;
     toggleToolbar: (show?: boolean) => void;
+    requestToggleAudio: (userId: UserId, shouldMute?: boolean) => void;
+    requestMute: (userId: UserId) => void;
+    requestUnmute: (userId: UserId) => void;
 }

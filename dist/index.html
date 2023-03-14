@@ -33,6 +33,8 @@
   <button class="c13">toggleToolbar</button>
   <button class="c14">auto layout</button>
   <button class="c15">tiled layout</button>
+  <button class="c16">leave session</button>
+  <button class="c17">end session</button>
 </div>
 
 <script async defer>
@@ -54,6 +56,8 @@
   const btn13 = document.querySelector('.c13');
   const btn14 = document.querySelector('.c14');
   const btn15 = document.querySelector('.c15');
+  const btn16 = document.querySelector('.c16');
+  const btn17 = document.querySelector('.c17');
 
   // change these values to connect to your room
   const TEAM = 'some-team';
@@ -87,6 +91,8 @@
   btn13.onclick = () => {api.toggleToolbar()}
   btn14.onclick = () => {api.changeLayoutMode('auto')}
   btn15.onclick = () => {api.changeLayoutMode('tiled')}
+  btn16.onclick = () => {api.leaveSession()}
+  btn17.onclick = () => {api.endSession()}
 
   api.on('*', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`

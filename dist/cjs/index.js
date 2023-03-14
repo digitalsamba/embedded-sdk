@@ -167,6 +167,12 @@ class DigitalSambaEmbedded extends events_1.default {
         this.changeLayoutMode = (mode) => {
             this.sendMessage({ type: 'changeLayoutMode', data: mode });
         };
+        this.leaveSession = () => {
+            this.sendMessage({ type: 'leaveSession' });
+        };
+        this.endSession = () => {
+            this.sendMessage({ type: 'endSession' });
+        };
         this.toggleToolbar = (show) => {
             if (typeof show === 'undefined') {
                 this.sendMessage({ type: 'toggleToolbar' });
@@ -177,6 +183,23 @@ class DigitalSambaEmbedded extends events_1.default {
             else {
                 this.hideToolbar();
             }
+        };
+        this.requestToggleAudio = (userId, shouldMute) => {
+            if (typeof shouldMute === 'undefined') {
+                this.sendMessage({ type: 'requestToggleAudio', data: userId });
+            }
+            else if (shouldMute) {
+                this.requestMute(userId);
+            }
+            else {
+                this.requestUnmute(userId);
+            }
+        };
+        this.requestMute = (userId) => {
+            this.sendMessage({ type: 'requestMute', data: userId });
+        };
+        this.requestUnmute = (userId) => {
+            this.sendMessage({ type: 'requestUnmute', data: userId });
         };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;

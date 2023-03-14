@@ -92,10 +92,13 @@ api.on('appError', (error) => {
   console.log(error);
 
   /* outputs  {
-      name: 'recording-not-allowed',
+      name: 'not-allowed',
       message:
         'Recording disabled. You’ll need to edit this room’s properties to record sessions in this room',
-    }
+      data: {
+        type: 'recording'
+      }
+    },
   */
 });
 ```
@@ -137,7 +140,6 @@ api.disableAudio();
 - `activeSpeakerChanged`
 
 ### Available commands:
-
 - `enableVideo()`
 - `disableVideo()`
 - `toggleVideo(newState?: boolean)`
@@ -152,3 +154,8 @@ api.disableAudio();
 - `hideToolbar()`
 - `toggleToolbar(newState?: boolean)`
 - `changeLayoutMode(mode: 'tiled' | 'auto')`
+- `leaveSession()`
+- `endSession()`
+- `requestToggleAudio(userId: string)`
+- `requestMute(userId: string)`
+- `requestUnmute(userId: string)`

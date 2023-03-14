@@ -1,4 +1,11 @@
-import { InitOptions, InstanceProperties, LayoutMode, ReceiveMessage, SendMessage } from './types';
+import {
+  InitOptions,
+  InstanceProperties,
+  LayoutMode,
+  ReceiveMessage,
+  SendMessage,
+  UserId,
+} from './types';
 import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
@@ -255,6 +262,14 @@ export class DigitalSambaEmbedded extends EventEmitter {
     this.sendMessage({ type: 'changeLayoutMode', data: mode });
   };
 
+  leaveSession = () => {
+    this.sendMessage({ type: 'leaveSession' });
+  };
+
+  endSession = () => {
+    this.sendMessage({ type: 'endSession' });
+  };
+
   toggleToolbar = (show?: boolean) => {
     if (typeof show === 'undefined') {
       this.sendMessage({ type: 'toggleToolbar' });
@@ -263,5 +278,23 @@ export class DigitalSambaEmbedded extends EventEmitter {
     } else {
       this.hideToolbar();
     }
+  };
+
+  requestToggleAudio = (userId: UserId, shouldMute?: boolean) => {
+    if (typeof shouldMute === 'undefined') {
+      this.sendMessage({ type: 'requestToggleAudio', data: userId });
+    } else if (shouldMute) {
+      this.requestMute(userId);
+    } else {
+      this.requestUnmute(userId);
+    }
+  };
+
+  requestMute = (userId: UserId) => {
+    this.sendMessage({ type: 'requestMute', data: userId });
+  };
+
+  requestUnmute = (userId: UserId) => {
+    this.sendMessage({ type: 'requestUnmute', data: userId });
   };
 }
