@@ -8,9 +8,9 @@ exports.DigitalSambaEmbedded = void 0;
 const errors_1 = require("./utils/errors");
 const events_1 = __importDefault(require("events"));
 const CONNECT_TIMEOUT = 10000;
-function isFunction(func) {
-    return func instanceof Function;
-}
+const internalEvents = {
+    roomJoined: true,
+};
 class DigitalSambaEmbedded extends events_1.default {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
@@ -19,6 +19,9 @@ class DigitalSambaEmbedded extends events_1.default {
         this.connected = false;
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
+        this.stored = {
+            users: {},
+        };
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -63,10 +66,50 @@ class DigitalSambaEmbedded extends events_1.default {
             if (!message) {
                 return;
             }
-            this.emit('*', message);
             if (message.type) {
-                this.emit(message.type, message);
+                if (internalEvents[message.type]) {
+                    this.handleInternalMessage(event.data);
+                }
+                else {
+                    this._emit(message.type, message);
+                }
             }
+        };
+        this.setupInternalEventListeners = () => {
+            this.on('userJoined', (event) => {
+                const { user, type } = event.data;
+                this.stored.users[user.id] = Object.assign(Object.assign({}, user), { kind: type });
+                this.emitUsersUpdated();
+            });
+            this.on('userLeft', (event) => {
+                var _b, _c;
+                console.warn('event,', event, '--');
+                if ((_c = (_b = event.data) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.id) {
+                    console.warn('-ss--s');
+                    delete this.stored.users[event.data.user.id];
+                }
+                this.emitUsersUpdated();
+            });
+        };
+        this._emit = (eventName, ...args) => {
+            this.emit('*', ...args);
+            return this.emit(eventName, ...args);
+        };
+        this.handleInternalMessage = (event) => {
+            const message = event.DSPayload;
+            switch (message.type) {
+                case 'roomJoined': {
+                    this.stored.users = message.data.users;
+                    this.emitUsersUpdated();
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        };
+        this.emitUsersUpdated = () => {
+            this._emit('usersUpdated', { type: 'usersUpdated', data: { users: this.listUsers() } });
         };
         this.setFrameSrc = () => {
             let url = this.savedIframeSrc;
@@ -201,6 +244,10 @@ class DigitalSambaEmbedded extends events_1.default {
         this.requestUnmute = (userId) => {
             this.sendMessage({ type: 'requestUnmute', data: userId });
         };
+        this.removeUser = (userId) => {
+            this.sendMessage({ type: 'removeUser', data: userId });
+        };
+        this.listUsers = () => Object.values(this.stored.users);
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
@@ -213,6 +260,7 @@ class DigitalSambaEmbedded extends events_1.default {
             this.frame.style.display = 'none';
         }
         window.addEventListener('message', this.onMessage);
+        this.setupInternalEventListeners();
     }
     checkTarget() {
         this.sendMessage({ type: 'connect' });

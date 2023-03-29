@@ -5,7 +5,10 @@ import {
   ReceiveMessage,
   SendMessage,
   UserId,
+  Stored,
+  UsersList,
 } from './types';
+
 import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
@@ -18,9 +21,9 @@ import EventEmitter from 'events';
 
 const CONNECT_TIMEOUT = 10000;
 
-function isFunction(func: any): func is (payload: any) => void {
-  return func instanceof Function;
-}
+const internalEvents: Record<string, boolean> = {
+  roomJoined: true,
+};
 
 export class DigitalSambaEmbedded extends EventEmitter {
   initOptions: Partial<InitOptions>;
@@ -34,6 +37,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
   frame: HTMLIFrameElement = document.createElement('iframe');
 
   reportErrors: boolean = false;
+
+  private stored: Stored = {
+    users: {},
+  };
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -57,6 +64,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
     }
 
     window.addEventListener('message', this.onMessage);
+
+    this.setupInternalEventListeners();
   }
 
   static createControl = (initOptions: InitOptions) => new this(initOptions, {}, false);
@@ -115,11 +124,60 @@ export class DigitalSambaEmbedded extends EventEmitter {
       return;
     }
 
-    this.emit('*', message);
-
     if (message.type) {
-      this.emit(message.type, message);
+      if (internalEvents[message.type]) {
+        this.handleInternalMessage(event.data);
+      } else {
+        this._emit(message.type, message);
+      }
     }
+  };
+
+  private setupInternalEventListeners = () => {
+    this.on('userJoined', (event) => {
+      const { user, type } = event.data;
+
+      this.stored.users[user.id] = {
+        ...user,
+        kind: type,
+      };
+
+      this.emitUsersUpdated();
+    });
+
+    this.on('userLeft', (event) => {
+      if (event.data?.user?.id) {
+        delete this.stored.users[event.data.user.id];
+      }
+
+      this.emitUsersUpdated();
+    });
+  };
+
+  private _emit = (eventName: string | symbol, ...args: any[]) => {
+    this.emit('*', ...args);
+
+    return this.emit(eventName, ...args);
+  };
+
+  private handleInternalMessage = (event: ReceiveMessage) => {
+    const message = event.DSPayload;
+
+    switch (message.type) {
+      case 'roomJoined': {
+        this.stored.users = (message.data as any).users as UsersList;
+
+        this.emitUsersUpdated();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  };
+
+  private emitUsersUpdated = () => {
+    this._emit('usersUpdated', { type: 'usersUpdated', data: { users: this.listUsers() } });
   };
 
   private setFrameSrc = () => {
@@ -297,4 +355,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
   requestUnmute = (userId: UserId) => {
     this.sendMessage({ type: 'requestUnmute', data: userId });
   };
+
+  removeUser = (userId: UserId) => {
+    this.sendMessage({ type: 'removeUser', data: userId });
+  };
+
+  listUsers = () => Object.values(this.stored.users);
 }

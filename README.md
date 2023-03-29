@@ -127,6 +127,7 @@ api.disableAudio();
 - `appError`
 - `userJoined`
 - `userLeft`
+- `usersUpdated`
 - `videoEnabled`
 - `videoDisabled`
 - `audioEnabled`

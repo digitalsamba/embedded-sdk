@@ -26,8 +26,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute';
-export type ReceiveMessageType = 'connected' | 'userJoined' | 'userLeft' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError';
+export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser';
+export type ReceiveMessageType = 'connected' | 'userJoined' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError';
 export interface SendMessage<D> {
     type: SendMessageType;
     data?: D;
@@ -35,7 +35,7 @@ export interface SendMessage<D> {
 export interface ReceiveMessage {
     DSPayload: {
         type: ReceiveMessageType;
-        payload: unknown;
+        data: unknown;
     };
 }
 export declare enum LayoutMode {
@@ -43,3 +43,14 @@ export declare enum LayoutMode {
     auto = "auto"
 }
 export type UserId = string;
+export interface User {
+    avatarColor: string;
+    id: UserId;
+    name: string;
+    role: string;
+    kind: 'local' | 'remote';
+}
+export type UsersList = Record<UserId, User>;
+export interface Stored {
+    users: UsersList;
+}

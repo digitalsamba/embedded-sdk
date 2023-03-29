@@ -50,12 +50,14 @@ export type SendMessageType =
   | 'endSession'
   | 'requestToggleAudio'
   | 'requestMute'
-  | 'requestUnmute';
+  | 'requestUnmute'
+  | 'removeUser';
 
 export type ReceiveMessageType =
   | 'connected'
   | 'userJoined'
   | 'userLeft'
+  | 'roomJoined'
   | 'videoEnabled'
   | 'videoDisabled'
   | 'audioEnabled'
@@ -77,7 +79,7 @@ export interface SendMessage<D> {
 export interface ReceiveMessage {
   DSPayload: {
     type: ReceiveMessageType;
-    payload: unknown;
+    data: unknown;
   };
 }
 
@@ -87,3 +89,17 @@ export enum LayoutMode {
 }
 
 export type UserId = string;
+
+export interface User {
+  avatarColor: string;
+  id: UserId;
+  name: string;
+  role: string;
+  kind: 'local' | 'remote';
+}
+
+export type UsersList = Record<UserId, User>;
+
+export interface Stored {
+  users: UsersList;
+}

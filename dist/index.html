@@ -7,14 +7,39 @@
   <title>Document</title>
   <!--  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>-->
   <script src="./umd/index.js"></script>
+  <style>
+    .user-list-row {
+      display: flex;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .user-list-avatar {
+      width: 24px;
+      height: 24px;
+      display: block;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .log p {
+      font-size: 14px;
+      line-height: 1;
+      margin: 0 0 4px
+    }
+  </style>
 </head>
 <body>
-<div class="ifp" style="display: flex">
-
-  <div class="log">
+<div style="display: flex">
+  <div class="ifp">
 
   </div>
+  <div style="min-width: 300px ; padding: 0 16px">
+    <h3>Room users:</h3>
+    <div class="participants">
 
+    </div>
+  </div>
 </div>
 <div class="div" style=" border: 1px solid yellow">
   <button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>
@@ -36,10 +61,15 @@
   <button class="c16">leave session</button>
   <button class="c17">end session</button>
 </div>
+<div class="log">
+
+</div>
 
 <script async defer>
   const parent = document.querySelector('.ifp');
   const frame = document.querySelector('.if');
+  const participantList = document.querySelector('.participants');
+
   const btn0 = document.querySelector('.c0');
   const btn1 = document.querySelector('.c1');
   const btn2 = document.querySelector('.c2');
@@ -68,7 +98,7 @@
   // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  const api = DigitalSambaEmbedded.createControl({  url: ROOM_URL});
+  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent });
 
   const log = document.querySelector('.log');
 
@@ -95,7 +125,7 @@
   btn17.onclick = () => {api.endSession()}
 
   api.on('*', (data) => {
-    log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`
+    log.innerHTML += `<p>${Number(new Date)}: ev(${data?.type}): ${JSON.stringify(data)}</p>`
   });
 
 
@@ -106,6 +136,51 @@
   api.on('userLeft', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: USER LEFT: ${JSON.stringify(data)}</p>`
   });
+
+
+  api.on('usersUpdated', ({data: {users}}) => {
+    participantList.innerHTML = '';
+
+
+    users.forEach(user => {
+      const row = document.createElement('div');
+      row.className = 'user-list-row';
+
+      const avatar = document.createElement('span');
+      avatar.className = 'user-list-avatar';
+      avatar.style.background = user.avatarColor;
+      row.appendChild(avatar);
+
+
+      const name = document.createElement('span');
+      name.className = 'user-list-name';
+      name.innerText = user.name;
+      row.appendChild(name);
+
+      if(user.kind === 'local') {
+        const label = document.createElement('span');
+        label.className = 'user-list-label';
+        label.innerText = '(you)'
+        label.style.color = '#777';
+        row.appendChild(label);
+      } else {
+        const micControl = document.createElement('button');
+        micControl.innerHTML = 'toggle mic'
+        micControl.style.margin = '0 4px';
+        micControl.onclick = () => {api.requestToggleAudio(user.id)}
+        row.appendChild(micControl);
+
+        const kickControl = document.createElement('button');
+        kickControl.innerHTML = 'kick'
+        kickControl.style.margin = '0 4px';
+        kickControl.onclick = () => {api.removeUser(user.id)}
+        row.appendChild(kickControl);
+      }
+
+      participantList.appendChild(row);
+
+    })
+  })
 
 </script>
 
