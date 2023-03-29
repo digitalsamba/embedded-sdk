@@ -83,9 +83,7 @@ class DigitalSambaEmbedded extends events_1.default {
             });
             this.on('userLeft', (event) => {
                 var _b, _c;
-                console.warn('event,', event, '--');
                 if ((_c = (_b = event.data) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.id) {
-                    console.warn('-ss--s');
                     delete this.stored.users[event.data.user.id];
                 }
                 this.emitUsersUpdated();
