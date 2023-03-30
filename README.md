@@ -121,7 +121,6 @@ api.toggleVideo();
 api.disableAudio();
 ```
 
-
 ---
 
 ### Available events:
