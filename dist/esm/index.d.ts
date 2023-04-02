@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode, UserId } from './types';
+import { InitOptions, InstanceProperties, LayoutMode, UserId, CaptionsOptions } from './types';
 import EventEmitter from 'events';
 export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
@@ -44,4 +44,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     requestUnmute: (userId: UserId) => void;
     removeUser: (userId: UserId) => void;
     listUsers: () => import("./types").User[];
+    showCaptions: () => void;
+    hideCaptions: () => void;
+    toggleCaptions: (show?: boolean) => void;
+    configureCaptions: (options: Partial<CaptionsOptions>) => void;
 }

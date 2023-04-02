@@ -51,7 +51,11 @@ export type SendMessageType =
   | 'requestToggleAudio'
   | 'requestMute'
   | 'requestUnmute'
-  | 'removeUser';
+  | 'removeUser'
+  | 'showCaptions'
+  | 'hideCaptions'
+  | 'toggleCaptions'
+  | 'configureCaptions';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -69,7 +73,9 @@ export type ReceiveMessageType =
   | 'recordingFailed'
   | 'layoutModeChanged'
   | 'activeSpeakerChanged'
-  | 'appError';
+  | 'appError'
+  | 'captionsSpokenLanguageChanged'
+  | 'captionsFontSizeChanged';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -102,4 +108,45 @@ export type UsersList = Record<UserId, User>;
 
 export interface Stored {
   users: UsersList;
+}
+
+export type CaptionsSpokenLanguage =
+  | 'zh'
+  | 'zh-CN'
+  | 'zh-TW'
+  | 'da'
+  | 'nl'
+  | 'en'
+  | 'en-AU'
+  | 'en-GB'
+  | 'en-IN'
+  | 'en-NZ'
+  | 'en-US'
+  | 'fr'
+  | 'fr-CA'
+  | 'de'
+  | 'hi'
+  | 'hi-Latn'
+  | 'id'
+  | 'it'
+  | 'ja'
+  | 'ko'
+  | 'no'
+  | 'pl'
+  | 'pt'
+  | 'pt-BR'
+  | 'pt-PT'
+  | 'ru'
+  | 'es'
+  | 'es-419'
+  | 'sv'
+  | 'ta'
+  | 'tr'
+  | 'uk';
+
+type CaptionsFontSize = 'small' | 'medium' | 'large';
+
+export interface CaptionsOptions {
+  spokenLanguage: CaptionsSpokenLanguage;
+  fontSize: CaptionsFontSize;
 }

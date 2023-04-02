@@ -7,6 +7,7 @@ import {
   UserId,
   Stored,
   UsersList,
+  CaptionsOptions,
 } from './types';
 
 import {
@@ -361,4 +362,26 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   listUsers = () => Object.values(this.stored.users);
+
+  showCaptions = () => {
+    this.sendMessage({ type: 'showCaptions' });
+  };
+
+  hideCaptions = () => {
+    this.sendMessage({ type: 'hideCaptions' });
+  };
+
+  toggleCaptions = (show?: boolean) => {
+    if (typeof show === 'undefined') {
+      this.sendMessage({ type: 'toggleCaptions' });
+    } else if (show) {
+      this.showCaptions();
+    } else {
+      this.hideCaptions();
+    }
+  };
+
+  configureCaptions = (options: Partial<CaptionsOptions>) => {
+    this.sendMessage({ type: 'configureCaptions', data: options || {} });
+  };
 }
