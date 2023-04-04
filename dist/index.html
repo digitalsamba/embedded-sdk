@@ -138,13 +138,30 @@
     log.innerHTML += `<p>${Number(new Date)}: ev(${data?.type}): ${JSON.stringify(data)}</p>`
   });
 
-
   api.on('userJoined', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: USER JOINED: ${JSON.stringify(data)}</p>`
   });
 
   api.on('userLeft', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: USER LEFT: ${JSON.stringify(data)}</p>`
+  });
+
+  api.on('permissionsChanged', ({ data }) => {
+    if(data.broadcast !== undefined){
+      if(data.broadcast) {
+        alert('You were granted broadcast permission')
+      } else {
+        alert('Your permission to broadcast was rejected')
+      }
+    }
+
+    if(data.screenshare !== undefined){
+      if(data.screenshare) {
+        alert('You were granted screenshare permission')
+      } else {
+        alert('Your permission to screenshare was rejected')
+      }
+    }
   });
 
 

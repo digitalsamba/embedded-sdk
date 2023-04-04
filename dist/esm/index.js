@@ -15,6 +15,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.reportErrors = false;
         this.stored = {
             users: {},
+            localUserPermissions: {},
         };
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
@@ -81,6 +82,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     delete this.stored.users[event.data.user.id];
                 }
                 this.emitUsersUpdated();
+            });
+            this.on('permissionsChanged', (event) => {
+                this.stored.localUserPermissions = Object.assign(Object.assign({}, this.stored.localUserPermissions), (event.data || {}));
             });
         };
         this._emit = (eventName, ...args) => {

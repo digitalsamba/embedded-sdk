@@ -41,6 +41,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   private stored: Stored = {
     users: {},
+    localUserPermissions: {},
   };
 
   constructor(
@@ -152,6 +153,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
       }
 
       this.emitUsersUpdated();
+    });
+
+    this.on('permissionsChanged', (event) => {
+      this.stored.localUserPermissions = {
+        ...this.stored.localUserPermissions,
+        ...(event.data || {}),
+      };
     });
   };
 
