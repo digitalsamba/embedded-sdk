@@ -15,6 +15,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.reportErrors = false;
         this.stored = {
             users: {},
+            localUserPermissions: {},
         };
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
@@ -81,6 +82,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     delete this.stored.users[event.data.user.id];
                 }
                 this.emitUsersUpdated();
+            });
+            this.on('permissionsChanged', (event) => {
+                this.stored.localUserPermissions = Object.assign(Object.assign({}, this.stored.localUserPermissions), (event.data || {}));
             });
         };
         this._emit = (eventName, ...args) => {
@@ -240,6 +244,26 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.sendMessage({ type: 'removeUser', data: userId });
         };
         this.listUsers = () => Object.values(this.stored.users);
+        this.showCaptions = () => {
+            this.sendMessage({ type: 'showCaptions' });
+        };
+        this.hideCaptions = () => {
+            this.sendMessage({ type: 'hideCaptions' });
+        };
+        this.toggleCaptions = (show) => {
+            if (typeof show === 'undefined') {
+                this.sendMessage({ type: 'toggleCaptions' });
+            }
+            else if (show) {
+                this.showCaptions();
+            }
+            else {
+                this.hideCaptions();
+            }
+        };
+        this.configureCaptions = (options) => {
+            this.sendMessage({ type: 'configureCaptions', data: options || {} });
+        };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';

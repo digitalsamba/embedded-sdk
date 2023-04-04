@@ -139,6 +139,8 @@ api.disableAudio();
 - `recordingFailed`
 - `layoutModeChanged`
 - `activeSpeakerChanged`
+- `captionsFontSizeChanged`
+- `captionsSpokenLanguageChanged`
 
 ### Available commands:
 - `enableVideo()`
@@ -160,3 +162,7 @@ api.disableAudio();
 - `requestToggleAudio(userId: string)`
 - `requestMute(userId: string)`
 - `requestUnmute(userId: string)`
+- `showCaptions()`
+- `hideCaptions()`
+- `toggleCaptions(newState?: boolean)`
+- `configureCaptions({ fontSize: 'small' | 'medium' | 'large', spokenLanguag: <>' })`

@@ -26,8 +26,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser';
-export type ReceiveMessageType = 'connected' | 'userJoined' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError';
+export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions';
+export type ReceiveMessageType = 'connected' | 'userJoined' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError' | 'captionsSpokenLanguageChanged' | 'captionsFontSizeChanged' | 'permissionsChanged';
 export interface SendMessage<D> {
     type: SendMessageType;
     data?: D;
@@ -51,6 +51,16 @@ export interface User {
     kind: 'local' | 'remote';
 }
 export type UsersList = Record<UserId, User>;
+interface Permissions {
+}
 export interface Stored {
     users: UsersList;
+    localUserPermissions: Partial<Permissions>;
 }
+export type CaptionsSpokenLanguage = 'zh' | 'zh-CN' | 'zh-TW' | 'da' | 'nl' | 'en' | 'en-AU' | 'en-GB' | 'en-IN' | 'en-NZ' | 'en-US' | 'fr' | 'fr-CA' | 'de' | 'hi' | 'hi-Latn' | 'id' | 'it' | 'ja' | 'ko' | 'no' | 'pl' | 'pt' | 'pt-BR' | 'pt-PT' | 'ru' | 'es' | 'es-419' | 'sv' | 'ta' | 'tr' | 'uk';
+type CaptionsFontSize = 'small' | 'medium' | 'large';
+export interface CaptionsOptions {
+    spokenLanguage: CaptionsSpokenLanguage;
+    fontSize: CaptionsFontSize;
+}
+export {};
