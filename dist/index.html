@@ -71,7 +71,15 @@
   // change these values to connect to your room
   const TEAM = 'some-team';
   const ROOM = 'some-room';
-  const ROOM_URL = 'https://localhost:3000/Public'
+  let ROOM_URL = 'https://localhost:3000/Public'
+
+  if(window.location.search) {
+    const params = new URLSearchParams(window.location.search);
+    const dynamicRoomUrl = params.get('roomUrl');
+    if(dynamicRoomUrl) {
+      ROOM_URL = dynamicRoomUrl
+    }
+  }
 
   //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
   // const api = new DigitalSambaEmbedded({ frame});
