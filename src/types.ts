@@ -75,7 +75,8 @@ export type ReceiveMessageType =
   | 'activeSpeakerChanged'
   | 'appError'
   | 'captionsSpokenLanguageChanged'
-  | 'captionsFontSizeChanged';
+  | 'captionsFontSizeChanged'
+  | 'permissionsChanged';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -106,8 +107,11 @@ export interface User {
 
 export type UsersList = Record<UserId, User>;
 
+interface Permissions {}
+
 export interface Stored {
   users: UsersList;
+  localUserPermissions: Partial<Permissions>;
 }
 
 export type CaptionsSpokenLanguage =
