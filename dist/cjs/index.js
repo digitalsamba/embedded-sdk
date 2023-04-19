@@ -14,7 +14,7 @@ const internalEvents = {
 class DigitalSambaEmbedded extends events_1.default {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
-        this.roomState = {};
+        this.roomSettings = {};
         this.savedIframeSrc = '';
         this.allowedOrigin = '*';
         this.connected = false;
@@ -159,11 +159,11 @@ class DigitalSambaEmbedded extends events_1.default {
         };
         // commands
         this.enableVideo = () => {
-            this.roomState.cameraEnabled = true;
+            this.roomSettings.cameraEnabled = true;
             this.sendMessage({ type: 'enableVideo' });
         };
         this.disableVideo = () => {
-            this.roomState.cameraEnabled = false;
+            this.roomSettings.cameraEnabled = false;
             this.sendMessage({ type: 'disableVideo' });
         };
         this.toggleVideo = (enable) => {
@@ -178,11 +178,11 @@ class DigitalSambaEmbedded extends events_1.default {
             }
         };
         this.enableAudio = () => {
-            this.roomState.micEnabled = true;
+            this.roomSettings.micEnabled = true;
             this.sendMessage({ type: 'enableAudio' });
         };
         this.disableAudio = () => {
-            this.roomState.micEnabled = false;
+            this.roomSettings.micEnabled = false;
             this.sendMessage({ type: 'disableAudio' });
         };
         this.toggleAudio = (enable) => {
@@ -209,15 +209,15 @@ class DigitalSambaEmbedded extends events_1.default {
             this.sendMessage({ type: 'stopRecording' });
         };
         this.showToolbar = () => {
-            this.roomState.showToolbar = true;
+            this.roomSettings.showToolbar = true;
             this.sendMessage({ type: 'showToolbar' });
         };
         this.hideToolbar = () => {
-            this.roomState.showToolbar = false;
+            this.roomSettings.showToolbar = false;
             this.sendMessage({ type: 'hideToolbar' });
         };
         this.changeLayoutMode = (mode) => {
-            this.roomState.layoutMode = mode;
+            this.roomSettings.layoutMode = mode;
             this.sendMessage({ type: 'changeLayoutMode', data: mode });
         };
         this.leaveSession = () => {
@@ -259,11 +259,11 @@ class DigitalSambaEmbedded extends events_1.default {
         };
         this.listUsers = () => Object.values(this.stored.users);
         this.showCaptions = () => {
-            this.roomState.showCaptions = true;
+            this.roomSettings.showCaptions = true;
             this.sendMessage({ type: 'showCaptions' });
         };
         this.hideCaptions = () => {
-            this.roomState.showCaptions = false;
+            this.roomSettings.showCaptions = false;
             this.sendMessage({ type: 'hideCaptions' });
         };
         this.toggleCaptions = (show) => {
@@ -281,7 +281,7 @@ class DigitalSambaEmbedded extends events_1.default {
             this.sendMessage({ type: 'configureCaptions', data: options || {} });
         };
         this.initOptions = options;
-        this.roomState = options.roomState || {};
+        this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
         this.frame.setAttribute('allowFullscreen', 'true');
@@ -296,7 +296,7 @@ class DigitalSambaEmbedded extends events_1.default {
         this.setupInternalEventListeners();
     }
     checkTarget() {
-        this.sendMessage({ type: 'connect', data: this.roomState || {} });
+        this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
         const confirmationTimeout = window.setTimeout(() => {
             this.logError(errors_1.UNKNOWN_TARGET);
         }, CONNECT_TIMEOUT);

@@ -6,7 +6,7 @@ export declare enum AppLayout {
     tiled = "tiled",
     tiled_content = "tiled_content"
 }
-export interface InitState {
+export interface RoomSettings {
     cameraEnabled: boolean;
     micEnabled: boolean;
     username: string;
@@ -21,7 +21,7 @@ export type InitOptions = {
     team: string;
     room: string;
     token?: string;
-    roomState: Partial<InitState>;
+    roomSettings: Partial<RoomSettings>;
 };
 export type FrameAttributes = {
     align: string;

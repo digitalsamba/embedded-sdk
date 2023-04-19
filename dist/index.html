@@ -85,8 +85,8 @@
   // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  const roomState = {
-    username: "'https://localhost:3000/Private?token=eyJhbGciOiJI",
+  const initialRoomState = {
+    username: "User Name",
     micEnabled: true,
     cameraEnabled: true,
     showToolbar: false,
@@ -94,7 +94,7 @@
     layoutMode: 'auto'
   }
 
-  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent, roomState: roomState });
+  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent, roomSettings: initialRoomState });
 
   const log = document.querySelector('.log');
 

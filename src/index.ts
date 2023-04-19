@@ -8,7 +8,7 @@ import {
   Stored,
   UsersList,
   CaptionsOptions,
-  InitState,
+  RoomSettings,
 } from './types';
 
 import {
@@ -29,7 +29,7 @@ const internalEvents: Record<string, boolean> = {
 
 export class DigitalSambaEmbedded extends EventEmitter {
   initOptions: Partial<InitOptions>;
-  roomState: Partial<InitState> = {};
+  roomSettings: Partial<RoomSettings> = {};
 
   savedIframeSrc: string = '';
 
@@ -54,7 +54,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
     super();
 
     this.initOptions = options;
-    this.roomState = options.roomState || {};
+    this.roomSettings = options.roomSettings || {};
 
     this.reportErrors = instanceProperties.reportErrors || false;
 
@@ -225,7 +225,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   private checkTarget() {
-    this.sendMessage({ type: 'connect', data: this.roomState || {} });
+    this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
 
     const confirmationTimeout = window.setTimeout(() => {
       this.logError(UNKNOWN_TARGET);
@@ -274,13 +274,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   // commands
   enableVideo = () => {
-    this.roomState.cameraEnabled = true;
+    this.roomSettings.cameraEnabled = true;
 
     this.sendMessage({ type: 'enableVideo' });
   };
 
   disableVideo = () => {
-    this.roomState.cameraEnabled = false;
+    this.roomSettings.cameraEnabled = false;
 
     this.sendMessage({ type: 'disableVideo' });
   };
@@ -296,12 +296,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   enableAudio = () => {
-    this.roomState.micEnabled = true;
+    this.roomSettings.micEnabled = true;
     this.sendMessage({ type: 'enableAudio' });
   };
 
   disableAudio = () => {
-    this.roomState.micEnabled = false;
+    this.roomSettings.micEnabled = false;
     this.sendMessage({ type: 'disableAudio' });
   };
 
@@ -332,17 +332,17 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   showToolbar = () => {
-    this.roomState.showToolbar = true;
+    this.roomSettings.showToolbar = true;
     this.sendMessage({ type: 'showToolbar' });
   };
 
   hideToolbar = () => {
-    this.roomState.showToolbar = false;
+    this.roomSettings.showToolbar = false;
     this.sendMessage({ type: 'hideToolbar' });
   };
 
   changeLayoutMode = (mode: LayoutMode) => {
-    this.roomState.layoutMode = mode;
+    this.roomSettings.layoutMode = mode;
 
     this.sendMessage({ type: 'changeLayoutMode', data: mode });
   };
@@ -390,12 +390,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
   listUsers = () => Object.values(this.stored.users);
 
   showCaptions = () => {
-    this.roomState.showCaptions = true;
+    this.roomSettings.showCaptions = true;
     this.sendMessage({ type: 'showCaptions' });
   };
 
   hideCaptions = () => {
-    this.roomState.showCaptions = false;
+    this.roomSettings.showCaptions = false;
     this.sendMessage({ type: 'hideCaptions' });
   };
 

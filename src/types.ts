@@ -8,7 +8,7 @@ export enum AppLayout {
   tiled_content = 'tiled_content',
 }
 
-export interface InitState {
+export interface RoomSettings {
   // device config
   cameraEnabled: boolean;
   micEnabled: boolean;
@@ -29,7 +29,7 @@ export type InitOptions = {
   room: string;
   token?: string;
 
-  roomState: Partial<InitState>;
+  roomSettings: Partial<RoomSettings>;
 };
 
 export type FrameAttributes = {
