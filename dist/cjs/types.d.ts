@@ -1,11 +1,28 @@
-export interface InitOptions {
+export declare enum LayoutMode {
+    tiled = "tiled",
+    auto = "auto"
+}
+export declare enum AppLayout {
+    tiled = "tiled",
+    tiled_content = "tiled_content"
+}
+export interface InitState {
+    cameraEnabled: boolean;
+    micEnabled: boolean;
+    username: string;
+    layoutMode: LayoutMode;
+    showToolbar: boolean;
+    showCaptions: boolean;
+}
+export type InitOptions = {
     root: HTMLElement;
     frame: HTMLIFrameElement;
     url: string;
     team: string;
     room: string;
     token?: string;
-}
+    roomState: Partial<InitState>;
+};
 export type FrameAttributes = {
     align: string;
     allow: string;
@@ -37,10 +54,6 @@ export interface ReceiveMessage {
         type: ReceiveMessageType;
         data: unknown;
     };
-}
-export declare enum LayoutMode {
-    tiled = "tiled",
-    auto = "auto"
 }
 export type UserId = string;
 export interface User {
