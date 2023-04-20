@@ -159,10 +159,11 @@ api.disableAudio();
 - `changeLayoutMode(mode: 'tiled' | 'auto')`
 - `leaveSession()`
 - `endSession()`
+- `removeUser(userId: string)`
 - `requestToggleAudio(userId: string)`
 - `requestMute(userId: string)`
 - `requestUnmute(userId: string)`
 - `showCaptions()`
 - `hideCaptions()`
 - `toggleCaptions(newState?: boolean)`
-- `configureCaptions({ fontSize: 'small' | 'medium' | 'large', spokenLanguag: <>' })`
+- `configureCaptions({ fontSize: 'small' | 'medium' | 'large', spokenLanguage: <>' })`
