@@ -7,68 +7,85 @@
   <title>Document</title>
   <!--  <script src="https://unpkg.com/@digitalsamba/embedded-sdk"></script>-->
   <script src="./umd/index.js"></script>
+  <style>
+    .user-list-row {
+      display: flex;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .user-list-avatar {
+      width: 24px;
+      height: 24px;
+      display: block;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .log p {
+      font-size: 14px;
+      line-height: 1;
+      margin: 0 0 4px
+    }
+
+    .buttons button, .captions-buttons button {
+      margin: 2px;
+    }
+  </style>
 </head>
 <body>
-<div class="ifp" style="display: flex">
-
-  <div class="log">
+<div style="display: flex">
+  <div class="ifp">
 
   </div>
+  <div style="min-width: 300px ; padding: 0 16px">
+    <h3>Room users:</h3>
+    <div class="participants">
+
+    </div>
+  </div>
+</div>
+<div class="div buttons" style=" border: 1px solid yellow">
+  <button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>
 
 </div>
-<div class="div" style=" border: 1px solid yellow">
-  <button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>
-  <button class="c1">toggleVideo</button>
-  <button class="c2">enableVideo</button>
-  <button class="c3">disableVideo</button>
-  <button class="c4">toggleAudio</button>
-  <button class="c5">enableAudio</button>
-  <button class="c6">disableAudio</button>
-  <button class="c7">startScreenshare</button>
-  <button class="c8">stopScreenshare</button>
-  <button class="c9">startRecording</button>
-  <button class="c10">stopRecording</button>
-  <button class="c11">showToolbar</button>
-  <button class="c12">hideToolbar</button>
-  <button class="c13">toggleToolbar</button>
-  <button class="c14">auto layout</button>
-  <button class="c15">tiled layout</button>
-  <button class="c16">leave session</button>
-  <button class="c17">end session</button>
+<div class="div captions-buttons" style=" border: 1px solid yellow">
+  <p>captions controls</p>
+
+</div>
+
+<div class="log">
+
 </div>
 
 <script async defer>
   const parent = document.querySelector('.ifp');
   const frame = document.querySelector('.if');
+  const buttonsParent = document.querySelector('.buttons');
+  const captionsButtonsParent = document.querySelector('.captions-buttons');
+  const participantList = document.querySelector('.participants');
+
   const btn0 = document.querySelector('.c0');
-  const btn1 = document.querySelector('.c1');
-  const btn2 = document.querySelector('.c2');
-  const btn3 = document.querySelector('.c3');
-  const btn4 = document.querySelector('.c4');
-  const btn5 = document.querySelector('.c5');
-  const btn6 = document.querySelector('.c6');
-  const btn7 = document.querySelector('.c7');
-  const btn8 = document.querySelector('.c8');
-  const btn9 = document.querySelector('.c9');
-  const btn10 = document.querySelector('.c10');
-  const btn11 = document.querySelector('.c11');
-  const btn12 = document.querySelector('.c12');
-  const btn13 = document.querySelector('.c13');
-  const btn14 = document.querySelector('.c14');
-  const btn15 = document.querySelector('.c15');
-  const btn16 = document.querySelector('.c16');
-  const btn17 = document.querySelector('.c17');
+
 
   // change these values to connect to your room
   const TEAM = 'some-team';
   const ROOM = 'some-room';
-  const ROOM_URL = 'https://localhost:3000/Public'
+  let ROOM_URL = 'https://localhost:3000/Public'
+
+  if(window.location.search) {
+    const params = new URLSearchParams(window.location.search);
+    const dynamicRoomUrl = params.get('roomUrl');
+    if(dynamicRoomUrl) {
+      ROOM_URL = dynamicRoomUrl
+    }
+  }
 
   //const api = new DigitalSambaEmbedded({ root: parent, team: TEAM, room: ROOM});
   // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  const api = DigitalSambaEmbedded.createControl({  url: ROOM_URL});
+  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent });
 
   const log = document.querySelector('.log');
 
@@ -76,28 +93,58 @@
   api.frame.height = 700;
 
   btn0.onclick = () => {api.load({ frameAttributes: {style: "border: 5px solid red"}, reportErrors: true })}
-  btn1.onclick = () => {api.toggleVideo()}
-  btn2.onclick = () => {api.enableVideo()}
-  btn3.onclick = () => {api.disableVideo()}
-  btn4.onclick = () => {api.toggleAudio()}
-  btn5.onclick = () => {api.enableAudio()}
-  btn6.onclick = () => {api.disableAudio()}
-  btn7.onclick = () => {api.startScreenshare()}
-  btn8.onclick = () => {api.stopScreenshare()}
-  btn9.onclick = () => {api.startRecording()}
-  btn10.onclick = () => {api.stopRecording()}
-  btn11.onclick = () => {api.showToolbar()}
-  btn12.onclick = () => {api.hideToolbar()}
-  btn13.onclick = () => {api.toggleToolbar()}
-  btn14.onclick = () => {api.changeLayoutMode('auto')}
-  btn15.onclick = () => {api.changeLayoutMode('tiled')}
-  btn16.onclick = () => {api.leaveSession()}
-  btn17.onclick = () => {api.endSession()}
+
+  const baseControls = [
+    {command: 'toggleVideo', label: 'toggle video' },
+    {command: 'enableVideo', label: 'enable video' },
+    {command: 'disableVideo', label: 'disable video' },
+    {command: 'toggleAudio', label: 'toggle audio' },
+    {command: 'enableAudio', label: 'enable audio' },
+    {command: 'disableAudio', label: 'disable audio' },
+    {command: 'startScreenshare', label: 'start screenshare' },
+    {command: 'stopScreenshare', label: 'stop screenshare' },
+    {command: 'startRecording', label: 'start recording' },
+    {command: 'stopRecording', label: 'stop recording' },
+    {command: 'showToolbar', label: 'show toolbar' },
+    {command: 'hideToolbar', label: 'hide toolbar' },
+    {command: 'toggleToolbar', label: 'toggle toolbar' },
+    {command: 'changeLayoutMode', label: 'auto layout', args: ['auto'] },
+    {command: 'changeLayoutMode', label: 'tiled layout', args: ['tiled'] },
+    {command: 'showCaptions', label: 'show captions'},
+    {command: 'hideCaptions', label: 'hide captions'},
+    {command: 'toggleCaptions', label: 'toggle captions'},
+    {command: 'leaveSession', label: 'leave session' },
+    {command: 'endSession', label: 'end session' },
+  ]
+
+  baseControls.forEach(control => {
+    const button = document.createElement("button");
+    button.innerHTML = control.label;
+    button.onclick = () => api[control.command](...(control.args || []))
+
+    buttonsParent.appendChild(button);
+  })
+
+  const captionsControls = [
+    {command: 'configureCaptions', label: 'set font size - small', args: [{fontSize: 'small'}] },
+    {command: 'configureCaptions', label: 'set font size - medium', args: [{fontSize: 'medium'}] },
+    {command: 'configureCaptions', label: 'set font size - large', args: [{fontSize: 'large'}] },
+    {command: 'configureCaptions', label: 'set spoken language - english', args: [{spokenLanguage: 'en'}] },
+    {command: 'configureCaptions', label: 'set spoken language - french', args: [{spokenLanguage: 'fr'}] },
+    {command: 'configureCaptions', label: 'set spoken language - spanish', args: [{spokenLanguage: 'es'}] },
+  ]
+
+  captionsControls.forEach(control => {
+    const button = document.createElement("button");
+    button.innerHTML = control.label;
+    button.onclick = () => api[control.command](...(control.args || []))
+
+    captionsButtonsParent.appendChild(button);
+  })
 
   api.on('*', (data) => {
-    log.innerHTML += `<p>${Number(new Date)}: ev(${data.type}): ${JSON.stringify(data)}</p>`
+    log.innerHTML += `<p>${Number(new Date)}: ev(${data?.type}): ${JSON.stringify(data)}</p>`
   });
-
 
   api.on('userJoined', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: USER JOINED: ${JSON.stringify(data)}</p>`
@@ -106,6 +153,69 @@
   api.on('userLeft', (data) => {
     log.innerHTML += `<p>${Number(new Date)}: USER LEFT: ${JSON.stringify(data)}</p>`
   });
+
+  api.on('permissionsChanged', ({ data }) => {
+    if(data.broadcast !== undefined){
+      if(data.broadcast) {
+        alert('You were granted broadcast permission')
+      } else {
+        alert('Your permission to broadcast was rejected')
+      }
+    }
+
+    if(data.screenshare !== undefined){
+      if(data.screenshare) {
+        alert('You were granted screenshare permission')
+      } else {
+        alert('Your permission to screenshare was rejected')
+      }
+    }
+  });
+
+
+  api.on('usersUpdated', ({data: {users}}) => {
+    participantList.innerHTML = '';
+
+
+    users.forEach(user => {
+      const row = document.createElement('div');
+      row.className = 'user-list-row';
+
+      const avatar = document.createElement('span');
+      avatar.className = 'user-list-avatar';
+      avatar.style.background = user.avatarColor;
+      row.appendChild(avatar);
+
+
+      const name = document.createElement('span');
+      name.className = 'user-list-name';
+      name.innerText = user.name;
+      row.appendChild(name);
+
+      if(user.kind === 'local') {
+        const label = document.createElement('span');
+        label.className = 'user-list-label';
+        label.innerText = '(you)'
+        label.style.color = '#777';
+        row.appendChild(label);
+      } else {
+        const micControl = document.createElement('button');
+        micControl.innerHTML = 'toggle mic'
+        micControl.style.margin = '0 4px';
+        micControl.onclick = () => {api.requestToggleAudio(user.id)}
+        row.appendChild(micControl);
+
+        const kickControl = document.createElement('button');
+        kickControl.innerHTML = 'kick'
+        kickControl.style.margin = '0 4px';
+        kickControl.onclick = () => {api.removeUser(user.id)}
+        row.appendChild(kickControl);
+      }
+
+      participantList.appendChild(row);
+
+    })
+  })
 
 </script>
 

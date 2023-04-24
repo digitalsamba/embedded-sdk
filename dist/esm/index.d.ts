@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode, UserId } from './types';
+import { InitOptions, InstanceProperties, LayoutMode, UserId, CaptionsOptions } from './types';
 import EventEmitter from 'events';
 export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
@@ -8,11 +8,16 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     connected: boolean;
     frame: HTMLIFrameElement;
     reportErrors: boolean;
+    private stored;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;
     private mountFrame;
     load: (instanceProperties?: InstanceProperties) => void;
     private onMessage;
+    private setupInternalEventListeners;
+    private _emit;
+    private handleInternalMessage;
+    private emitUsersUpdated;
     private setFrameSrc;
     private checkTarget;
     private sendMessage;
@@ -37,4 +42,10 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     requestToggleAudio: (userId: UserId, shouldMute?: boolean) => void;
     requestMute: (userId: UserId) => void;
     requestUnmute: (userId: UserId) => void;
+    removeUser: (userId: UserId) => void;
+    listUsers: () => import("./types").User[];
+    showCaptions: () => void;
+    hideCaptions: () => void;
+    toggleCaptions: (show?: boolean) => void;
+    configureCaptions: (options: Partial<CaptionsOptions>) => void;
 }

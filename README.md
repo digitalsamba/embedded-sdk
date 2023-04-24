@@ -127,6 +127,7 @@ api.disableAudio();
 - `appError`
 - `userJoined`
 - `userLeft`
+- `usersUpdated`
 - `videoEnabled`
 - `videoDisabled`
 - `audioEnabled`
@@ -138,6 +139,8 @@ api.disableAudio();
 - `recordingFailed`
 - `layoutModeChanged`
 - `activeSpeakerChanged`
+- `captionsFontSizeChanged`
+- `captionsSpokenLanguageChanged`
 
 ### Available commands:
 - `enableVideo()`
@@ -156,6 +159,11 @@ api.disableAudio();
 - `changeLayoutMode(mode: 'tiled' | 'auto')`
 - `leaveSession()`
 - `endSession()`
+- `removeUser(userId: string)`
 - `requestToggleAudio(userId: string)`
 - `requestMute(userId: string)`
 - `requestUnmute(userId: string)`
+- `showCaptions()`
+- `hideCaptions()`
+- `toggleCaptions(newState?: boolean)`
+- `configureCaptions({ fontSize: 'small' | 'medium' | 'large', spokenLanguage: <>' })`

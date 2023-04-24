@@ -2,9 +2,9 @@ var _a;
 import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, UNKNOWN_TARGET, } from './utils/errors';
 import EventEmitter from 'events';
 const CONNECT_TIMEOUT = 10000;
-function isFunction(func) {
-    return func instanceof Function;
-}
+const internalEvents = {
+    roomJoined: true,
+};
 export class DigitalSambaEmbedded extends EventEmitter {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
@@ -13,6 +13,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.connected = false;
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
+        this.stored = {
+            users: {},
+            localUserPermissions: {},
+        };
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -57,10 +61,51 @@ export class DigitalSambaEmbedded extends EventEmitter {
             if (!message) {
                 return;
             }
-            this.emit('*', message);
             if (message.type) {
-                this.emit(message.type, message);
+                if (internalEvents[message.type]) {
+                    this.handleInternalMessage(event.data);
+                }
+                else {
+                    this._emit(message.type, message);
+                }
             }
+        };
+        this.setupInternalEventListeners = () => {
+            this.on('userJoined', (event) => {
+                const { user, type } = event.data;
+                this.stored.users[user.id] = Object.assign(Object.assign({}, user), { kind: type });
+                this.emitUsersUpdated();
+            });
+            this.on('userLeft', (event) => {
+                var _b, _c;
+                if ((_c = (_b = event.data) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.id) {
+                    delete this.stored.users[event.data.user.id];
+                }
+                this.emitUsersUpdated();
+            });
+            this.on('permissionsChanged', (event) => {
+                this.stored.localUserPermissions = Object.assign(Object.assign({}, this.stored.localUserPermissions), (event.data || {}));
+            });
+        };
+        this._emit = (eventName, ...args) => {
+            this.emit('*', ...args);
+            return this.emit(eventName, ...args);
+        };
+        this.handleInternalMessage = (event) => {
+            const message = event.DSPayload;
+            switch (message.type) {
+                case 'roomJoined': {
+                    this.stored.users = message.data.users;
+                    this.emitUsersUpdated();
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        };
+        this.emitUsersUpdated = () => {
+            this._emit('usersUpdated', { type: 'usersUpdated', data: { users: this.listUsers() } });
         };
         this.setFrameSrc = () => {
             let url = this.savedIframeSrc;
@@ -195,6 +240,30 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.requestUnmute = (userId) => {
             this.sendMessage({ type: 'requestUnmute', data: userId });
         };
+        this.removeUser = (userId) => {
+            this.sendMessage({ type: 'removeUser', data: userId });
+        };
+        this.listUsers = () => Object.values(this.stored.users);
+        this.showCaptions = () => {
+            this.sendMessage({ type: 'showCaptions' });
+        };
+        this.hideCaptions = () => {
+            this.sendMessage({ type: 'hideCaptions' });
+        };
+        this.toggleCaptions = (show) => {
+            if (typeof show === 'undefined') {
+                this.sendMessage({ type: 'toggleCaptions' });
+            }
+            else if (show) {
+                this.showCaptions();
+            }
+            else {
+                this.hideCaptions();
+            }
+        };
+        this.configureCaptions = (options) => {
+            this.sendMessage({ type: 'configureCaptions', data: options || {} });
+        };
         this.initOptions = options;
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
@@ -207,6 +276,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.frame.style.display = 'none';
         }
         window.addEventListener('message', this.onMessage);
+        this.setupInternalEventListeners();
     }
     checkTarget() {
         this.sendMessage({ type: 'connect' });
