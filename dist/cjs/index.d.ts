@@ -1,8 +1,9 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode, UserId, CaptionsOptions } from './types';
+import { InitOptions, InstanceProperties, LayoutMode, UserId, CaptionsOptions, RoomSettings } from './types';
 import EventEmitter from 'events';
 export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
+    roomSettings: Partial<RoomSettings>;
     savedIframeSrc: string;
     allowedOrigin: string;
     connected: boolean;

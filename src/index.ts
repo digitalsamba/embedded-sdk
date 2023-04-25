@@ -8,6 +8,7 @@ import {
   Stored,
   UsersList,
   CaptionsOptions,
+  RoomSettings,
 } from './types';
 
 import {
@@ -28,6 +29,7 @@ const internalEvents: Record<string, boolean> = {
 
 export class DigitalSambaEmbedded extends EventEmitter {
   initOptions: Partial<InitOptions>;
+  roomSettings: Partial<RoomSettings> = {};
 
   savedIframeSrc: string = '';
 
@@ -52,6 +54,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
     super();
 
     this.initOptions = options;
+    this.roomSettings = options.roomSettings || {};
+
     this.reportErrors = instanceProperties.reportErrors || false;
 
     this.frame.allow = 'camera; microphone; display-capture; autoplay;';
@@ -221,7 +225,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   private checkTarget() {
-    this.sendMessage({ type: 'connect' });
+    this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
 
     const confirmationTimeout = window.setTimeout(() => {
       this.logError(UNKNOWN_TARGET);
@@ -235,6 +239,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   private sendMessage<G>(message: SendMessage<G>) {
     if (this.frame.contentWindow) {
+      if (!this.connected && message.type !== 'connect') {
+        return;
+      }
+
       this.frame.contentWindow.postMessage(message, {
         targetOrigin: this.allowedOrigin,
       });
@@ -266,10 +274,14 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   // commands
   enableVideo = () => {
+    this.roomSettings.cameraEnabled = true;
+
     this.sendMessage({ type: 'enableVideo' });
   };
 
   disableVideo = () => {
+    this.roomSettings.cameraEnabled = false;
+
     this.sendMessage({ type: 'disableVideo' });
   };
 
@@ -284,10 +296,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   enableAudio = () => {
+    this.roomSettings.micEnabled = true;
     this.sendMessage({ type: 'enableAudio' });
   };
 
   disableAudio = () => {
+    this.roomSettings.micEnabled = false;
     this.sendMessage({ type: 'disableAudio' });
   };
 
@@ -318,14 +332,18 @@ export class DigitalSambaEmbedded extends EventEmitter {
   };
 
   showToolbar = () => {
+    this.roomSettings.showToolbar = true;
     this.sendMessage({ type: 'showToolbar' });
   };
 
   hideToolbar = () => {
+    this.roomSettings.showToolbar = false;
     this.sendMessage({ type: 'hideToolbar' });
   };
 
   changeLayoutMode = (mode: LayoutMode) => {
+    this.roomSettings.layoutMode = mode;
+
     this.sendMessage({ type: 'changeLayoutMode', data: mode });
   };
 
@@ -372,10 +390,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
   listUsers = () => Object.values(this.stored.users);
 
   showCaptions = () => {
+    this.roomSettings.showCaptions = true;
     this.sendMessage({ type: 'showCaptions' });
   };
 
   hideCaptions = () => {
+    this.roomSettings.showCaptions = false;
     this.sendMessage({ type: 'hideCaptions' });
   };
 
