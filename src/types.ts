@@ -79,7 +79,9 @@ export type SendMessageType =
   | 'showCaptions'
   | 'hideCaptions'
   | 'toggleCaptions'
-  | 'configureCaptions';
+  | 'configureCaptions'
+  | 'raiseHand'
+  | 'lowerHand';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -100,7 +102,9 @@ export type ReceiveMessageType =
   | 'appError'
   | 'captionsSpokenLanguageChanged'
   | 'captionsFontSizeChanged'
-  | 'permissionsChanged';
+  | 'permissionsChanged'
+  | 'handRaised'
+  | 'handLowered';
 
 export interface SendMessage<D> {
   type: SendMessageType;

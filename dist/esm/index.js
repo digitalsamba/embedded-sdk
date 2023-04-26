@@ -274,6 +274,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.configureCaptions = (options) => {
             this.sendMessage({ type: 'configureCaptions', data: options || {} });
         };
+        this.raiseHand = () => {
+            this.sendMessage({ type: 'raiseHand' });
+        };
+        this.lowerHand = (target) => {
+            this.sendMessage({ type: 'lowerHand', data: target });
+        };
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;

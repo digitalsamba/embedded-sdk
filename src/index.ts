@@ -408,8 +408,15 @@ export class DigitalSambaEmbedded extends EventEmitter {
       this.hideCaptions();
     }
   };
-
   configureCaptions = (options: Partial<CaptionsOptions>) => {
     this.sendMessage({ type: 'configureCaptions', data: options || {} });
+  };
+
+  raiseHand = () => {
+    this.sendMessage({ type: 'raiseHand' });
+  };
+
+  lowerHand = (target?: UserId) => {
+    this.sendMessage({ type: 'lowerHand', data: target });
   };
 }

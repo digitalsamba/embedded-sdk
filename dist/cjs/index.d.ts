@@ -49,4 +49,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     hideCaptions: () => void;
     toggleCaptions: (show?: boolean) => void;
     configureCaptions: (options: Partial<CaptionsOptions>) => void;
+    raiseHand: () => void;
+    lowerHand: (target?: UserId) => void;
 }

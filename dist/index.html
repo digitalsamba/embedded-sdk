@@ -85,16 +85,8 @@
   // const api = new DigitalSambaEmbedded({ frame});
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
-  const initialRoomState = {
-    username: "User Name",
-    micEnabled: true,
-    cameraEnabled: true,
-    showToolbar: false,
-    showCaptions: true,
-    layoutMode: 'auto'
-  }
 
-  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent, roomSettings: initialRoomState });
+  const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent });
 
   const log = document.querySelector('.log');
 
@@ -112,6 +104,7 @@
     {command: 'disableAudio', label: 'disable audio' },
     {command: 'startScreenshare', label: 'start screenshare' },
     {command: 'stopScreenshare', label: 'stop screenshare' },
+    {command: 'raiseHand', label: 'raise hand' },
     {command: 'startRecording', label: 'start recording' },
     {command: 'stopRecording', label: 'stop recording' },
     {command: 'showToolbar', label: 'show toolbar' },
@@ -181,6 +174,24 @@
     }
   });
 
+  api.on('handRaised', ({data}) => {
+    const control = document.querySelector('#lower-hand-'+data.userId);
+
+    if(control) {
+      control.style.display = 'inline'
+    }
+  })
+
+  api.on('handLowered', ({data}) => {
+    const id = data.self ? data.by : data.target;
+
+    const control = document.querySelector('#lower-hand-'+ id );
+
+    if(control) {
+      control.style.display = 'none'
+    }
+  })
+
 
   api.on('usersUpdated', ({data: {users}}) => {
     participantList.innerHTML = '';
@@ -220,6 +231,14 @@
         kickControl.onclick = () => {api.removeUser(user.id)}
         row.appendChild(kickControl);
       }
+
+      const raisedHandControl = document.createElement('button');
+      raisedHandControl.id = 'lower-hand-'+user.id;
+      raisedHandControl.innerHTML = 'lower hand'
+      raisedHandControl.style.margin = '0 4px';
+      raisedHandControl.style.display = 'none';
+      raisedHandControl.onclick = () => {api.lowerHand(user.id)}
+      row.appendChild(raisedHandControl);
 
       participantList.appendChild(row);
 
