@@ -419,4 +419,20 @@ export class DigitalSambaEmbedded extends EventEmitter {
   lowerHand = (target?: UserId) => {
     this.sendMessage({ type: 'lowerHand', data: target });
   };
+
+  allowBroadcast = (userId: UserId) => {
+    this.sendMessage({ type: 'allowBroadcast', data: userId });
+  };
+
+  disallowBroadcast = (userId: UserId) => {
+    this.sendMessage({ type: 'disallowBroadcast', data: userId });
+  };
+
+  allowScreenshare = (userId: UserId) => {
+    this.sendMessage({ type: 'allowScreenshare', data: userId });
+  };
+
+  disallowScreenshare = (userId: UserId) => {
+    this.sendMessage({ type: 'disallowScreenshare', data: userId });
+  };
 }

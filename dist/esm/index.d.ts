@@ -51,4 +51,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     configureCaptions: (options: Partial<CaptionsOptions>) => void;
     raiseHand: () => void;
     lowerHand: (target?: UserId) => void;
+    allowBroadcast: (userId: UserId) => void;
+    disallowBroadcast: (userId: UserId) => void;
+    allowScreenshare: (userId: UserId) => void;
+    disallowScreenshare: (userId: UserId) => void;
 }

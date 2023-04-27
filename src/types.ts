@@ -81,7 +81,11 @@ export type SendMessageType =
   | 'toggleCaptions'
   | 'configureCaptions'
   | 'raiseHand'
-  | 'lowerHand';
+  | 'lowerHand'
+  | 'allowBroadcast'
+  | 'disallowBroadcast'
+  | 'allowScreenshare'
+  | 'disallowScreenshare';
 
 export type ReceiveMessageType =
   | 'connected'

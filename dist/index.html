@@ -10,7 +10,7 @@
   <style>
     .user-list-row {
       display: flex;
-      margin-bottom: 8px;
+      margin: 12px 0 8px;
       align-items: center;
     }
 
@@ -200,6 +200,8 @@
     users.forEach(user => {
       const row = document.createElement('div');
       row.className = 'user-list-row';
+      const subButtons = document.createElement('div')
+      row.appendChild(subButtons);
 
       const avatar = document.createElement('span');
       avatar.className = 'user-list-avatar';
@@ -230,6 +232,30 @@
         kickControl.style.margin = '0 4px';
         kickControl.onclick = () => {api.removeUser(user.id)}
         row.appendChild(kickControl);
+
+        const allowBroadcastControl = document.createElement('button');
+        allowBroadcastControl.innerHTML = 'allow broadcast'
+        allowBroadcastControl.style.margin = '0 4px';
+        allowBroadcastControl.onclick = () => {api.allowBroadcast(user.id)}
+        subButtons.appendChild(allowBroadcastControl);
+
+        const disallowBroadcastControl = document.createElement('button');
+        disallowBroadcastControl.innerHTML = 'disallow broadcast'
+        disallowBroadcastControl.style.margin = '0 4px';
+        disallowBroadcastControl.onclick = () => {api.disallowBroadcast(user.id)}
+        subButtons.appendChild(disallowBroadcastControl);
+
+        const allowScreenshareControl = document.createElement('button');
+        allowScreenshareControl.innerHTML = 'allow screenshare'
+        allowScreenshareControl.style.margin = '0 4px';
+        allowScreenshareControl.onclick = () => {api.allowScreenshare(user.id)}
+        subButtons.appendChild(allowScreenshareControl);
+
+        const disallowScreenshareControl = document.createElement('button');
+        disallowScreenshareControl.innerHTML = 'disallow screenshare'
+        disallowScreenshareControl.style.margin = '0 4px';
+        disallowScreenshareControl.onclick = () => {api.disallowScreenshare(user.id)}
+        subButtons.appendChild(disallowScreenshareControl);
       }
 
       const raisedHandControl = document.createElement('button');
@@ -241,6 +267,7 @@
       row.appendChild(raisedHandControl);
 
       participantList.appendChild(row);
+      participantList.appendChild(subButtons);
 
     })
   })
