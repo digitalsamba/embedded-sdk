@@ -1,9 +1,9 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode, UserId, CaptionsOptions, RoomSettings } from './types';
 import EventEmitter from 'events';
+import { CaptionsOptions, InitialRoomSettings, InitOptions, InstanceProperties, LayoutMode, UserId } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter {
     initOptions: Partial<InitOptions>;
-    roomSettings: Partial<RoomSettings>;
+    roomSettings: Partial<InitialRoomSettings>;
     savedIframeSrc: string;
     allowedOrigin: string;
     connected: boolean;
@@ -19,6 +19,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     private _emit;
     private handleInternalMessage;
     private emitUsersUpdated;
+    private emitRoomStateUpdated;
     private setFrameSrc;
     private checkTarget;
     private sendMessage;
@@ -45,6 +46,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     requestUnmute: (userId: UserId) => void;
     removeUser: (userId: UserId) => void;
     listUsers: () => import("./types").User[];
+    get roomState(): import("./types").RoomState;
     showCaptions: () => void;
     hideCaptions: () => void;
     toggleCaptions: (show?: boolean) => void;
