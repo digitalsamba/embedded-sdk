@@ -6,7 +6,7 @@ export declare enum AppLayout {
     tiled = "tiled",
     tiled_content = "tiled_content"
 }
-export interface RoomSettings {
+export interface InitialRoomSettings {
     cameraEnabled: boolean;
     micEnabled: boolean;
     username: string;
@@ -21,7 +21,7 @@ export type InitOptions = {
     team: string;
     room: string;
     token?: string;
-    roomSettings: Partial<RoomSettings>;
+    roomSettings: Partial<InitialRoomSettings>;
 };
 export type FrameAttributes = {
     align: string;
@@ -63,17 +63,34 @@ export interface User {
     role: string;
     kind: 'local' | 'remote';
 }
-export type UsersList = Record<UserId, User>;
-interface Permissions {
-}
-export interface Stored {
-    users: UsersList;
-    localUserPermissions: Partial<Permissions>;
-}
 export type CaptionsSpokenLanguage = 'zh' | 'zh-CN' | 'zh-TW' | 'da' | 'nl' | 'en' | 'en-AU' | 'en-GB' | 'en-IN' | 'en-NZ' | 'en-US' | 'fr' | 'fr-CA' | 'de' | 'hi' | 'hi-Latn' | 'id' | 'it' | 'ja' | 'ko' | 'no' | 'pl' | 'pt' | 'pt-BR' | 'pt-PT' | 'ru' | 'es' | 'es-419' | 'sv' | 'ta' | 'tr' | 'uk';
 type CaptionsFontSize = 'small' | 'medium' | 'large';
 export interface CaptionsOptions {
     spokenLanguage: CaptionsSpokenLanguage;
     fontSize: CaptionsFontSize;
+}
+export type UsersList = Record<UserId, User>;
+interface Permissions {
+}
+export interface RoomState {
+    media: {
+        cameraEnabled: boolean;
+        micEnabled: boolean;
+    };
+    layout: {
+        mode: LayoutMode;
+        presentation: AppLayout;
+        showToolbar: boolean;
+        toolbarPosition: 'left' | 'right' | 'bottom';
+    };
+    captionsState: {
+        showCaptions: boolean;
+    } & CaptionsOptions;
+}
+export interface Stored {
+    users: UsersList;
+    localUserPermissions: Partial<Permissions>;
+    activeSpeaker?: UserId;
+    roomState: RoomState;
 }
 export {};

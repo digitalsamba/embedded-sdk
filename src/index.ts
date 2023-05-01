@@ -1,14 +1,16 @@
+import EventEmitter from 'events';
+import { createWatchedProxy } from './utils/proxy';
 import {
+  AppLayout,
+  CaptionsOptions,
+  InitialRoomSettings,
   InitOptions,
   InstanceProperties,
   LayoutMode,
   ReceiveMessage,
   SendMessage,
-  UserId,
   Stored,
-  UsersList,
-  CaptionsOptions,
-  RoomSettings,
+  UserId,
 } from './types';
 
 import {
@@ -19,17 +21,37 @@ import {
   UNKNOWN_TARGET,
 } from './utils/errors';
 
-import EventEmitter from 'events';
-
 const CONNECT_TIMEOUT = 10000;
 
 const internalEvents: Record<string, boolean> = {
   roomJoined: true,
 };
 
+const defaultStoredState: Stored = {
+  roomState: {
+    media: {
+      micEnabled: false,
+      cameraEnabled: false,
+    },
+    layout: {
+      mode: LayoutMode.tiled,
+      presentation: AppLayout.tiled,
+      showToolbar: true,
+      toolbarPosition: 'left',
+    },
+    captionsState: {
+      showCaptions: false,
+      spokenLanguage: 'en',
+      fontSize: 'medium',
+    },
+  },
+  users: {},
+  localUserPermissions: {},
+};
+
 export class DigitalSambaEmbedded extends EventEmitter {
   initOptions: Partial<InitOptions>;
-  roomSettings: Partial<RoomSettings> = {};
+  roomSettings: Partial<InitialRoomSettings> = {};
 
   savedIframeSrc: string = '';
 
@@ -41,10 +63,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   reportErrors: boolean = false;
 
-  private stored: Stored = {
-    users: {},
-    localUserPermissions: {},
-  };
+  private stored: Stored;
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -52,6 +71,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
     loadImmediately = true
   ) {
     super();
+
+    this.stored = {
+      users: {},
+      localUserPermissions: {},
+      roomState: createWatchedProxy({ ...defaultStoredState.roomState }, this.emitRoomStateUpdated),
+    };
 
     this.initOptions = options;
     this.roomSettings = options.roomSettings || {};
@@ -165,6 +190,46 @@ export class DigitalSambaEmbedded extends EventEmitter {
         ...(event.data || {}),
       };
     });
+
+    this.on('activeSpeakerChanged', (event) => {
+      this.stored.activeSpeaker = event.data?.user?.id;
+    });
+
+    this.on('videoEnabled', (event) => {
+      if (event.data?.type === 'local') {
+        this.stored.roomState.media.cameraEnabled = true;
+      }
+    });
+
+    this.on('videoDisabled', (event) => {
+      if (event.data?.type === 'local') {
+        this.stored.roomState.media.cameraEnabled = false;
+      }
+    });
+
+    this.on('audioEnabled', (event) => {
+      if (event.data?.type === 'local') {
+        this.stored.roomState.media.micEnabled = true;
+      }
+    });
+
+    this.on('audioDisabled', (event) => {
+      if (event.data?.type === 'local') {
+        this.stored.roomState.media.micEnabled = false;
+      }
+    });
+
+    this.on('layoutModeChanged', (event) => {
+      this.stored.roomState.layout.mode = event.data.mode;
+    });
+
+    this.on('captionsSpokenLanguageChanged', (event) => {
+      this.stored.roomState.captionsState.spokenLanguage = event.data.language;
+    });
+
+    this.on('captionsFontSizeChanged', (event) => {
+      this.stored.roomState.captionsState.fontSize = event.data.fontSize;
+    });
   };
 
   private _emit = (eventName: string | symbol, ...args: any[]) => {
@@ -178,7 +243,11 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
     switch (message.type) {
       case 'roomJoined': {
-        this.stored.users = (message.data as any).users as UsersList;
+        const { users, roomState, activeSpeaker } = message.data as Stored;
+
+        this.stored.users = { ...this.stored.users, ...users };
+        this.stored.roomState = roomState;
+        this.stored.activeSpeaker = activeSpeaker;
 
         this.emitUsersUpdated();
         break;
@@ -191,6 +260,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   private emitUsersUpdated = () => {
     this._emit('usersUpdated', { type: 'usersUpdated', data: { users: this.listUsers() } });
+  };
+
+  private emitRoomStateUpdated = () => {
+    this._emit('roomStateUpdated', { type: 'roomStateUpdated', data: { state: this.roomState } });
   };
 
   private setFrameSrc = () => {
@@ -333,11 +406,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   showToolbar = () => {
     this.roomSettings.showToolbar = true;
+    this.stored.roomState.layout.showToolbar = true;
     this.sendMessage({ type: 'showToolbar' });
   };
 
   hideToolbar = () => {
     this.roomSettings.showToolbar = false;
+    this.stored.roomState.layout.showToolbar = false;
     this.sendMessage({ type: 'hideToolbar' });
   };
 
@@ -357,6 +432,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   toggleToolbar = (show?: boolean) => {
     if (typeof show === 'undefined') {
+      this.stored.roomState.layout.showToolbar = !this.stored.roomState.layout.showToolbar;
       this.sendMessage({ type: 'toggleToolbar' });
     } else if (show) {
       this.showToolbar();
@@ -389,18 +465,26 @@ export class DigitalSambaEmbedded extends EventEmitter {
 
   listUsers = () => Object.values(this.stored.users);
 
+  get roomState() {
+    return this.stored.roomState;
+  }
+
   showCaptions = () => {
     this.roomSettings.showCaptions = true;
+    this.stored.roomState.captionsState.showCaptions = true;
     this.sendMessage({ type: 'showCaptions' });
   };
 
   hideCaptions = () => {
     this.roomSettings.showCaptions = false;
+    this.stored.roomState.captionsState.showCaptions = false;
     this.sendMessage({ type: 'hideCaptions' });
   };
 
   toggleCaptions = (show?: boolean) => {
     if (typeof show === 'undefined') {
+      this.stored.roomState.captionsState.showCaptions =
+        !this.stored.roomState.captionsState.showCaptions;
       this.sendMessage({ type: 'toggleCaptions' });
     } else if (show) {
       this.showCaptions();
