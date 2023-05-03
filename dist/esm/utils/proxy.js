@@ -14,4 +14,4 @@ const createHandler = (onChange) => {
     };
     return handler;
 };
-export const createProxy = (initialState, onChange) => new Proxy(initialState, createHandler(onChange));
+export const createWatchedProxy = (initialState, onChange) => new Proxy(initialState, createHandler(onChange));

@@ -1,12 +1,5 @@
-export enum LayoutMode {
-  tiled = 'tiled',
-  auto = 'auto',
-}
-
-export enum AppLayout {
-  tiled = 'tiled',
-  tiled_content = 'tiled_content',
-}
+import { PermissionsMap } from './utils/PermissionManager/types';
+import { AppLayout, LayoutMode, PermissionTypes } from './utils/vars';
 
 export interface InitialRoomSettings {
   // device config
@@ -129,6 +122,8 @@ export interface User {
   name: string;
   role: string;
   kind: 'local' | 'remote';
+
+  dynamicPermissions: PermissionTypes[] | undefined;
 }
 
 export type CaptionsSpokenLanguage =
@@ -174,8 +169,6 @@ export interface CaptionsOptions {
 
 export type UsersList = Record<UserId, User>;
 
-interface Permissions {}
-
 export interface RoomState {
   media: {
     cameraEnabled: boolean;
@@ -193,8 +186,54 @@ export interface RoomState {
 }
 
 export interface Stored {
+  userId: UserId;
   users: UsersList;
-  localUserPermissions: Partial<Permissions>;
   activeSpeaker?: UserId;
   roomState: RoomState;
+}
+
+export type RoomJoinedPayload = Stored & { permissionsMap: PermissionsMap };
+
+export interface EmbeddedInstance {
+  initOptions: Partial<InitOptions>;
+  roomSettings: Partial<InitialRoomSettings>;
+  savedIframeSrc: string;
+  allowedOrigin: string;
+  connected: boolean;
+  frame: HTMLIFrameElement;
+  reportErrors: boolean;
+  stored: Stored;
+  enableVideo: () => void;
+  disableVideo: () => void;
+  toggleVideo: (enable?: boolean) => void;
+  enableAudio: () => void;
+  disableAudio: () => void;
+  toggleAudio: (enable?: boolean) => void;
+  startScreenshare: () => void;
+  stopScreenshare: () => void;
+  startRecording: () => void;
+  stopRecording: () => void;
+  showToolbar: () => void;
+  hideToolbar: () => void;
+  changeLayoutMode: (mode: LayoutMode) => void;
+  leaveSession: () => void;
+  endSession: () => void;
+  toggleToolbar: (show?: boolean) => void;
+  requestToggleAudio: (userId: UserId, shouldMute?: boolean) => void;
+  requestMute: (userId: UserId) => void;
+  requestUnmute: (userId: UserId) => void;
+  removeUser: (userId: UserId) => void;
+  listUsers: () => User[];
+  get roomState(): RoomState;
+  get localUser(): User;
+  showCaptions: () => void;
+  hideCaptions: () => void;
+  toggleCaptions: (show?: boolean) => void;
+  configureCaptions: (options: Partial<CaptionsOptions>) => void;
+  raiseHand: () => void;
+  lowerHand: (target?: UserId) => void;
+  allowBroadcast: (userId: UserId) => void;
+  disallowBroadcast: (userId: UserId) => void;
+  allowScreenshare: (userId: UserId) => void;
+  disallowScreenshare: (userId: UserId) => void;
 }

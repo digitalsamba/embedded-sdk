@@ -1,33 +1,9 @@
 var _a;
 import EventEmitter from 'events';
-import { createProxy } from './utils/proxy';
-import { AppLayout, LayoutMode, } from './types';
+import { PermissionManager } from './utils/PermissionManager';
+import { CONNECT_TIMEOUT, defaultStoredState, internalEvents, } from './utils/vars';
+import { createWatchedProxy } from './utils/proxy';
 import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, UNKNOWN_TARGET, } from './utils/errors';
-const CONNECT_TIMEOUT = 10000;
-const internalEvents = {
-    roomJoined: true,
-};
-const defaultStoredState = {
-    roomState: {
-        media: {
-            micEnabled: false,
-            cameraEnabled: false,
-        },
-        layout: {
-            mode: LayoutMode.tiled,
-            presentation: AppLayout.tiled,
-            showToolbar: true,
-            toolbarPosition: 'left',
-        },
-        captionsState: {
-            showCaptions: false,
-            spokenLanguage: 'en',
-            fontSize: 'medium',
-        },
-    },
-    users: {},
-    localUserPermissions: {},
-};
 export class DigitalSambaEmbedded extends EventEmitter {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
@@ -37,6 +13,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.connected = false;
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
+        this.stored = Object.assign({}, defaultStoredState);
+        this.permissionManager = new PermissionManager(this);
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -94,6 +72,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.on('userJoined', (event) => {
                 const { user, type } = event.data;
                 this.stored.users[user.id] = Object.assign(Object.assign({}, user), { kind: type });
+                if (type === 'local') {
+                    this.stored.userId = user.id;
+                }
                 this.emitUsersUpdated();
             });
             this.on('userLeft', (event) => {
@@ -104,7 +85,21 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.emitUsersUpdated();
             });
             this.on('permissionsChanged', (event) => {
-                this.stored.localUserPermissions = Object.assign(Object.assign({}, this.stored.localUserPermissions), (event.data || {}));
+                if (this.stored.users[this.stored.userId]) {
+                    let modifiedPermissions = [
+                        ...(this.stored.users[this.stored.userId].dynamicPermissions || []),
+                    ];
+                    Object.entries(event.data).forEach(([permission, enabled]) => {
+                        if (enabled && !modifiedPermissions.includes(permission)) {
+                            modifiedPermissions.push(permission);
+                        }
+                        if (!enabled) {
+                            modifiedPermissions = modifiedPermissions.filter((userPermission) => userPermission !== permission);
+                        }
+                    });
+                    this.stored.users[this.stored.userId].dynamicPermissions =
+                        modifiedPermissions;
+                }
             });
             this.on('activeSpeakerChanged', (event) => {
                 var _b, _c;
@@ -152,11 +147,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
-                    const { users, roomState, activeSpeaker } = message.data;
+                    const { users, roomState, activeSpeaker, permissionsMap } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
-                    this.stored.roomState = roomState;
+                    this.stored.roomState = createWatchedProxy(Object.assign({}, roomState), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
+                    this.permissionManager.permissionsMap = permissionsMap;
                     this.emitUsersUpdated();
+                    this._emit('roomJoined', { type: 'roomJoined' });
                     break;
                 }
                 default: {
@@ -361,7 +358,6 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.disallowScreenshare = (userId) => {
             this.sendMessage({ type: 'disallowScreenshare', data: userId });
         };
-        this.stored = createProxy(Object.assign({}, defaultStoredState), this.emitRoomStateUpdated);
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;
@@ -397,8 +393,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
             });
         }
     }
+    // getters
     get roomState() {
         return this.stored.roomState;
+    }
+    get localUser() {
+        return this.stored.users[this.stored.userId];
     }
 }
 _a = DigitalSambaEmbedded;

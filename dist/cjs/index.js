@@ -6,34 +6,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DigitalSambaEmbedded = void 0;
 const events_1 = __importDefault(require("events"));
+const PermissionManager_1 = require("./utils/PermissionManager");
+const vars_1 = require("./utils/vars");
 const proxy_1 = require("./utils/proxy");
-const types_1 = require("./types");
 const errors_1 = require("./utils/errors");
-const CONNECT_TIMEOUT = 10000;
-const internalEvents = {
-    roomJoined: true,
-};
-const defaultStoredState = {
-    roomState: {
-        media: {
-            micEnabled: false,
-            cameraEnabled: false,
-        },
-        layout: {
-            mode: types_1.LayoutMode.tiled,
-            presentation: types_1.AppLayout.tiled,
-            showToolbar: true,
-            toolbarPosition: 'left',
-        },
-        captionsState: {
-            showCaptions: false,
-            spokenLanguage: 'en',
-            fontSize: 'medium',
-        },
-    },
-    users: {},
-    localUserPermissions: {},
-};
 class DigitalSambaEmbedded extends events_1.default {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
@@ -43,6 +19,8 @@ class DigitalSambaEmbedded extends events_1.default {
         this.connected = false;
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
+        this.stored = Object.assign({}, vars_1.defaultStoredState);
+        this.permissionManager = new PermissionManager_1.PermissionManager(this);
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -88,7 +66,7 @@ class DigitalSambaEmbedded extends events_1.default {
                 return;
             }
             if (message.type) {
-                if (internalEvents[message.type]) {
+                if (vars_1.internalEvents[message.type]) {
                     this.handleInternalMessage(event.data);
                 }
                 else {
@@ -100,6 +78,9 @@ class DigitalSambaEmbedded extends events_1.default {
             this.on('userJoined', (event) => {
                 const { user, type } = event.data;
                 this.stored.users[user.id] = Object.assign(Object.assign({}, user), { kind: type });
+                if (type === 'local') {
+                    this.stored.userId = user.id;
+                }
                 this.emitUsersUpdated();
             });
             this.on('userLeft', (event) => {
@@ -110,7 +91,21 @@ class DigitalSambaEmbedded extends events_1.default {
                 this.emitUsersUpdated();
             });
             this.on('permissionsChanged', (event) => {
-                this.stored.localUserPermissions = Object.assign(Object.assign({}, this.stored.localUserPermissions), (event.data || {}));
+                if (this.stored.users[this.stored.userId]) {
+                    let modifiedPermissions = [
+                        ...(this.stored.users[this.stored.userId].dynamicPermissions || []),
+                    ];
+                    Object.entries(event.data).forEach(([permission, enabled]) => {
+                        if (enabled && !modifiedPermissions.includes(permission)) {
+                            modifiedPermissions.push(permission);
+                        }
+                        if (!enabled) {
+                            modifiedPermissions = modifiedPermissions.filter((userPermission) => userPermission !== permission);
+                        }
+                    });
+                    this.stored.users[this.stored.userId].dynamicPermissions =
+                        modifiedPermissions;
+                }
             });
             this.on('activeSpeakerChanged', (event) => {
                 var _b, _c;
@@ -158,11 +153,13 @@ class DigitalSambaEmbedded extends events_1.default {
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
-                    const { users, roomState, activeSpeaker } = message.data;
+                    const { users, roomState, activeSpeaker, permissionsMap } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
-                    this.stored.roomState = roomState;
+                    this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, roomState), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
+                    this.permissionManager.permissionsMap = permissionsMap;
                     this.emitUsersUpdated();
+                    this._emit('roomJoined', { type: 'roomJoined' });
                     break;
                 }
                 default: {
@@ -367,7 +364,6 @@ class DigitalSambaEmbedded extends events_1.default {
         this.disallowScreenshare = (userId) => {
             this.sendMessage({ type: 'disallowScreenshare', data: userId });
         };
-        this.stored = (0, proxy_1.createProxy)(Object.assign({}, defaultStoredState), this.emitRoomStateUpdated);
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;
@@ -387,7 +383,7 @@ class DigitalSambaEmbedded extends events_1.default {
         this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
         const confirmationTimeout = window.setTimeout(() => {
             this.logError(errors_1.UNKNOWN_TARGET);
-        }, CONNECT_TIMEOUT);
+        }, vars_1.CONNECT_TIMEOUT);
         this.on('connected', () => {
             this.connected = true;
             clearTimeout(confirmationTimeout);
@@ -403,8 +399,12 @@ class DigitalSambaEmbedded extends events_1.default {
             });
         }
     }
+    // getters
     get roomState() {
         return this.stored.roomState;
+    }
+    get localUser() {
+        return this.stored.users[this.stored.userId];
     }
 }
 exports.DigitalSambaEmbedded = DigitalSambaEmbedded;
