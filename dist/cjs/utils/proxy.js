@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProxy = void 0;
+exports.createWatchedProxy = void 0;
 const createHandler = (onChange) => {
     const handler = {
         get(target, key) {
@@ -17,5 +17,5 @@ const createHandler = (onChange) => {
     };
     return handler;
 };
-const createProxy = (initialState, onChange) => new Proxy(initialState, createHandler(onChange));
-exports.createProxy = createProxy;
+const createWatchedProxy = (initialState, onChange) => new Proxy(initialState, createHandler(onChange));
+exports.createWatchedProxy = createWatchedProxy;

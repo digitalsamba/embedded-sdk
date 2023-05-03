@@ -1,7 +1,9 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
-import { CaptionsOptions, InitialRoomSettings, InitOptions, InstanceProperties, LayoutMode, UserId } from './types';
-export declare class DigitalSambaEmbedded extends EventEmitter {
+import { PermissionManager } from './utils/PermissionManager';
+import { LayoutMode } from './utils/vars';
+import { CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId } from './types';
+export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
     savedIframeSrc: string;
@@ -9,7 +11,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     connected: boolean;
     frame: HTMLIFrameElement;
     reportErrors: boolean;
-    private stored;
+    stored: Stored;
+    permissionManager: PermissionManager;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;
     private mountFrame;
@@ -25,6 +28,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     private sendMessage;
     private logError;
     private applyFrameProperties;
+    get roomState(): import("./types").RoomState;
+    get localUser(): import("./types").User;
     enableVideo: () => void;
     disableVideo: () => void;
     toggleVideo: (enable?: boolean) => void;
@@ -46,7 +51,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     requestUnmute: (userId: UserId) => void;
     removeUser: (userId: UserId) => void;
     listUsers: () => import("./types").User[];
-    get roomState(): import("./types").RoomState;
     showCaptions: () => void;
     hideCaptions: () => void;
     toggleCaptions: (show?: boolean) => void;
