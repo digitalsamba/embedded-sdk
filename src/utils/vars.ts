@@ -11,11 +11,6 @@ export enum LayoutMode {
   auto = 'auto',
 }
 
-export enum AppLayout {
-  tiled = 'tiled',
-  tiled_content = 'tiled_content',
-}
-
 export enum PermissionTypes {
   broadcast = 'broadcast',
   manageBroadcast = 'manage_broadcast',
@@ -41,7 +36,6 @@ export const defaultStoredState: Stored = {
     },
     layout: {
       mode: LayoutMode.tiled,
-      presentation: AppLayout.tiled,
       showToolbar: true,
       toolbarPosition: 'left',
     },

@@ -7,11 +7,6 @@ export var LayoutMode;
     LayoutMode["tiled"] = "tiled";
     LayoutMode["auto"] = "auto";
 })(LayoutMode || (LayoutMode = {}));
-export var AppLayout;
-(function (AppLayout) {
-    AppLayout["tiled"] = "tiled";
-    AppLayout["tiled_content"] = "tiled_content";
-})(AppLayout || (AppLayout = {}));
 export var PermissionTypes;
 (function (PermissionTypes) {
     PermissionTypes["broadcast"] = "broadcast";
@@ -37,7 +32,6 @@ export const defaultStoredState = {
         },
         layout: {
             mode: LayoutMode.tiled,
-            presentation: AppLayout.tiled,
             showToolbar: true,
             toolbarPosition: 'left',
         },

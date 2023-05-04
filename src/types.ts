@@ -1,5 +1,5 @@
 import { PermissionsMap } from './utils/PermissionManager/types';
-import { AppLayout, LayoutMode, PermissionTypes } from './utils/vars';
+import { LayoutMode, PermissionTypes } from './utils/vars';
 
 export interface InitialRoomSettings {
   // device config
@@ -176,7 +176,6 @@ export interface RoomState {
   };
   layout: {
     mode: LayoutMode;
-    presentation: AppLayout;
     showToolbar: boolean;
     toolbarPosition: 'left' | 'right' | 'bottom';
   };

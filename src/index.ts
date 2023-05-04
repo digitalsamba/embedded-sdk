@@ -249,6 +249,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         this.permissionManager.permissionsMap = permissionsMap;
 
         this.emitUsersUpdated();
+        this.emitRoomStateUpdated();
 
         this._emit('roomJoined', { type: 'roomJoined' });
         break;

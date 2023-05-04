@@ -5,10 +5,6 @@ export declare enum LayoutMode {
     tiled = "tiled",
     auto = "auto"
 }
-export declare enum AppLayout {
-    tiled = "tiled",
-    tiled_content = "tiled_content"
-}
 export declare enum PermissionTypes {
     broadcast = "broadcast",
     manageBroadcast = "manage_broadcast",
