@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultStoredState = exports.PermissionTypes = exports.AppLayout = exports.LayoutMode = exports.internalEvents = exports.CONNECT_TIMEOUT = void 0;
+exports.defaultStoredState = exports.PermissionTypes = exports.LayoutMode = exports.internalEvents = exports.CONNECT_TIMEOUT = void 0;
 exports.CONNECT_TIMEOUT = 10000;
 exports.internalEvents = {
     roomJoined: true,
@@ -10,11 +10,6 @@ var LayoutMode;
     LayoutMode["tiled"] = "tiled";
     LayoutMode["auto"] = "auto";
 })(LayoutMode = exports.LayoutMode || (exports.LayoutMode = {}));
-var AppLayout;
-(function (AppLayout) {
-    AppLayout["tiled"] = "tiled";
-    AppLayout["tiled_content"] = "tiled_content";
-})(AppLayout = exports.AppLayout || (exports.AppLayout = {}));
 var PermissionTypes;
 (function (PermissionTypes) {
     PermissionTypes["broadcast"] = "broadcast";
@@ -40,7 +35,6 @@ exports.defaultStoredState = {
         },
         layout: {
             mode: LayoutMode.tiled,
-            presentation: AppLayout.tiled,
             showToolbar: true,
             toolbarPosition: 'left',
         },

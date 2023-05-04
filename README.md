@@ -141,6 +141,7 @@ api.disableAudio();
 - `activeSpeakerChanged`
 - `captionsFontSizeChanged`
 - `captionsSpokenLanguageChanged`
+- `roomStateUpdated`
 
 ### Available commands:
 - `enableVideo()`

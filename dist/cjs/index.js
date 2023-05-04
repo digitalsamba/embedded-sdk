@@ -159,6 +159,7 @@ class DigitalSambaEmbedded extends events_1.default {
                     this.stored.activeSpeaker = activeSpeaker;
                     this.permissionManager.permissionsMap = permissionsMap;
                     this.emitUsersUpdated();
+                    this.emitRoomStateUpdated();
                     this._emit('roomJoined', { type: 'roomJoined' });
                     break;
                 }

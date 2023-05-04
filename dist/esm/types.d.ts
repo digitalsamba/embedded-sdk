@@ -1,5 +1,5 @@
 import { PermissionsMap } from './utils/PermissionManager/types';
-import { AppLayout, LayoutMode, PermissionTypes } from './utils/vars';
+import { LayoutMode, PermissionTypes } from './utils/vars';
 export interface InitialRoomSettings {
     cameraEnabled: boolean;
     micEnabled: boolean;
@@ -7,6 +7,12 @@ export interface InitialRoomSettings {
     layoutMode: LayoutMode;
     showToolbar: boolean;
     showCaptions: boolean;
+    virtualBackground: {
+        blur: 'medium' | 'strong';
+        image: 'office' | 'etc' | /* OR */ 'custom-xxxxxx';
+        imageUrl: 'https://image.url';
+        enforce: true;
+    };
 }
 export type InitOptions = {
     root: HTMLElement;
@@ -72,7 +78,6 @@ export interface RoomState {
     };
     layout: {
         mode: LayoutMode;
-        presentation: AppLayout;
         showToolbar: boolean;
         toolbarPosition: 'left' | 'right' | 'bottom';
     };
