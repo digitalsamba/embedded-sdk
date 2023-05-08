@@ -1,4 +1,19 @@
-export interface InitOptions {
+import { PermissionsMap } from './utils/PermissionManager/types';
+import { LayoutMode, PermissionTypes } from './utils/vars';
+
+export interface InitialRoomSettings {
+  // device config
+  cameraEnabled: boolean;
+  micEnabled: boolean;
+  // user config
+  username: string;
+  // layout config
+  layoutMode: LayoutMode;
+  showToolbar: boolean;
+  showCaptions: boolean;
+}
+
+export type InitOptions = {
   root: HTMLElement;
   frame: HTMLIFrameElement;
 
@@ -6,7 +21,9 @@ export interface InitOptions {
   team: string;
   room: string;
   token?: string;
-}
+
+  roomSettings: Partial<InitialRoomSettings>;
+};
 
 export type FrameAttributes = {
   align: string;
@@ -55,7 +72,13 @@ export type SendMessageType =
   | 'showCaptions'
   | 'hideCaptions'
   | 'toggleCaptions'
-  | 'configureCaptions';
+  | 'configureCaptions'
+  | 'raiseHand'
+  | 'lowerHand'
+  | 'allowBroadcast'
+  | 'disallowBroadcast'
+  | 'allowScreenshare'
+  | 'disallowScreenshare';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -76,7 +99,9 @@ export type ReceiveMessageType =
   | 'appError'
   | 'captionsSpokenLanguageChanged'
   | 'captionsFontSizeChanged'
-  | 'permissionsChanged';
+  | 'permissionsChanged'
+  | 'handRaised'
+  | 'handLowered';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -89,12 +114,6 @@ export interface ReceiveMessage {
     data: unknown;
   };
 }
-
-export enum LayoutMode {
-  tiled = 'tiled',
-  auto = 'auto',
-}
-
 export type UserId = string;
 
 export interface User {
@@ -103,15 +122,8 @@ export interface User {
   name: string;
   role: string;
   kind: 'local' | 'remote';
-}
 
-export type UsersList = Record<UserId, User>;
-
-interface Permissions {}
-
-export interface Stored {
-  users: UsersList;
-  localUserPermissions: Partial<Permissions>;
+  dynamicPermissions: PermissionTypes[] | undefined;
 }
 
 export type CaptionsSpokenLanguage =
@@ -153,4 +165,74 @@ type CaptionsFontSize = 'small' | 'medium' | 'large';
 export interface CaptionsOptions {
   spokenLanguage: CaptionsSpokenLanguage;
   fontSize: CaptionsFontSize;
+}
+
+export type UsersList = Record<UserId, User>;
+
+export interface RoomState {
+  media: {
+    cameraEnabled: boolean;
+    micEnabled: boolean;
+  };
+  layout: {
+    mode: LayoutMode;
+    showToolbar: boolean;
+    toolbarPosition: 'left' | 'right' | 'bottom';
+  };
+  captionsState: {
+    showCaptions: boolean;
+  } & CaptionsOptions;
+}
+
+export interface Stored {
+  userId: UserId;
+  users: UsersList;
+  activeSpeaker?: UserId;
+  roomState: RoomState;
+}
+
+export type RoomJoinedPayload = Stored & { permissionsMap: PermissionsMap };
+
+export interface EmbeddedInstance {
+  initOptions: Partial<InitOptions>;
+  roomSettings: Partial<InitialRoomSettings>;
+  savedIframeSrc: string;
+  allowedOrigin: string;
+  connected: boolean;
+  frame: HTMLIFrameElement;
+  reportErrors: boolean;
+  stored: Stored;
+  enableVideo: () => void;
+  disableVideo: () => void;
+  toggleVideo: (enable?: boolean) => void;
+  enableAudio: () => void;
+  disableAudio: () => void;
+  toggleAudio: (enable?: boolean) => void;
+  startScreenshare: () => void;
+  stopScreenshare: () => void;
+  startRecording: () => void;
+  stopRecording: () => void;
+  showToolbar: () => void;
+  hideToolbar: () => void;
+  changeLayoutMode: (mode: LayoutMode) => void;
+  leaveSession: () => void;
+  endSession: () => void;
+  toggleToolbar: (show?: boolean) => void;
+  requestToggleAudio: (userId: UserId, shouldMute?: boolean) => void;
+  requestMute: (userId: UserId) => void;
+  requestUnmute: (userId: UserId) => void;
+  removeUser: (userId: UserId) => void;
+  listUsers: () => User[];
+  get roomState(): RoomState;
+  get localUser(): User;
+  showCaptions: () => void;
+  hideCaptions: () => void;
+  toggleCaptions: (show?: boolean) => void;
+  configureCaptions: (options: Partial<CaptionsOptions>) => void;
+  raiseHand: () => void;
+  lowerHand: (target?: UserId) => void;
+  allowBroadcast: (userId: UserId) => void;
+  disallowBroadcast: (userId: UserId) => void;
+  allowScreenshare: (userId: UserId) => void;
+  disallowScreenshare: (userId: UserId) => void;
 }

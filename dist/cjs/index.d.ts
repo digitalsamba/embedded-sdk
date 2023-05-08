@@ -1,14 +1,18 @@
 /// <reference types="node" />
-import { InitOptions, InstanceProperties, LayoutMode, UserId, CaptionsOptions } from './types';
 import EventEmitter from 'events';
-export declare class DigitalSambaEmbedded extends EventEmitter {
+import { PermissionManager } from './utils/PermissionManager';
+import { LayoutMode } from './utils/vars';
+import { CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId } from './types';
+export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
+    roomSettings: Partial<InitialRoomSettings>;
     savedIframeSrc: string;
     allowedOrigin: string;
     connected: boolean;
     frame: HTMLIFrameElement;
     reportErrors: boolean;
-    private stored;
+    stored: Stored;
+    permissionManager: PermissionManager;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;
     private mountFrame;
@@ -18,11 +22,14 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     private _emit;
     private handleInternalMessage;
     private emitUsersUpdated;
+    private emitRoomStateUpdated;
     private setFrameSrc;
     private checkTarget;
     private sendMessage;
     private logError;
     private applyFrameProperties;
+    get roomState(): import("./types").RoomState;
+    get localUser(): import("./types").User;
     enableVideo: () => void;
     disableVideo: () => void;
     toggleVideo: (enable?: boolean) => void;
@@ -48,4 +55,10 @@ export declare class DigitalSambaEmbedded extends EventEmitter {
     hideCaptions: () => void;
     toggleCaptions: (show?: boolean) => void;
     configureCaptions: (options: Partial<CaptionsOptions>) => void;
+    raiseHand: () => void;
+    lowerHand: (target?: UserId) => void;
+    allowBroadcast: (userId: UserId) => void;
+    disallowBroadcast: (userId: UserId) => void;
+    allowScreenshare: (userId: UserId) => void;
+    disallowScreenshare: (userId: UserId) => void;
 }

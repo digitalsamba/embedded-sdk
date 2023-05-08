@@ -22,22 +22,6 @@
       margin-right: 8px;
     }
 
-    .speaker-indicator {
-      width: 8px;
-      height: 8px;
-      display: block;
-      border-radius: 50%;
-      margin-right: 8px;
-      background: #4cd964;
-      opacity: 0;
-      margin-left: 8px;
-    }
-
-    .speaker-indicator.show {
-      opacity: 1
-    }
-
-
     .log p {
       font-size: 14px;
       line-height: 1;
@@ -57,10 +41,6 @@
   <div style="min-width: 300px ; padding: 0 16px">
     <h3>Room users:</h3>
     <div class="participants">
-
-    </div>
-    <h3>Room state</h3>
-    <div class="state">
 
     </div>
   </div>
@@ -115,37 +95,6 @@
 
   btn0.onclick = () => {api.load({ frameAttributes: {style: "border: 5px solid red"}, reportErrors: true })}
 
-  const baseControls = [
-    {command: 'toggleVideo', label: 'toggle video' },
-    {command: 'enableVideo', label: 'enable video' },
-    {command: 'disableVideo', label: 'disable video' },
-    {command: 'toggleAudio', label: 'toggle audio' },
-    {command: 'enableAudio', label: 'enable audio' },
-    {command: 'disableAudio', label: 'disable audio' },
-    {command: 'startScreenshare', label: 'start screenshare' },
-    {command: 'stopScreenshare', label: 'stop screenshare' },
-    {command: 'raiseHand', label: 'raise hand' },
-    {command: 'startRecording', label: 'start recording' },
-    {command: 'stopRecording', label: 'stop recording' },
-    {command: 'showToolbar', label: 'show toolbar' },
-    {command: 'hideToolbar', label: 'hide toolbar' },
-    {command: 'toggleToolbar', label: 'toggle toolbar' },
-    {command: 'changeLayoutMode', label: 'auto layout', args: ['auto'] },
-    {command: 'changeLayoutMode', label: 'tiled layout', args: ['tiled'] },
-    {command: 'showCaptions', label: 'show captions'},
-    {command: 'hideCaptions', label: 'hide captions'},
-    {command: 'toggleCaptions', label: 'toggle captions'},
-    {command: 'leaveSession', label: 'leave session' },
-    {command: 'endSession', label: 'end session' },
-  ]
-
-  baseControls.forEach(control => {
-    const button = document.createElement("button");
-    button.innerHTML = control.label;
-    button.onclick = () => api[control.command](...(control.args || []))
-
-    buttonsParent.appendChild(button);
-  })
 
   const captionsControls = [
     {command: 'configureCaptions', label: 'set font size - small', args: [{fontSize: 'small'}] },
@@ -176,6 +125,47 @@
     log.innerHTML += `<p>${Number(new Date)}: USER LEFT: ${JSON.stringify(data)}</p>`
   });
 
+  const baseControls = [
+    {command: 'toggleVideo', label: 'toggle video', permission: "broadcast" },
+    {command: 'enableVideo', label: 'enable video', permission: 'broadcast' },
+    {command: 'disableVideo', label: 'disable video', permission: 'broadcast' },
+    {command: 'toggleAudio', label: 'toggle audio', permission: 'broadcast' },
+    {command: 'enableAudio', label: 'enable audio', permission: 'broadcast' },
+    {command: 'disableAudio', label: 'disable audio', permission: 'broadcast' },
+    {command: 'startScreenshare', label: 'start screenshare', permission: 'screenshare' },
+    {command: 'stopScreenshare', label: 'stop screenshare', permission: 'screenshare' },
+    {command: 'raiseHand', label: 'raise hand', permission: 'raise_hand' },
+    {command: 'startRecording', label: 'start recording', permission: 'recording' },
+    {command: 'stopRecording', label: 'stop recording', permission: 'recording' },
+    {command: 'showToolbar', label: 'show toolbar' },
+    {command: 'hideToolbar', label: 'hide toolbar' },
+    {command: 'toggleToolbar', label: 'toggle toolbar' },
+    {command: 'changeLayoutMode', label: 'auto layout', args: ['auto'] },
+    {command: 'changeLayoutMode', label: 'tiled layout', args: ['tiled'] },
+    {command: 'showCaptions', label: 'show captions'},
+    {command: 'hideCaptions', label: 'hide captions'},
+    {command: 'toggleCaptions', label: 'toggle captions'},
+    {command: 'leaveSession', label: 'leave session' },
+    {command: 'endSession', label: 'end session', permission: 'end_session' },
+  ]
+
+  api.on('roomJoined', () => {
+    baseControls.forEach(control => {
+      if(control.permission && !api.permissionManager.hasPermissions(control.permission)) {
+        return;
+      };
+
+      const button = document.createElement("button");
+      button.innerHTML = control.label;
+      button.onclick = () => api[control.command](...(control.args || []))
+
+      buttonsParent.appendChild(button);
+    })
+
+
+    buttonsParent.style.display = 'block';
+  })
+
   api.on('permissionsChanged', ({ data }) => {
     if(data.broadcast !== undefined){
       if(data.broadcast) {
@@ -192,31 +182,22 @@
         alert('Your permission to screenshare was rejected')
       }
     }
+
+    buttonsParent.innerHTML = '<button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>';
+
+    baseControls.forEach(control => {
+      if(control.permission && !api.permissionManager.hasPermissions(control.permission)) {
+        return;
+      };
+
+      const button = document.createElement("button");
+      button.innerHTML = control.label;
+      button.onclick = () => api[control.command](...(control.args || []))
+
+      buttonsParent.appendChild(button);
+    })
   });
 
-  api.on('handRaised', ({data}) => {
-    const control = document.querySelector('#lower-hand-'+data.userId);
-
-    if(control) {
-      control.style.display = 'inline'
-    }
-  })
-
-  api.on('handLowered', ({data}) => {
-    const id = data.user;
-
-    const control = document.querySelector('#lower-hand-'+ id );
-
-    if(control) {
-      control.style.display = 'none'
-    }
-  })
-
-  const stateBlock = document.querySelector('.state');
-
-  api.on('roomStateUpdated', ({data}) => {
-    stateBlock.innerHTML = JSON.stringify(data);
-  })
 
   api.on('usersUpdated', ({data: {users}}) => {
     participantList.innerHTML = '';
@@ -238,11 +219,6 @@
       name.innerText = user.name;
       row.appendChild(name);
 
-      const speakerIndicator = document.createElement('span')
-      speakerIndicator.className = `speaker-indicator speaker-indicator-${user.id}`;
-      row.appendChild(speakerIndicator);
-
-
       if(user.kind === 'local') {
         const label = document.createElement('span');
         label.className = 'user-list-label';
@@ -250,41 +226,48 @@
         label.style.color = '#777';
         row.appendChild(label);
       } else {
-        const micControl = document.createElement('button');
-        micControl.innerHTML = 'toggle mic'
-        micControl.style.margin = '0 4px';
-        micControl.onclick = () => {api.requestToggleAudio(user.id)}
-        row.appendChild(micControl);
+          const micControl = document.createElement('button');
+          micControl.innerHTML = 'toggle mic'
+          micControl.style.margin = '0 4px';
+          micControl.onclick = () => {
+            api.requestToggleAudio(user.id)
+          }
+          row.appendChild(micControl);
 
-        const kickControl = document.createElement('button');
-        kickControl.innerHTML = 'kick'
-        kickControl.style.margin = '0 4px';
-        kickControl.onclick = () => {api.removeUser(user.id)}
-        row.appendChild(kickControl);
 
-        const allowBroadcastControl = document.createElement('button');
-        allowBroadcastControl.innerHTML = 'allow broadcast'
-        allowBroadcastControl.style.margin = '0 4px';
-        allowBroadcastControl.onclick = () => {api.allowBroadcast(user.id)}
-        subButtons.appendChild(allowBroadcastControl);
+        if(api.permissionManager.hasPermissions('remove_participant', {targetRole: user.role})) {
+          const kickControl = document.createElement('button');
+          kickControl.innerHTML = 'kick'
+          kickControl.style.margin = '0 4px';
+          kickControl.onclick = () => {api.removeUser(user.id)}
+          row.appendChild(kickControl);
+        }
 
-        const disallowBroadcastControl = document.createElement('button');
-        disallowBroadcastControl.innerHTML = 'disallow broadcast'
-        disallowBroadcastControl.style.margin = '0 4px';
-        disallowBroadcastControl.onclick = () => {api.disallowBroadcast(user.id)}
-        subButtons.appendChild(disallowBroadcastControl);
+        if(api.permissionManager.hasPermissions('manage_broadcast', {targetRole: user.role})) {
+          const allowBroadcastControl = document.createElement('button');
+          allowBroadcastControl.innerHTML = 'allow broadcast'
+          allowBroadcastControl.style.margin = '0 4px';
+          allowBroadcastControl.onclick = () => {api.allowBroadcast(user.id)}
+          subButtons.appendChild(allowBroadcastControl);
 
-        const allowScreenshareControl = document.createElement('button');
-        allowScreenshareControl.innerHTML = 'allow screenshare'
-        allowScreenshareControl.style.margin = '0 4px';
-        allowScreenshareControl.onclick = () => {api.allowScreenshare(user.id)}
-        subButtons.appendChild(allowScreenshareControl);
+          const disallowBroadcastControl = document.createElement('button');
+          disallowBroadcastControl.innerHTML = 'disallow broadcast'
+          disallowBroadcastControl.style.margin = '0 4px';
+          disallowBroadcastControl.onclick = () => {api.disallowBroadcast(user.id)}
+          subButtons.appendChild(disallowBroadcastControl);
 
-        const disallowScreenshareControl = document.createElement('button');
-        disallowScreenshareControl.innerHTML = 'disallow screenshare'
-        disallowScreenshareControl.style.margin = '0 4px';
-        disallowScreenshareControl.onclick = () => {api.disallowScreenshare(user.id)}
-        subButtons.appendChild(disallowScreenshareControl);
+          const allowScreenshareControl = document.createElement('button');
+          allowScreenshareControl.innerHTML = 'allow screenshare'
+          allowScreenshareControl.style.margin = '0 4px';
+          allowScreenshareControl.onclick = () => {api.allowScreenshare(user.id)}
+          subButtons.appendChild(allowScreenshareControl);
+
+          const disallowScreenshareControl = document.createElement('button');
+          disallowScreenshareControl.innerHTML = 'disallow screenshare'
+          disallowScreenshareControl.style.margin = '0 4px';
+          disallowScreenshareControl.onclick = () => {api.disallowScreenshare(user.id)}
+          subButtons.appendChild(disallowScreenshareControl);
+        }
       }
 
       const raisedHandControl = document.createElement('button');
@@ -300,18 +283,6 @@
 
     })
   })
-
-  api.on('activeSpeakerChanged', ({data}) => {
-    const currentIndicator = document.querySelector('.speaker-indicator.show')
-    if(currentIndicator) {
-      currentIndicator.className = currentIndicator.className.replace(' show', '');
-
-    }
-
-    const newIndicator = document.querySelector(`.speaker-indicator-${data.user.id}`);
-    newIndicator.className = newIndicator.className + ' show'
-  })
-
 </script>
 
 </body>
