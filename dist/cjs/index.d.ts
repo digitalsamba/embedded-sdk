@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId } from './types';
+import { CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -61,4 +61,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     disallowBroadcast: (userId: UserId) => void;
     allowScreenshare: (userId: UserId) => void;
     disallowScreenshare: (userId: UserId) => void;
+    configureVirtualBackground: (options: VirtualBackgroundOptions) => void;
+    enableVirtualBackground: (options: VirtualBackgroundOptions) => void;
+    disableVirtualBackground: () => void;
 }

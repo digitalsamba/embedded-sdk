@@ -19,6 +19,7 @@ import {
   SendMessage,
   Stored,
   UserId,
+  VirtualBackgroundOptions,
 } from './types';
 
 import {
@@ -225,6 +226,23 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     this.on('captionsFontSizeChanged', (event) => {
       this.stored.roomState.captionsState.fontSize = event.data.fontSize;
+    });
+
+    this.on('virtualBackgroundChanged', (event) => {
+      const { type, value, enforced } = event.data.virtualBackgroundConfig;
+
+      this.stored.roomState.virtualBackground = {
+        enabled: true,
+        type,
+        value,
+        enforced,
+      };
+    });
+
+    this.on('virtualBackgroundDisabled', (event) => {
+      this.stored.roomState.virtualBackground = {
+        enabled: false,
+      };
     });
   };
 
@@ -525,5 +543,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   disallowScreenshare = (userId: UserId) => {
     this.sendMessage({ type: 'disallowScreenshare', data: userId });
+  };
+
+  configureVirtualBackground = (options: VirtualBackgroundOptions) => {
+    this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
+  };
+
+  enableVirtualBackground = (options: VirtualBackgroundOptions) =>
+    this.configureVirtualBackground(options);
+
+  disableVirtualBackground = () => {
+    this.sendMessage({ type: 'disableVirtualBackground' });
   };
 }

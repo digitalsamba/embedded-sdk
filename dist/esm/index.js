@@ -138,6 +138,20 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.on('captionsFontSizeChanged', (event) => {
                 this.stored.roomState.captionsState.fontSize = event.data.fontSize;
             });
+            this.on('virtualBackgroundChanged', (event) => {
+                const { type, value, enforced } = event.data.virtualBackgroundConfig;
+                this.stored.roomState.virtualBackground = {
+                    enabled: true,
+                    type,
+                    value,
+                    enforced,
+                };
+            });
+            this.on('virtualBackgroundDisabled', (event) => {
+                this.stored.roomState.virtualBackground = {
+                    enabled: false,
+                };
+            });
         };
         this._emit = (eventName, ...args) => {
             this.emit('*', ...args);
@@ -358,6 +372,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
         };
         this.disallowScreenshare = (userId) => {
             this.sendMessage({ type: 'disallowScreenshare', data: userId });
+        };
+        this.configureVirtualBackground = (options) => {
+            this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
+        };
+        this.enableVirtualBackground = (options) => this.configureVirtualBackground(options);
+        this.disableVirtualBackground = () => {
+            this.sendMessage({ type: 'disableVirtualBackground' });
         };
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};

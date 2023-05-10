@@ -43,6 +43,9 @@ exports.defaultStoredState = {
             spokenLanguage: 'en',
             fontSize: 'medium',
         },
+        virtualBackground: {
+            enabled: false,
+        },
     },
     users: {},
 };
