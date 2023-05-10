@@ -7,12 +7,7 @@ export interface InitialRoomSettings {
     layoutMode: LayoutMode;
     showToolbar: boolean;
     showCaptions: boolean;
-    virtualBackground: {
-        blur: 'medium' | 'strong';
-        image: 'office' | 'etc' | /* OR */ 'custom-xxxxxx';
-        imageUrl: 'https://image.url';
-        enforce: true;
-    };
+    virtualBackground: VirtualBackgroundOptions;
 }
 export type InitOptions = {
     root: HTMLElement;
@@ -43,8 +38,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare';
-export type ReceiveMessageType = 'connected' | 'userJoined' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError' | 'captionsSpokenLanguageChanged' | 'captionsFontSizeChanged' | 'permissionsChanged' | 'handRaised' | 'handLowered';
+export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground';
+export type ReceiveMessageType = 'connected' | 'userJoined' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError' | 'captionsSpokenLanguageChanged' | 'captionsFontSizeChanged' | 'permissionsChanged' | 'handRaised' | 'handLowered' | 'virtualBackgroundChanged' | 'virtualBackgroundDisabled';
 export interface SendMessage<D> {
     type: SendMessageType;
     data?: D;
@@ -70,6 +65,12 @@ export interface CaptionsOptions {
     spokenLanguage: CaptionsSpokenLanguage;
     fontSize: CaptionsFontSize;
 }
+export interface VirtualBackgroundOptions {
+    enforce?: boolean;
+    blur?: 'balanced' | 'strong';
+    image?: string;
+    imageUrl?: string;
+}
 export type UsersList = Record<UserId, User>;
 export interface RoomState {
     media: {
@@ -84,6 +85,16 @@ export interface RoomState {
     captionsState: {
         showCaptions: boolean;
     } & CaptionsOptions;
+    virtualBackground: {
+        enabled: boolean;
+        enforced?: boolean;
+        type?: 'blur' | 'image' | 'imageUrl';
+        value?: string | {
+            src: string;
+            thumb: string;
+            alt: string;
+        };
+    };
 }
 export interface Stored {
     userId: UserId;

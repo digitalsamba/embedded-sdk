@@ -40,6 +40,9 @@ export const defaultStoredState = {
             spokenLanguage: 'en',
             fontSize: 'medium',
         },
+        virtualBackground: {
+            enabled: false,
+        },
     },
     users: {},
 };

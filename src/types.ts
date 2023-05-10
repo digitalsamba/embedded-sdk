@@ -11,6 +11,7 @@ export interface InitialRoomSettings {
   layoutMode: LayoutMode;
   showToolbar: boolean;
   showCaptions: boolean;
+  virtualBackground: VirtualBackgroundOptions;
 }
 
 export type InitOptions = {
@@ -78,7 +79,9 @@ export type SendMessageType =
   | 'allowBroadcast'
   | 'disallowBroadcast'
   | 'allowScreenshare'
-  | 'disallowScreenshare';
+  | 'disallowScreenshare'
+  | 'configureVirtualBackground'
+  | 'disableVirtualBackground';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -101,7 +104,9 @@ export type ReceiveMessageType =
   | 'captionsFontSizeChanged'
   | 'permissionsChanged'
   | 'handRaised'
-  | 'handLowered';
+  | 'handLowered'
+  | 'virtualBackgroundChanged'
+  | 'virtualBackgroundDisabled';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -167,6 +172,13 @@ export interface CaptionsOptions {
   fontSize: CaptionsFontSize;
 }
 
+export interface VirtualBackgroundOptions {
+  enforce?: boolean;
+  blur?: 'balanced' | 'strong';
+  image?: string;
+  imageUrl?: string;
+}
+
 export type UsersList = Record<UserId, User>;
 
 export interface RoomState {
@@ -182,6 +194,13 @@ export interface RoomState {
   captionsState: {
     showCaptions: boolean;
   } & CaptionsOptions;
+
+  virtualBackground: {
+    enabled: boolean;
+    enforced?: boolean;
+    type?: 'blur' | 'image' | 'imageUrl';
+    value?: string | { src: string; thumb: string; alt: string };
+  };
 }
 
 export interface Stored {
