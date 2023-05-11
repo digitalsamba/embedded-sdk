@@ -222,6 +222,15 @@
     prepBlock.style.display = 'none'
     controlsBlock.style.display = 'block'
 
+    const roomVBType = document.getElementById('room-vb-type');
+    roomVBType.value = VBstate.type;
+
+  const roomVBValue= document.getElementById('room-vb-value');
+    roomVBValue.value = VBstate.value;
+
+  const roomVBEnforce = document.getElementById('room-vb-enforced');
+    roomVBEnforce.checked = VBstate.type;
+
     createControl()
   }
 
