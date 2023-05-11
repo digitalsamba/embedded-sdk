@@ -141,6 +141,12 @@ class DigitalSambaEmbedded extends events_1.default {
             this.on('captionsSpokenLanguageChanged', (event) => {
                 this.stored.roomState.captionsState.spokenLanguage = event.data.language;
             });
+            this.on('captionsEnabled', () => {
+                this.stored.roomState.captionsState.showCaptions = true;
+            });
+            this.on('captionsDisabled', () => {
+                this.stored.roomState.captionsState.showCaptions = false;
+            });
             this.on('captionsFontSizeChanged', (event) => {
                 this.stored.roomState.captionsState.fontSize = event.data.fontSize;
             });
