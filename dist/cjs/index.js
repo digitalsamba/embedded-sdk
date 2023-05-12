@@ -200,9 +200,12 @@ class DigitalSambaEmbedded extends events_1.default {
             if (team && room) {
                 url = `https://${team}.digitalsamba.com/${room}`;
             }
-            if (url && token) {
+            if (url) {
                 const urlObj = new URL(url);
-                urlObj.searchParams.append('token', token);
+                urlObj.searchParams.append('dsEmbedFrame', 'true');
+                if (token) {
+                    urlObj.searchParams.append('token', token);
+                }
                 url = urlObj.toString();
             }
             if (url) {
@@ -214,7 +217,10 @@ class DigitalSambaEmbedded extends events_1.default {
             }
             const allowedURL = new URL(this.frame.src);
             this.allowedOrigin = allowedURL.origin;
-            this.frame.onload = () => this.checkTarget();
+            this.frame.onload = () => {
+                this._emit('frameLoaded');
+                this.checkTarget();
+            };
         };
         this.logError = (error) => {
             if (this.reportErrors) {
