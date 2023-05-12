@@ -128,7 +128,7 @@
   <div class="div buttons" style=" border: 1px solid yellow">
     <button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>
 
-    <fieldset>
+    <fieldset class="room-vb-fields" style="display: none">
       <legend>Virtual background:</legend>
       <div class="vb-room-options">
         <div>
@@ -229,7 +229,7 @@
     roomVBValue.value = VBstate.value;
 
   const roomVBEnforce = document.getElementById('room-vb-enforced');
-    roomVBEnforce.checked = VBstate.type;
+    roomVBEnforce.checked = VBstate.enforce;
 
     createControl()
   }
@@ -262,6 +262,10 @@
     api.on('*', (data) => {
       log.innerHTML += `<p>${Number(new Date)}: ev(${data?.type}): ${JSON.stringify(data)}</p>`
     });
+
+    api.on('frameLoaded', () => {
+      document.querySelector('.room-vb-fields').style.display = 'block'
+    })
 
     const stateBlock = document.querySelector('.state');
 
