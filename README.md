@@ -125,6 +125,7 @@ api.disableAudio();
 
 ### Available events:
 - `appError`
+- `frameLoaded`
 - `userJoined`
 - `userLeft`
 - `usersUpdated`

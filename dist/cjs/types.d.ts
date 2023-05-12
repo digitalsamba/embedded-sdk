@@ -7,12 +7,6 @@ export interface InitialRoomSettings {
     layoutMode: LayoutMode;
     showToolbar: boolean;
     showCaptions: boolean;
-    virtualBackground: {
-        blur: 'medium' | 'strong';
-        image: 'office' | 'etc' | /* OR */ 'custom-xxxxxx';
-        imageUrl: 'https://image.url';
-        enforce: true;
-    };
 }
 export type InitOptions = {
     root: HTMLElement;
