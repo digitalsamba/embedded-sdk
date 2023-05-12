@@ -85,7 +85,9 @@ export type SendMessageType =
 
 export type ReceiveMessageType =
   | 'connected'
+  | 'frameLoaded'
   | 'userJoined'
+  | 'usersUpdated'
   | 'userLeft'
   | 'roomJoined'
   | 'videoEnabled'
@@ -100,13 +102,16 @@ export type ReceiveMessageType =
   | 'layoutModeChanged'
   | 'activeSpeakerChanged'
   | 'appError'
+  | 'captionsEnabled'
+  | 'captionsDisabled'
   | 'captionsSpokenLanguageChanged'
   | 'captionsFontSizeChanged'
   | 'permissionsChanged'
   | 'handRaised'
   | 'handLowered'
   | 'virtualBackgroundChanged'
-  | 'virtualBackgroundDisabled';
+  | 'virtualBackgroundDisabled'
+  | 'roomStateUpdated';
 
 export interface SendMessage<D> {
   type: SendMessageType;
