@@ -114,25 +114,25 @@ class DigitalSambaEmbedded extends events_1.default {
             this.on('videoEnabled', (event) => {
                 var _b;
                 if (((_b = event.data) === null || _b === void 0 ? void 0 : _b.type) === 'local') {
-                    this.stored.roomState.media.cameraEnabled = true;
+                    this.stored.roomState.media.videoEnabled = true;
                 }
             });
             this.on('videoDisabled', (event) => {
                 var _b;
                 if (((_b = event.data) === null || _b === void 0 ? void 0 : _b.type) === 'local') {
-                    this.stored.roomState.media.cameraEnabled = false;
+                    this.stored.roomState.media.videoEnabled = false;
                 }
             });
             this.on('audioEnabled', (event) => {
                 var _b;
                 if (((_b = event.data) === null || _b === void 0 ? void 0 : _b.type) === 'local') {
-                    this.stored.roomState.media.micEnabled = true;
+                    this.stored.roomState.media.audioEnabled = true;
                 }
             });
             this.on('audioDisabled', (event) => {
                 var _b;
                 if (((_b = event.data) === null || _b === void 0 ? void 0 : _b.type) === 'local') {
-                    this.stored.roomState.media.micEnabled = false;
+                    this.stored.roomState.media.audioEnabled = false;
                 }
             });
             this.on('layoutModeChanged', (event) => {
@@ -218,7 +218,7 @@ class DigitalSambaEmbedded extends events_1.default {
             const allowedURL = new URL(this.frame.src);
             this.allowedOrigin = allowedURL.origin;
             this.frame.onload = () => {
-                this._emit('frameLoaded');
+                this._emit('frameLoaded', { type: 'frameLoaded' });
                 this.checkTarget();
             };
         };
@@ -245,11 +245,11 @@ class DigitalSambaEmbedded extends events_1.default {
         };
         // commands
         this.enableVideo = () => {
-            this.roomSettings.cameraEnabled = true;
+            this.roomSettings.videoEnabled = true;
             this.sendMessage({ type: 'enableVideo' });
         };
         this.disableVideo = () => {
-            this.roomSettings.cameraEnabled = false;
+            this.roomSettings.videoEnabled = false;
             this.sendMessage({ type: 'disableVideo' });
         };
         this.toggleVideo = (enable) => {
@@ -264,11 +264,11 @@ class DigitalSambaEmbedded extends events_1.default {
             }
         };
         this.enableAudio = () => {
-            this.roomSettings.micEnabled = true;
+            this.roomSettings.audioEnabled = true;
             this.sendMessage({ type: 'enableAudio' });
         };
         this.disableAudio = () => {
-            this.roomSettings.micEnabled = false;
+            this.roomSettings.audioEnabled = false;
             this.sendMessage({ type: 'disableAudio' });
         };
         this.toggleAudio = (enable) => {
@@ -347,6 +347,7 @@ class DigitalSambaEmbedded extends events_1.default {
             this.sendMessage({ type: 'removeUser', data: userId });
         };
         this.listUsers = () => Object.values(this.stored.users);
+        this.getUser = (userId) => { var _b; return (_b = this.stored.users) === null || _b === void 0 ? void 0 : _b[userId]; };
         this.showCaptions = () => {
             this.roomSettings.showCaptions = true;
             this.stored.roomState.captionsState.showCaptions = true;
@@ -392,10 +393,27 @@ class DigitalSambaEmbedded extends events_1.default {
             this.sendMessage({ type: 'disallowScreenshare', data: userId });
         };
         this.configureVirtualBackground = (options) => {
+            this.roomSettings.virtualBackground = options;
+            const optionsToState = {
+                enabled: true,
+                type: undefined,
+                value: '',
+                enforced: options.enforce,
+            };
+            const vbOptions = ['blur', 'image', 'imageUrl'];
+            vbOptions.forEach((value) => {
+                if (options[value]) {
+                    optionsToState.type = value;
+                    optionsToState.value = options[value];
+                }
+            });
+            this.stored.roomState.virtualBackground = optionsToState;
             this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
         };
         this.enableVirtualBackground = (options) => this.configureVirtualBackground(options);
         this.disableVirtualBackground = () => {
+            this.roomSettings.virtualBackground = undefined;
+            this.stored.roomState.virtualBackground = { enabled: false };
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
         this.initOptions = options;

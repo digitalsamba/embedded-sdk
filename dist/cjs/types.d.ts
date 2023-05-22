@@ -1,8 +1,8 @@
 import { PermissionsMap } from './utils/PermissionManager/types';
 import { LayoutMode, PermissionTypes } from './utils/vars';
 export interface InitialRoomSettings {
-    cameraEnabled: boolean;
-    micEnabled: boolean;
+    videoEnabled: boolean;
+    audioEnabled: boolean;
     username: string;
     layoutMode: LayoutMode;
     showToolbar: boolean;
@@ -72,10 +72,20 @@ export interface VirtualBackgroundOptions {
     imageUrl?: string;
 }
 export type UsersList = Record<UserId, User>;
+export interface StoredVBState {
+    enabled: boolean;
+    enforced?: boolean;
+    type?: 'blur' | 'image' | 'imageUrl';
+    value?: string | {
+        src: string;
+        thumb: string;
+        alt: string;
+    };
+}
 export interface RoomState {
     media: {
-        cameraEnabled: boolean;
-        micEnabled: boolean;
+        videoEnabled: boolean;
+        audioEnabled: boolean;
     };
     layout: {
         mode: LayoutMode;
@@ -85,16 +95,7 @@ export interface RoomState {
     captionsState: {
         showCaptions: boolean;
     } & CaptionsOptions;
-    virtualBackground: {
-        enabled: boolean;
-        enforced?: boolean;
-        type?: 'blur' | 'image' | 'imageUrl';
-        value?: string | {
-            src: string;
-            thumb: string;
-            alt: string;
-        };
-    };
+    virtualBackground: StoredVBState;
 }
 export interface Stored {
     userId: UserId;

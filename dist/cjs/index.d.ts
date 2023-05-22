@@ -51,6 +51,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     requestUnmute: (userId: UserId) => void;
     removeUser: (userId: UserId) => void;
     listUsers: () => import("./types").User[];
+    getUser: (userId: UserId) => import("./types").User;
     showCaptions: () => void;
     hideCaptions: () => void;
     toggleCaptions: (show?: boolean) => void;

@@ -27,8 +27,8 @@ export const defaultStoredState = {
     userId: '',
     roomState: {
         media: {
-            micEnabled: false,
-            cameraEnabled: false,
+            audioEnabled: false,
+            videoEnabled: false,
         },
         layout: {
             mode: LayoutMode.tiled,
