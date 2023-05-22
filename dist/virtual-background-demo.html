@@ -35,8 +35,8 @@
   <script>
     const initialRoomState = {
       username: "",
-      micEnabled: false,
-      cameraEnabled: false,
+      audioEnabled: false,
+      videoEnabled: false,
       showToolbar: false,
       showCaptions: false,
       layoutMode: 'auto',
@@ -192,8 +192,8 @@
   //const api = new DigitalSambaEmbedded({ url: ROOM_URL}, {reportErrors: true});
 
   const prepCheckboxes = [
-    {control: 'micEnabled', label: 'Microphone enabled  by default'},
-    {control: 'cameraEnabled', label: 'Camera enabled  by default'},
+    {control: 'audioEnabled', label: 'Microphone enabled  by default'},
+    {control: 'videoEnabled', label: 'Camera enabled  by default'},
     {control: 'showToolbar', label: 'Show toolbar'},
     {control: 'showCaptions', label: 'Show captions'},
   ];
