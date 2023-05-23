@@ -12,6 +12,9 @@ or
 
 `yarn install @digitalsamba/embedded-sdk`
 
+[NPM Package link](https://www.npmjs.com/package/@digitalsamba/embedded-sdk)
+
+
 After installation, use it in your application code using provided import:
 
 ```js

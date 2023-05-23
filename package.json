@@ -11,6 +11,10 @@
     "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
     "prepare": "husky install"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digitalsamba/embedded-sdk.git"
+  },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
