@@ -31,8 +31,8 @@ export const defaultStoredState: Stored = {
   userId: '',
   roomState: {
     media: {
-      micEnabled: false,
-      cameraEnabled: false,
+      audioEnabled: false,
+      videoEnabled: false,
     },
     layout: {
       mode: LayoutMode.tiled,
@@ -43,6 +43,9 @@ export const defaultStoredState: Stored = {
       showCaptions: false,
       spokenLanguage: 'en',
       fontSize: 'medium',
+    },
+    virtualBackground: {
+      enabled: false,
     },
   },
   users: {},

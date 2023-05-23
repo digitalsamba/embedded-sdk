@@ -30,8 +30,8 @@ exports.defaultStoredState = {
     userId: '',
     roomState: {
         media: {
-            micEnabled: false,
-            cameraEnabled: false,
+            audioEnabled: false,
+            videoEnabled: false,
         },
         layout: {
             mode: LayoutMode.tiled,
@@ -42,6 +42,9 @@ exports.defaultStoredState = {
             showCaptions: false,
             spokenLanguage: 'en',
             fontSize: 'medium',
+        },
+        virtualBackground: {
+            enabled: false,
         },
     },
     users: {},

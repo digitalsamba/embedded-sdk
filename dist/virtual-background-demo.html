@@ -39,11 +39,35 @@
       videoEnabled: false,
       showToolbar: false,
       showCaptions: false,
-      layoutMode: 'auto'
+      layoutMode: 'auto',
+      virtualBackground: undefined
+    }
+    const VBstate = {
+      type: 'blur',
+      value: 'balanced',
+      enforce: false,
+    }
+    const updateVBEnabled = () => {
+      const vbOptions = document.querySelector('.vb-prep-options');
+
+      if(initialRoomState.virtualBackground) {
+        initialRoomState.virtualBackground = undefined
+        vbOptions.style.opacity = '0.5'
+        vbOptions.style.pointerEvents = 'none'
+      } else {
+        initialRoomState.virtualBackground = VBstate;
+        vbOptions.style.opacity = '1'
+        vbOptions.style.pointerEvents = 'all'
+      }
     }
   </script>
 </head>
 <body>
+<div>
+  <p>allowed blur options: "balanced", "strong"</p>
+  <p>allowed image options: "office","office2","beach","fireworks","bookshelf","forest","mountain","savannah"
+  </p>
+</div>
 <div class="sdk-prep">
   <h3>Initial settings</h3>
 
@@ -62,6 +86,29 @@
       <label for="contactChoice2">Tiled</label>
     </div>
   </fieldset>
+  <fieldset>
+    <legend>Virtual background:</legend>
+    <input type="checkbox" id="prep-vb-enabled" name="vb-enabled" value="auto" onchange="updateVBEnabled()" />
+    <label for="prep-vb-enabled">VB enabled</label>
+    <div class="vb-prep-options" style="opacity: 0.5; pointer-events: none;">
+      <div>
+        <label for="vb-type">VB type</label>
+        <select name="vb-type" id="vb-type" onchange="VBstate.type = this.value">
+          <option value="blur">blur</option>
+          <option value="image">image</option>
+          <option value="imageUrl">imageUrl</option>
+        </select>
+      </div>
+      <div>
+        <label for="prep-vb-value"></label>
+        <input type="text" name="prep-vb-value" id="prep-vb-value" value="balanced" onchange="VBstate.value = this.value">
+      </div>
+      <div>
+        <input type="checkbox" id="prep-vb-enforced" name="vb-enforced" value="auto" onchange="VBstate.enforce = !VBstate.enforce" />
+        <label for="prep-vb-enforced">enforce VB</label>
+      </div>
+    </div>
+  </fieldset>
   <div style="margin-top: 20px">
     <button type="button" class="sdk-prep-submit">load</button>
   </div>
@@ -72,8 +119,8 @@
 
     </div>
     <div style="min-width: 300px ; padding: 0 16px">
-      <h3>Room users:</h3>
-      <div class="participants">
+      <h3>Room state</h3>
+      <div class="state">
 
       </div>
     </div>
@@ -81,10 +128,29 @@
   <div class="div buttons" style=" border: 1px solid yellow">
     <button class="c0" style="margin-right: 15px; border: 2px solid blue">LOAD</button>
 
-  </div>
-  <div class="div captions-buttons" style=" border: 1px solid yellow">
-    <p>captions controls</p>
-
+    <fieldset class="room-vb-fields" style="display: none">
+      <legend>Virtual background:</legend>
+      <div class="vb-room-options">
+        <div>
+          <label for="room-vb-type">VB type</label>
+          <select name="room-vb-type" id="room-vb-type" onchange="VBstate.type = this.value">
+            <option value="blur">blur</option>
+            <option value="image">image</option>
+            <option value="imageUrl">imageUrl</option>
+          </select>
+        </div>
+        <div>
+          <label for="room-vb-value"></label>
+          <input type="text" name="room-vb-value" id="room-vb-value" value="balanced" onchange="VBstate.value = this.value">
+        </div>
+        <div>
+          <input type="checkbox" id="room-vb-enforced" name="room-vb-enforced" value="auto" onchange="VBstate.enforce = !VBstate.enforce" />
+          <label for="room-vb-enforced">enforce VB</label>
+        </div>
+      </div>
+    </fieldset>
+    <button class="enable-vb-button">apply settings</button>
+    <button class="disable-vb-button">disable-vb</button>
   </div>
 
   <div class="log">
@@ -104,6 +170,9 @@
   const controlsBlock = document.querySelector('.sdk-ready')
   const prepUsernameInput = document.getElementById('prep-username-input')
   const prepCheckboxesParent = document.querySelector('.prep-checkboxes')
+
+  const enableVBButton = document.querySelector('.enable-vb-button')
+  const disableVBButton = document.querySelector('.disable-vb-button')
 
   // change these values to connect to your room
   const TEAM = 'some-team';
@@ -153,17 +222,34 @@
     prepBlock.style.display = 'none'
     controlsBlock.style.display = 'block'
 
+    const roomVBType = document.getElementById('room-vb-type');
+    roomVBType.value = VBstate.type;
+
+  const roomVBValue= document.getElementById('room-vb-value');
+    roomVBValue.value = VBstate.value;
+
+  const roomVBEnforce = document.getElementById('room-vb-enforced');
+    roomVBEnforce.checked = VBstate.enforce;
+
     createControl()
   }
 
   prepUsernameInput.onchange = (e) => {
     initialRoomState.username = e.target.value
-
-    console.warn(initialRoomState, '.,s')
   }
 
+  const vbStateToInitState = (originalConfig) => {
+    if(!originalConfig) return undefined;
+
+    return {
+      [originalConfig.type]: originalConfig.value,
+      enforce: originalConfig.enforce
+    }
+  }
 
   const createControl = () => {
+    initialRoomState.virtualBackground = vbStateToInitState(initialRoomState.virtualBackground)
+
     const api = DigitalSambaEmbedded.createControl({ url: ROOM_URL, root: parent, roomSettings: initialRoomState });
 
     const log = document.querySelector('.log');
@@ -173,128 +259,29 @@
 
     btn0.onclick = () => {api.load({ frameAttributes: {style: "border: 5px solid red"}, reportErrors: true })}
 
-    const baseControls = [
-      {command: 'toggleVideo', label: 'toggle video' },
-      {command: 'enableVideo', label: 'enable video' },
-      {command: 'disableVideo', label: 'disable video' },
-      {command: 'toggleAudio', label: 'toggle audio' },
-      {command: 'enableAudio', label: 'enable audio' },
-      {command: 'disableAudio', label: 'disable audio' },
-      {command: 'startScreenshare', label: 'start screenshare' },
-      {command: 'stopScreenshare', label: 'stop screenshare' },
-      {command: 'startRecording', label: 'start recording' },
-      {command: 'stopRecording', label: 'stop recording' },
-      {command: 'showToolbar', label: 'show toolbar' },
-      {command: 'hideToolbar', label: 'hide toolbar' },
-      {command: 'toggleToolbar', label: 'toggle toolbar' },
-      {command: 'changeLayoutMode', label: 'auto layout', args: ['auto'] },
-      {command: 'changeLayoutMode', label: 'tiled layout', args: ['tiled'] },
-      {command: 'showCaptions', label: 'show captions'},
-      {command: 'hideCaptions', label: 'hide captions'},
-      {command: 'toggleCaptions', label: 'toggle captions'},
-      {command: 'leaveSession', label: 'leave session' },
-      {command: 'endSession', label: 'end session' },
-    ]
-
-    baseControls.forEach(control => {
-      const button = document.createElement("button");
-      button.innerHTML = control.label;
-      button.onclick = () => api[control.command](...(control.args || []))
-
-      buttonsParent.appendChild(button);
-    })
-
-    const captionsControls = [
-      {command: 'configureCaptions', label: 'set font size - small', args: [{fontSize: 'small'}] },
-      {command: 'configureCaptions', label: 'set font size - medium', args: [{fontSize: 'medium'}] },
-      {command: 'configureCaptions', label: 'set font size - large', args: [{fontSize: 'large'}] },
-      {command: 'configureCaptions', label: 'set spoken language - english', args: [{spokenLanguage: 'en'}] },
-      {command: 'configureCaptions', label: 'set spoken language - french', args: [{spokenLanguage: 'fr'}] },
-      {command: 'configureCaptions', label: 'set spoken language - spanish', args: [{spokenLanguage: 'es'}] },
-    ]
-
-    captionsControls.forEach(control => {
-      const button = document.createElement("button");
-      button.innerHTML = control.label;
-      button.onclick = () => api[control.command](...(control.args || []))
-
-      captionsButtonsParent.appendChild(button);
-    })
-
     api.on('*', (data) => {
       log.innerHTML += `<p>${Number(new Date)}: ev(${data?.type}): ${JSON.stringify(data)}</p>`
     });
 
-    api.on('userJoined', (data) => {
-      log.innerHTML += `<p>${Number(new Date)}: USER JOINED: ${JSON.stringify(data)}</p>`
-    });
-
-    api.on('userLeft', (data) => {
-      log.innerHTML += `<p>${Number(new Date)}: USER LEFT: ${JSON.stringify(data)}</p>`
-    });
-
-    api.on('permissionsChanged', ({ data }) => {
-      if(data.broadcast !== undefined){
-        if(data.broadcast) {
-          alert('You were granted broadcast permission')
-        } else {
-          alert('Your permission to broadcast was rejected')
-        }
-      }
-
-      if(data.screenshare !== undefined){
-        if(data.screenshare) {
-          alert('You were granted screenshare permission')
-        } else {
-          alert('Your permission to screenshare was rejected')
-        }
-      }
-    });
-
-
-    api.on('usersUpdated', ({data: {users}}) => {
-      participantList.innerHTML = '';
-
-
-      users.forEach(user => {
-        const row = document.createElement('div');
-        row.className = 'user-list-row';
-
-        const avatar = document.createElement('span');
-        avatar.className = 'user-list-avatar';
-        avatar.style.background = user.avatarColor;
-        row.appendChild(avatar);
-
-
-        const name = document.createElement('span');
-        name.className = 'user-list-name';
-        name.innerText = user.name;
-        row.appendChild(name);
-
-        if(user.kind === 'local') {
-          const label = document.createElement('span');
-          label.className = 'user-list-label';
-          label.innerText = '(you)'
-          label.style.color = '#777';
-          row.appendChild(label);
-        } else {
-          const micControl = document.createElement('button');
-          micControl.innerHTML = 'toggle mic'
-          micControl.style.margin = '0 4px';
-          micControl.onclick = () => {api.requestToggleAudio(user.id)}
-          row.appendChild(micControl);
-
-          const kickControl = document.createElement('button');
-          kickControl.innerHTML = 'kick'
-          kickControl.style.margin = '0 4px';
-          kickControl.onclick = () => {api.removeUser(user.id)}
-          row.appendChild(kickControl);
-        }
-
-        participantList.appendChild(row);
-
-      })
+    api.on('frameLoaded', () => {
+      document.querySelector('.room-vb-fields').style.display = 'block'
     })
+
+    const stateBlock = document.querySelector('.state');
+
+    api.on('roomStateUpdated', ({data}) => {
+      stateBlock.innerHTML = JSON.stringify(data);
+    })
+
+    enableVBButton.onclick = () => {
+      console.warn(vbStateToInitState(VBstate),'---')
+      api.configureVirtualBackground(vbStateToInitState(VBstate));
+    }
+
+    disableVBButton.onclick = () => {
+      api.disableVirtualBackground()
+    }
+
   }
 
 </script>

@@ -18,7 +18,9 @@ import {
   RoomJoinedPayload,
   SendMessage,
   Stored,
+  StoredVBState,
   UserId,
+  VirtualBackgroundOptions,
 } from './types';
 
 import {
@@ -193,25 +195,25 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     this.on('videoEnabled', (event) => {
       if (event.data?.type === 'local') {
-        this.stored.roomState.media.cameraEnabled = true;
+        this.stored.roomState.media.videoEnabled = true;
       }
     });
 
     this.on('videoDisabled', (event) => {
       if (event.data?.type === 'local') {
-        this.stored.roomState.media.cameraEnabled = false;
+        this.stored.roomState.media.videoEnabled = false;
       }
     });
 
     this.on('audioEnabled', (event) => {
       if (event.data?.type === 'local') {
-        this.stored.roomState.media.micEnabled = true;
+        this.stored.roomState.media.audioEnabled = true;
       }
     });
 
     this.on('audioDisabled', (event) => {
       if (event.data?.type === 'local') {
-        this.stored.roomState.media.micEnabled = false;
+        this.stored.roomState.media.audioEnabled = false;
       }
     });
 
@@ -223,8 +225,33 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.stored.roomState.captionsState.spokenLanguage = event.data.language;
     });
 
+    this.on('captionsEnabled', () => {
+      this.stored.roomState.captionsState.showCaptions = true;
+    });
+
+    this.on('captionsDisabled', () => {
+      this.stored.roomState.captionsState.showCaptions = false;
+    });
+
     this.on('captionsFontSizeChanged', (event) => {
       this.stored.roomState.captionsState.fontSize = event.data.fontSize;
+    });
+
+    this.on('virtualBackgroundChanged', (event) => {
+      const { type, value, enforced } = event.data.virtualBackgroundConfig;
+
+      this.stored.roomState.virtualBackground = {
+        enabled: true,
+        type,
+        value,
+        enforced,
+      };
+    });
+
+    this.on('virtualBackgroundDisabled', (event) => {
+      this.stored.roomState.virtualBackground = {
+        enabled: false,
+      };
     });
   };
 
@@ -302,7 +329,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.allowedOrigin = allowedURL.origin;
 
     this.frame.onload = () => {
-      this._emit('frameLoaded');
+      this._emit('frameLoaded', { type: 'frameLoaded' });
       this.checkTarget();
     };
   };
@@ -366,13 +393,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   // commands
   enableVideo = () => {
-    this.roomSettings.cameraEnabled = true;
+    this.roomSettings.videoEnabled = true;
 
     this.sendMessage({ type: 'enableVideo' });
   };
 
   disableVideo = () => {
-    this.roomSettings.cameraEnabled = false;
+    this.roomSettings.videoEnabled = false;
 
     this.sendMessage({ type: 'disableVideo' });
   };
@@ -388,12 +415,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   enableAudio = () => {
-    this.roomSettings.micEnabled = true;
+    this.roomSettings.audioEnabled = true;
     this.sendMessage({ type: 'enableAudio' });
   };
 
   disableAudio = () => {
-    this.roomSettings.micEnabled = false;
+    this.roomSettings.audioEnabled = false;
     this.sendMessage({ type: 'disableAudio' });
   };
 
@@ -484,6 +511,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   listUsers = () => Object.values(this.stored.users);
 
+  getUser = (userId: UserId) => this.stored.users?.[userId];
+
   showCaptions = () => {
     this.roomSettings.showCaptions = true;
     this.stored.roomState.captionsState.showCaptions = true;
@@ -533,5 +562,38 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   disallowScreenshare = (userId: UserId) => {
     this.sendMessage({ type: 'disallowScreenshare', data: userId });
+  };
+
+  configureVirtualBackground = (options: VirtualBackgroundOptions) => {
+    this.roomSettings.virtualBackground = options;
+    const optionsToState: StoredVBState = {
+      enabled: true,
+      type: undefined,
+      value: '',
+      enforced: options.enforce,
+    };
+
+    const vbOptions: ('blur' | 'image' | 'imageUrl')[] = ['blur', 'image', 'imageUrl'];
+
+    vbOptions.forEach((value) => {
+      if (options[value]) {
+        optionsToState.type = value;
+        optionsToState.value = options[value]!;
+      }
+    });
+
+    this.stored.roomState.virtualBackground = optionsToState;
+
+    this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
+  };
+
+  enableVirtualBackground = (options: VirtualBackgroundOptions) =>
+    this.configureVirtualBackground(options);
+
+  disableVirtualBackground = () => {
+    this.roomSettings.virtualBackground = undefined;
+    this.stored.roomState.virtualBackground = { enabled: false };
+
+    this.sendMessage({ type: 'disableVirtualBackground' });
   };
 }
