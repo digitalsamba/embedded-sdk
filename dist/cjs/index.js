@@ -462,3 +462,4 @@ class DigitalSambaEmbedded extends events_1.default {
 exports.DigitalSambaEmbedded = DigitalSambaEmbedded;
 _a = DigitalSambaEmbedded;
 DigitalSambaEmbedded.createControl = (initOptions) => new _a(initOptions, {}, false);
+exports.default = DigitalSambaEmbedded;

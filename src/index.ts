@@ -77,7 +77,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.setupInternalEventListeners();
   }
 
-  static createControl = (initOptions: InitOptions) => new this(initOptions, {}, false);
+  static createControl = (initOptions: Partial<InitOptions>) => new this(initOptions, {}, false);
 
   private mountFrame = (loadImmediately: boolean) => {
     const { url, frame, root } = this.initOptions;
@@ -597,3 +597,5 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'disableVirtualBackground' });
   };
 }
+
+export default DigitalSambaEmbedded;

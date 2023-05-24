@@ -455,3 +455,4 @@ export class DigitalSambaEmbedded extends EventEmitter {
 }
 _a = DigitalSambaEmbedded;
 DigitalSambaEmbedded.createControl = (initOptions) => new _a(initOptions, {}, false);
+export default DigitalSambaEmbedded;

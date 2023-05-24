@@ -14,7 +14,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     stored: Stored;
     permissionManager: PermissionManager;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
-    static createControl: (initOptions: InitOptions) => DigitalSambaEmbedded;
+    static createControl: (initOptions: Partial<InitOptions>) => DigitalSambaEmbedded;
     private mountFrame;
     load: (instanceProperties?: InstanceProperties) => void;
     private onMessage;
@@ -66,3 +66,4 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     enableVirtualBackground: (options: VirtualBackgroundOptions) => void;
     disableVirtualBackground: () => void;
 }
+export default DigitalSambaEmbedded;
