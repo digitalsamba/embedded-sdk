@@ -1,7 +1,7 @@
 {
   "name": "@digitalsamba/embedded-sdk",
   "packageManager": "yarn@3.1.0",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "license": "BSD-2-Clause",
   "scripts": {
     "build": "npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:types",
@@ -18,7 +18,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
-  "types": "dist/types/index.d.js",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
