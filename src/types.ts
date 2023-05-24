@@ -23,7 +23,7 @@ export type InitOptions = {
   room: string;
   token?: string;
 
-  roomSettings: Partial<InitialRoomSettings>;
+  roomSettings?: Partial<InitialRoomSettings>;
 };
 
 export type FrameAttributes = {

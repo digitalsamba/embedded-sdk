@@ -16,7 +16,7 @@ export type InitOptions = {
     team: string;
     room: string;
     token?: string;
-    roomSettings: Partial<InitialRoomSettings>;
+    roomSettings?: Partial<InitialRoomSettings>;
 };
 export type FrameAttributes = {
     align: string;
