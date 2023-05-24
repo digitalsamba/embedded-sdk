@@ -515,20 +515,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   showCaptions = () => {
     this.roomSettings.showCaptions = true;
-    this.stored.roomState.captionsState.showCaptions = true;
     this.sendMessage({ type: 'showCaptions' });
   };
 
   hideCaptions = () => {
     this.roomSettings.showCaptions = false;
-    this.stored.roomState.captionsState.showCaptions = false;
     this.sendMessage({ type: 'hideCaptions' });
   };
 
   toggleCaptions = (show?: boolean) => {
     if (typeof show === 'undefined') {
-      this.stored.roomState.captionsState.showCaptions =
-        !this.stored.roomState.captionsState.showCaptions;
       this.sendMessage({ type: 'toggleCaptions' });
     } else if (show) {
       this.showCaptions();
@@ -582,8 +578,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       }
     });
 
-    this.stored.roomState.virtualBackground = optionsToState;
-
     this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
   };
 
@@ -592,7 +586,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   disableVirtualBackground = () => {
     this.roomSettings.virtualBackground = undefined;
-    this.stored.roomState.virtualBackground = { enabled: false };
 
     this.sendMessage({ type: 'disableVirtualBackground' });
   };
