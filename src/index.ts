@@ -27,6 +27,7 @@ import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
   INVALID_URL,
+  INSECURE_CONTEXT,
   RichError,
   UNKNOWN_TARGET,
 } from './utils/errors';
@@ -55,6 +56,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     loadImmediately = true
   ) {
     super();
+
+    if (!window.isSecureContext) {
+      this.logError(INSECURE_CONTEXT);
+    }
 
     this.initOptions = options;
     this.roomSettings = options.roomSettings || {};
@@ -362,6 +367,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   private logError = (error: RichError) => {
     if (this.reportErrors) {
       throw error;
+    } else {
+      console.error(error);
     }
   };
 

@@ -226,6 +226,9 @@ class DigitalSambaEmbedded extends events_1.default {
             if (this.reportErrors) {
                 throw error;
             }
+            else {
+                console.error(error);
+            }
         };
         this.applyFrameProperties = (instanceProperties) => {
             if (instanceProperties.frameAttributes) {
@@ -410,6 +413,9 @@ class DigitalSambaEmbedded extends events_1.default {
             this.roomSettings.virtualBackground = undefined;
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
+        if (!window.isSecureContext) {
+            this.logError(errors_1.INSECURE_CONTEXT);
+        }
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;

@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { CONNECT_TIMEOUT, defaultStoredState, internalEvents, } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
-import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, UNKNOWN_TARGET, } from './utils/errors';
+import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, INSECURE_CONTEXT, UNKNOWN_TARGET, } from './utils/errors';
 export class DigitalSambaEmbedded extends EventEmitter {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
@@ -220,6 +220,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
             if (this.reportErrors) {
                 throw error;
             }
+            else {
+                console.error(error);
+            }
         };
         this.applyFrameProperties = (instanceProperties) => {
             if (instanceProperties.frameAttributes) {
@@ -404,6 +407,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.roomSettings.virtualBackground = undefined;
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
+        if (!window.isSecureContext) {
+            this.logError(INSECURE_CONTEXT);
+        }
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;

@@ -1,8 +1,8 @@
-## Description
+# Description
 
 Digital Samba Embedded SDK - control easily with JS your iframe integration.
 
-### Usage with NPM
+## Usage with NPM
 
 Add it to dependency list using your preferred package manager:
 
@@ -30,7 +30,17 @@ This package is written in TypeScript, so type definitions are also available:
 import { SendMessageType, ReceiveMessageType /* ...etc */ } from '@digitalsamba/embedded-sdk';
 ```
 
-### Initialization
+## Initialization
+
+---
+### Secure context
+
+️Since the embedded app relies on media device capabilities, it needs to be accessed in a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts) (`https://` versus `http://`).
+
+For local development, most browsers treat `http://localhost` and `http://127.0.0.1` as secure.
+
+---
+### Configuring SDK instance
 
 Library provides alternative initialization styles. Using the class constructor you can configure it and load the frame
 in one call:
@@ -75,20 +85,24 @@ Remember to always specify `allow="camera; microphone; display-capture; autoplay
 - `frameAttributes` - list of attributes to be applied to target iframe
 - `reportErrors` - boolean, false by default. Whether to report misconfiguration or runtime errors to console
 
-### Usage
+## Usage
+Once initialized you can listen to events emitted by embedded app and control it by sending commands.
 
+Additional functionality like room [permission management](https://docs.digitalsamba.com/reference/sdk/properties/permissionmanager) and [exposed state](https://docs.digitalsamba.com/reference/sdk/properties/roomstate) is also available.
+
+### Events
 To listen for events, attach listener for any of supported events:
 
 ```js
 api.on('userJoined', (data) => {
   // ...
 });
-
-api.on('userLeft', (data) => {
-  // ...
-});
 ```
+---
 
+💡 See the [events docs](https://docs.digitalsamba.com/reference/sdk/events) for a full list of available events.
+
+---
 Error event can provide useful details:
 ```js
 api.on('appError', (error) => {
@@ -106,15 +120,19 @@ api.on('appError', (error) => {
 });
 ```
 
-
 For debugging purposes, you can also listen to all events simultaneously
 ```js
 api.on('*', (data) => {
   console.log(data);
 });
 ```
+---
 
-Also see `dist/index.html` for more examples.
+💡 Also see `dist/index.html` for more examples.
+
+---
+
+### Commands
 
 To send commands, api instance provides handy utilities:
 
@@ -123,52 +141,6 @@ api.toggleVideo();
 // ...
 api.disableAudio();
 ```
-
 ---
 
-### Available events:
-- `appError`
-- `frameLoaded`
-- `userJoined`
-- `userLeft`
-- `usersUpdated`
-- `videoEnabled`
-- `videoDisabled`
-- `audioEnabled`
-- `audioDisabled`
-- `screenshareStarted`
-- `screenshareStopped`
-- `recordingStarted`
-- `recordingStopped`
-- `recordingFailed`
-- `layoutModeChanged`
-- `activeSpeakerChanged`
-- `captionsFontSizeChanged`
-- `captionsSpokenLanguageChanged`
-- `roomStateUpdated`
-
-### Available commands:
-- `enableVideo()`
-- `disableVideo()`
-- `toggleVideo(newState?: boolean)`
-- `enableAudio()`
-- `disableAudio()`
-- `toggleAudio(newState?: boolean)`
-- `startScreenshare()`
-- `stopScreenshare()`
-- `startRecording()`
-- `stopRecording()`
-- `showToolbar()`
-- `hideToolbar()`
-- `toggleToolbar(newState?: boolean)`
-- `changeLayoutMode(mode: 'tiled' | 'auto')`
-- `leaveSession()`
-- `endSession()`
-- `removeUser(userId: string)`
-- `requestToggleAudio(userId: string)`
-- `requestMute(userId: string)`
-- `requestUnmute(userId: string)`
-- `showCaptions()`
-- `hideCaptions()`
-- `toggleCaptions(newState?: boolean)`
-- `configureCaptions({ fontSize: 'small' | 'medium' | 'large', spokenLanguage: <>' })`
+💡 Full list of available commands with usage examples can be found on [documentation website](https://docs.digitalsamba.com/reference/sdk/methods).

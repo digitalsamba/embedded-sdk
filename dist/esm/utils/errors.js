@@ -20,3 +20,7 @@ export const INVALID_URL = new RichError({
     name: 'INVALID_URL',
     message: 'Invalid frame url specified',
 });
+export const INSECURE_CONTEXT = new RichError({
+    name: 'INSECURE_CONTEXT',
+    message: 'Initializing embedded app in an insecure context, media capabilities unavailable. See https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts for details',
+});
