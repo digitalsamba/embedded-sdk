@@ -37,7 +37,11 @@ class DigitalSambaEmbedded extends events_1.default {
             }
             if (url || (this.frame.src && this.frame.src !== window.location.href)) {
                 try {
-                    const frameSrc = new URL(url || this.frame.src).toString();
+                    let origString = url || this.frame.src;
+                    if (!origString.includes('https://')) {
+                        origString = 'https://' + origString;
+                    }
+                    const frameSrc = new URL(origString).toString();
                     this.frame.src = frameSrc;
                     this.savedIframeSrc = frameSrc;
                 }
@@ -212,7 +216,9 @@ class DigitalSambaEmbedded extends events_1.default {
                 this.frame.src = url;
             }
             else {
-                this.logError(errors_1.INVALID_CONFIG);
+                if (!this.initOptions.url) {
+                    this.logError(errors_1.INVALID_CONFIG);
+                }
                 return;
             }
             const allowedURL = new URL(this.frame.src);
@@ -461,5 +467,5 @@ class DigitalSambaEmbedded extends events_1.default {
 }
 exports.DigitalSambaEmbedded = DigitalSambaEmbedded;
 _a = DigitalSambaEmbedded;
-DigitalSambaEmbedded.createControl = (initOptions) => new _a(initOptions, {}, false);
+DigitalSambaEmbedded.createControl = (initOptions, instanceProperties = {}) => new _a(initOptions, instanceProperties, false);
 exports.default = DigitalSambaEmbedded;

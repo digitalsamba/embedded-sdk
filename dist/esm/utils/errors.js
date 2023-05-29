@@ -18,7 +18,7 @@ export const ALLOW_ATTRIBUTE_MISSING = new RichError({
 });
 export const INVALID_URL = new RichError({
     name: 'INVALID_URL',
-    message: 'Invalid frame url specified',
+    message: 'Invalid room URL specified',
 });
 export const INSECURE_CONTEXT = new RichError({
     name: 'INSECURE_CONTEXT',

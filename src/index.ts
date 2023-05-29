@@ -82,7 +82,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.setupInternalEventListeners();
   }
 
-  static createControl = (initOptions: Partial<InitOptions>) => new this(initOptions, {}, false);
+  static createControl = (
+    initOptions: Partial<InitOptions>,
+    instanceProperties: InstanceProperties = {}
+  ) => new this(initOptions, instanceProperties, false);
 
   private mountFrame = (loadImmediately: boolean) => {
     const { url, frame, root } = this.initOptions;
@@ -101,7 +104,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     if (url || (this.frame.src && this.frame.src !== window.location.href)) {
       try {
-        const frameSrc = new URL(url || this.frame.src).toString();
+        let origString = url || this.frame.src;
+
+        if (!origString.includes('https://')) {
+          origString = 'https://' + origString;
+        }
+
+        const frameSrc = new URL(origString).toString();
 
         this.frame.src = frameSrc;
         this.savedIframeSrc = frameSrc;
@@ -324,7 +333,9 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     if (url) {
       this.frame.src = url;
     } else {
-      this.logError(INVALID_CONFIG);
+      if (!this.initOptions.url) {
+        this.logError(INVALID_CONFIG);
+      }
 
       return;
     }

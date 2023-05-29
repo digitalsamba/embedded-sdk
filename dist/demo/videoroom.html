@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Simple videoroom</title>
+  <script src="./index.js"></script>
+  <script src="./helper.js"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+<nav class="topbar">
+  <div class="container">
+    <img class="logo" src="logo.png" alt="DigitalSamba">
+    <a href="https://github.com/digitalsamba/embedded-sdk" target="_blank" rel="noopener nofollow">View on GitHub</a>
+  </div>
+</nav>
+
+
+<div class="screen room-url-field show">
+    <div class="container">
+      <div class="vertical">
+        <label for="custom-room-url">
+          <span><b>Room URL</b></span>
+          <span>Can be found in account center.</span>
+        </label>
+        <div>
+          <input type="text" id="custom-room-url" name="custom-room-url" onkeydown="onURLChange()">
+          <!-- kicks off loading -->
+          <button onclick="loadCustomRoom()">load room</button>
+        </div>
+        <p class="room-url-error"></p>
+      </div>
+    </div>
+</div>
+<div class="screen room-frame">
+  <div class="container">
+    <div class="room-content">
+      <div class="frame-area">
+        <div class="frame-parent">
+          <!-- our frame will load here -->
+        </div>
+        <div class="frame-controls" style="display: none">
+          <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
+          <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
+          <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+        </div>
+      </div>
+      <div class="sidebar"></div>
+    </div>
+  </div>
+
+</div>
+
+<script async defer>
+  let ROOM_URL = 'https://localhost:3000/Public';
+
+  var sambaEmbedded;
+
+  // if room is predefined in search params, skip room URL field;
+  checkDynamicRoomURL();
+
+  function loadCustomRoom() {
+    const input = document.querySelector('#custom-room-url');
+
+    if(input.value) {
+      ROOM_URL = input.value;
+      loadRoom();
+    } else {
+      updateError('Please enter room URL')
+    }
+  }
+
+  function loadRoom() {
+    try {
+      const parent = document.querySelector('.frame-parent');
+      parent.innerHTML = null;
+
+      // create pre-configured controller instance using given URL;
+      // if no frame specified, this pre-creates a frame but doesn't load it yet;
+      // other init strategies are available, along with more detailed customization
+      // see https://docs.digitalsamba.com/reference/sdk/digitalsambaembedded-class
+      sambaEmbedded = DigitalSambaEmbedded.createControl(
+        { url: ROOM_URL, root: parent, roomSettings: {showToolbar: false} },
+        {reportErrors: true}
+      );
+
+      // controller instance exposes the frame, so we can customize it a little bit
+      sambaEmbedded.frame.width = 1000;
+      sambaEmbedded.frame.height = 700;
+      sambaEmbedded.frame.style.border = '5px solid #f06859';
+      sambaEmbedded.frame.style.borderRadius = '8px';
+
+      // load samba frame
+      sambaEmbedded.load();
+
+      addJoiningHint(ROOM_URL);
+      initializeLogs();
+
+      // after loading, controller will start emitting events
+      // event listeners can be set up prior to loading;
+      setupCustomEventListeners();
+
+      showScreen('.room-frame');
+    } catch (e) {
+      updateError(e.message)
+    }
+  }
+
+  function setupCustomEventListeners() {
+    // catch all events. Useful for logging or debugging;
+    sambaEmbedded.on('*', (data) => {
+      const logList = document.querySelector('.log-list');
+
+      if(logList) {
+        logList.innerHTML += `<div>
+            <p>[${(new Date).toLocaleTimeString()}] event: <b>${data?.type}</b></p>
+            ${data.data ? `<p>payload: ${JSON.stringify(data.data)}</p>` : ''}
+          </div>`;
+
+        logList.scrollTop = logList.scrollHeight;
+      }
+    })
+
+    // `roomJoined` is fired when local user has joined the room
+    // this listener is used to display media device controls after joining
+    sambaEmbedded.on('roomJoined', () => {
+      const controls = document.querySelector('.frame-controls');
+
+      controls.style.display = 'flex';
+    })
+  }
+</script>
+</body>
+</html>

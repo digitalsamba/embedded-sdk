@@ -126,11 +126,6 @@ api.on('*', (data) => {
   console.log(data);
 });
 ```
----
-
-💡 Also see `dist/index.html` for more examples.
-
----
 
 ### Commands
 
@@ -144,3 +139,11 @@ api.disableAudio();
 ---
 
 💡 Full list of available commands with usage examples can be found on [documentation website](https://docs.digitalsamba.com/reference/sdk/methods).
+
+
+### Examples
+
+There are several demos available with example integrations
+* [Simple Videoroom](https://digitalsamba.github.io/embedded-sdk/dist/demo/videoroom.html) - simple demo that showcases basic integration, listening to events and running commands
+* [Initial settings](https://digitalsamba.github.io/embedded-sdk/dist/demo/initial-config.html) - examples of setting default settings prior to loading the frame
+* [Managed State demo](https://digitalsamba.github.io/embedded-sdk/dist/demo/managed-state.html) - shows how to use exposed state in complex scenarios, listening to events, checking for permissions and accessing stored data.
