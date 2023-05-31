@@ -220,7 +220,7 @@ a {
 .sidebar {
   padding-left: 15px;
   flex-grow: 1;
-  max-width: calc(100vw - 1100px);
+  max-width: calc(100vw - 1055px);
 }
 
 .sidebar-block {
@@ -237,6 +237,8 @@ a {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  line-height: 1.25;
 }
 
 .logs-toggle {
