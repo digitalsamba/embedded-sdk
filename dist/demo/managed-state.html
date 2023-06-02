@@ -254,6 +254,23 @@
       newIndicator.className = newIndicator.className + " show";
     });
 
+    sambaEmbedded.on("audioDisabled", ({ data }) => {
+      const currentIndicator = document.querySelector(`.speaker-indicator-${data.user.id}`);
+
+      if (currentIndicator && currentIndicator.className.includes(' show')) {
+        currentIndicator.className = currentIndicator.className.replace(" show", "");
+      }
+    });
+
+    sambaEmbedded.on("audioEnabled", ({ data }) => {
+      if(data.user.id === sambaEmbedded.stored.activeSpeaker) {
+        const currentIndicator = document.querySelector(`.speaker-indicator-${sambaEmbedded.stored.activeSpeaker}`);
+
+        if (currentIndicator ) {
+          currentIndicator.className += " show";
+        }
+      }
+    });
   }
 
 </script>
