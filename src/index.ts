@@ -27,6 +27,7 @@ import {
   ALLOW_ATTRIBUTE_MISSING,
   INVALID_CONFIG,
   INVALID_URL,
+  INSECURE_CONTEXT,
   RichError,
   UNKNOWN_TARGET,
 } from './utils/errors';
@@ -56,6 +57,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   ) {
     super();
 
+    if (!window.isSecureContext) {
+      this.logError(INSECURE_CONTEXT);
+    }
+
     this.initOptions = options;
     this.roomSettings = options.roomSettings || {};
 
@@ -77,7 +82,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.setupInternalEventListeners();
   }
 
-  static createControl = (initOptions: Partial<InitOptions>) => new this(initOptions, {}, false);
+  static createControl = (
+    initOptions: Partial<InitOptions>,
+    instanceProperties: InstanceProperties = {}
+  ) => new this(initOptions, instanceProperties, false);
 
   private mountFrame = (loadImmediately: boolean) => {
     const { url, frame, root } = this.initOptions;
@@ -96,7 +104,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     if (url || (this.frame.src && this.frame.src !== window.location.href)) {
       try {
-        const frameSrc = new URL(url || this.frame.src).toString();
+        let origString = url || this.frame.src;
+
+        if (!origString.includes('https://')) {
+          origString = 'https://' + origString;
+        }
+
+        const frameSrc = new URL(origString).toString();
 
         this.frame.src = frameSrc;
         this.savedIframeSrc = frameSrc;
@@ -319,7 +333,9 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     if (url) {
       this.frame.src = url;
     } else {
-      this.logError(INVALID_CONFIG);
+      if (!this.initOptions.url) {
+        this.logError(INVALID_CONFIG);
+      }
 
       return;
     }
@@ -362,6 +378,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   private logError = (error: RichError) => {
     if (this.reportErrors) {
       throw error;
+    } else {
+      console.error(error);
     }
   };
 
@@ -515,20 +533,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   showCaptions = () => {
     this.roomSettings.showCaptions = true;
-    this.stored.roomState.captionsState.showCaptions = true;
     this.sendMessage({ type: 'showCaptions' });
   };
 
   hideCaptions = () => {
     this.roomSettings.showCaptions = false;
-    this.stored.roomState.captionsState.showCaptions = false;
     this.sendMessage({ type: 'hideCaptions' });
   };
 
   toggleCaptions = (show?: boolean) => {
     if (typeof show === 'undefined') {
-      this.stored.roomState.captionsState.showCaptions =
-        !this.stored.roomState.captionsState.showCaptions;
       this.sendMessage({ type: 'toggleCaptions' });
     } else if (show) {
       this.showCaptions();
@@ -582,8 +596,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       }
     });
 
-    this.stored.roomState.virtualBackground = optionsToState;
-
     this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
   };
 
@@ -592,7 +604,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   disableVirtualBackground = () => {
     this.roomSettings.virtualBackground = undefined;
-    this.stored.roomState.virtualBackground = { enabled: false };
 
     this.sendMessage({ type: 'disableVirtualBackground' });
   };

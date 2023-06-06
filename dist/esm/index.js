@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { CONNECT_TIMEOUT, defaultStoredState, internalEvents, } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
-import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, UNKNOWN_TARGET, } from './utils/errors';
+import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, INSECURE_CONTEXT, UNKNOWN_TARGET, } from './utils/errors';
 export class DigitalSambaEmbedded extends EventEmitter {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
@@ -31,7 +31,11 @@ export class DigitalSambaEmbedded extends EventEmitter {
             }
             if (url || (this.frame.src && this.frame.src !== window.location.href)) {
                 try {
-                    const frameSrc = new URL(url || this.frame.src).toString();
+                    let origString = url || this.frame.src;
+                    if (!origString.includes('https://')) {
+                        origString = 'https://' + origString;
+                    }
+                    const frameSrc = new URL(origString).toString();
                     this.frame.src = frameSrc;
                     this.savedIframeSrc = frameSrc;
                 }
@@ -206,7 +210,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.frame.src = url;
             }
             else {
-                this.logError(INVALID_CONFIG);
+                if (!this.initOptions.url) {
+                    this.logError(INVALID_CONFIG);
+                }
                 return;
             }
             const allowedURL = new URL(this.frame.src);
@@ -219,6 +225,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.logError = (error) => {
             if (this.reportErrors) {
                 throw error;
+            }
+            else {
+                console.error(error);
             }
         };
         this.applyFrameProperties = (instanceProperties) => {
@@ -344,18 +353,14 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.getUser = (userId) => { var _b; return (_b = this.stored.users) === null || _b === void 0 ? void 0 : _b[userId]; };
         this.showCaptions = () => {
             this.roomSettings.showCaptions = true;
-            this.stored.roomState.captionsState.showCaptions = true;
             this.sendMessage({ type: 'showCaptions' });
         };
         this.hideCaptions = () => {
             this.roomSettings.showCaptions = false;
-            this.stored.roomState.captionsState.showCaptions = false;
             this.sendMessage({ type: 'hideCaptions' });
         };
         this.toggleCaptions = (show) => {
             if (typeof show === 'undefined') {
-                this.stored.roomState.captionsState.showCaptions =
-                    !this.stored.roomState.captionsState.showCaptions;
                 this.sendMessage({ type: 'toggleCaptions' });
             }
             else if (show) {
@@ -401,15 +406,16 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     optionsToState.value = options[value];
                 }
             });
-            this.stored.roomState.virtualBackground = optionsToState;
             this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
         };
         this.enableVirtualBackground = (options) => this.configureVirtualBackground(options);
         this.disableVirtualBackground = () => {
             this.roomSettings.virtualBackground = undefined;
-            this.stored.roomState.virtualBackground = { enabled: false };
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
+        if (!window.isSecureContext) {
+            this.logError(INSECURE_CONTEXT);
+        }
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;
@@ -454,5 +460,5 @@ export class DigitalSambaEmbedded extends EventEmitter {
     }
 }
 _a = DigitalSambaEmbedded;
-DigitalSambaEmbedded.createControl = (initOptions) => new _a(initOptions, {}, false);
+DigitalSambaEmbedded.createControl = (initOptions, instanceProperties = {}) => new _a(initOptions, instanceProperties, false);
 export default DigitalSambaEmbedded;

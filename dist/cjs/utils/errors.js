@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.INVALID_URL = exports.ALLOW_ATTRIBUTE_MISSING = exports.INVALID_CONFIG = exports.UNKNOWN_TARGET = exports.RichError = void 0;
+exports.INSECURE_CONTEXT = exports.INVALID_URL = exports.ALLOW_ATTRIBUTE_MISSING = exports.INVALID_CONFIG = exports.UNKNOWN_TARGET = exports.RichError = void 0;
 class RichError extends Error {
     constructor(error) {
         super(error.message);
@@ -22,5 +22,9 @@ exports.ALLOW_ATTRIBUTE_MISSING = new RichError({
 });
 exports.INVALID_URL = new RichError({
     name: 'INVALID_URL',
-    message: 'Invalid frame url specified',
+    message: 'Invalid room URL specified',
+});
+exports.INSECURE_CONTEXT = new RichError({
+    name: 'INSECURE_CONTEXT',
+    message: 'Initializing embedded app in an insecure context, media capabilities unavailable. See https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts for details',
 });

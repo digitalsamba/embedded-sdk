@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Initial settings</title>
+  <script src="./index.js"></script>
+  <script src="./helper.js"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+<nav class="topbar">
+  <div class="container">
+    <img class="logo" src="logo.png" alt="DigitalSamba">
+    <a href="https://github.com/digitalsamba/embedded-sdk" target="_blank" rel="noopener nofollow">View on GitHub</a>
+  </div>
+</nav>
+
+<div class="screen room-url-field show">
+  <div class="container">
+    <div class="vertical">
+      <label for="custom-room-url">
+        <span><b>Room URL</b></span>
+        <span>Can be found in <a href="https://dashboard.digitalsamba.com/" target="_blank" rel="noopener nofollow">dashboard</a></span>.
+      </label>
+      <div>
+        <input type="text" id="custom-room-url" name="custom-room-url" onkeydown="onURLChange()">
+        <!-- kicks off loading -->
+        <button onclick="loadCustomRoom()">load room</button>
+      </div>
+      <p class="room-url-error"></p>
+      <p style="margin-top: 30px;" class="init-settings-title">Predefined settings</p>
+      <p style="margin-bottom: 15px">These options can be applied prior to joining the room. For
+        instance,<br> if you pre-set a username, participant won't be prompted for it.
+        <br>
+        You can also set defaults for media devices and room UI.
+      </p>
+
+      <div>
+        <label for="initial-settings-username">
+          Username
+        </label>
+        <div>
+          <input type="text" id="initial-settings-username" onchange="initialSettings.username = this.value">
+        </div>
+        <div style="display: flex">
+          <label class="checkbox-label" for="initial-settings-video">
+            <span>Video enabled</span>
+            <input type="checkbox" id="initial-settings-video" checked onchange="initialSettings.videoEnabled = !initialSettings.videoEnabled" />
+          </label>
+          <label class="checkbox-label" for="initial-settings-audio">
+            <span>Audio enabled</span>
+            <input type="checkbox" id="initial-settings-audio" checked onchange="initialSettings.audioEnabled = !initialSettings.audioEnabled" />
+          </label>
+        </div>
+        <div>
+          <label class="checkbox-label" for="initial-settings-toolbar">
+            <span>Show toolbar</span>
+            <input type="checkbox" id="initial-settings-toolbar" onchange="initialSettings.showToolbar = !initialSettings.showToolbar" />
+          </label>
+        </div>
+        <fieldset style="margin-bottom: 10px;">
+          <div style="display: flex;">
+            <legend style="margin-right: 8px;">Layout mode</legend>
+            <div style="display: flex; align-items: center; justify-content: center">
+              <input type="radio" id="prep-layout-mode-auto" checked name="layout-mode" value="auto" onchange="initialSettings.layoutMode = 'auto'" />
+              <label class="radio-label" for="prep-layout-mode-auto">Auto</label>
+
+              <input type="radio" id="prep-layout-mode-tiled" name="layout-mode" value="tiled" onchange="initialSettings.layoutMode = 'tiled'" />
+              <label class="radio-label" for="prep-layout-mode-tiled">Tiled</label>
+            </div>
+          </div>
+        </fieldset>
+        <div>
+          <label class="checkbox-label" for="initial-settings-vb">
+            <span>Enable virtual background</span>
+            <input type="checkbox" id="initial-settings-vb" onchange="toggleVirtualBackground(this.checked)" />
+          </label>
+        </div>
+        <div class="vb-options" style ="display: none">
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="vb-type">Virtual background type</label>
+            <select name="vb-type" id="vb-type" onchange="updateVBType(this.value)">
+              <option value="blur">blur</option>
+              <option value="image">predefined image</option>
+              <option value="imageUrl">custom image</option>
+            </select>
+          </div>
+          <div class="vb-value vb-value-blur show">
+            <div style="display: flex; align-items: center; justify-content: flex-start">
+              <label style="margin-right: 8px;" for="vb-blur-value">Blur strength</label>
+              <select name="vb-blur-value" id="vb-blur-value" onchange="VBstate.value = this.value; VBvalues.blur = this.value">
+                <option value="balanced">balanced</option>
+                <option value="strong">strong</option>
+              </select>
+            </div>
+          </div>
+          <div class="vb-value vb-value-image">
+            <div style="display: flex; align-items: center; justify-content: flex-start">
+              <label style="margin-right: 8px;" for="vb-image-value">Preset name</label>
+              <select name="vb-image-value" id="vb-image-value" onchange="VBstate.value = this.value; VBvalues.image = this.value;">
+                <option value="office">office</option>
+                <option value="office2">office2</option>
+                <option value="beach">beach</option>
+                <option value="fireworks">fireworks</option>
+                <option value="bookshelf">bookshelf</option>
+                <option value="forest">forest</option>
+                <option value="mountain">mountain</option>
+                <option value="savannah">savannah</option>
+              </select>
+            </div>
+          </div>
+          <div class="vb-value vb-value-imageUrl">
+            <label for="vb-image-url">
+              Custom image URL
+            </label>
+            <div>
+              <input type="text" id="vb-image-url" onchange="VBstate.value = this.value; VBvalues.imageUrl = this.value">
+            </div>
+          </div>
+          <div>
+            <label class="checkbox-label" for="initial-settings-enforce-vb">
+              <span>Allow changing virtual background</span>
+              <input type="checkbox" id="initial-settings-enforce-vb" onchange="VBstate.enforce = !this.checked" />
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen room-frame">
+  <div class="container">
+    <div class="room-content">
+      <div class="frame-area">
+        <div class="frame-parent">
+          <!-- our frame will load here -->
+        </div>
+        <div class="frame-controls" style="display: none">
+          <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
+          <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
+          <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+        </div>
+      </div>
+      <div class="sidebar"></div>
+    </div>
+  </div>
+
+</div>
+
+<script async defer>
+  let ROOM_URL = "https://localhost:3000/Public";
+
+  var sambaEmbedded;
+
+  // defaults for pre-configured state;
+  var initialSettings = {
+    username: "",
+    audioEnabled: true,
+    videoEnabled: true,
+    showToolbar: false,
+    showCaptions: false,
+    layoutMode: "auto",
+    virtualBackground: undefined
+  };
+
+  var VBstate = {
+    type: "blur",
+    value: "balanced",
+    enforce: false
+  };
+
+  var VBvalues = {
+    blur: 'balanced',
+    image: 'office',
+    imageUrl: 'string'
+  }
+
+
+  // if room is predefined in search params, skip room URL field;
+  checkDynamicRoomURL();
+
+  function loadCustomRoom() {
+    const input = document.querySelector("#custom-room-url");
+
+    if (input.value) {
+      ROOM_URL = input.value;
+
+      initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
+
+      loadRoom();
+    } else {
+      updateError("Please enter room URL");
+    }
+  }
+
+  function loadRoom() {
+    try {
+      const parent = document.querySelector(".frame-parent");
+      parent.innerHTML = null;
+
+      // create pre-configured controller instance using given URL;
+      // if no frame specified, this pre-creates a frame but doesn't load it yet;
+      // other init strategies are available, along with more detailed customization
+      // see https://docs.digitalsamba.com/reference/sdk/digitalsambaembedded-class
+      sambaEmbedded = DigitalSambaEmbedded.createControl(
+        {
+          url: ROOM_URL, root: parent,
+          // apply predefined room settings
+          roomSettings: initialSettings
+        },
+        { reportErrors: true }
+      );
+
+      // controller instance exposes the frame, so we can customize it a little bit
+      sambaEmbedded.frame.width = 1000;
+      sambaEmbedded.frame.height = 700;
+      sambaEmbedded.frame.style.border = "5px solid #f06859";
+      sambaEmbedded.frame.style.borderRadius = "8px";
+
+      // load samba frame
+      sambaEmbedded.load();
+
+      addJoiningHint(ROOM_URL);
+      initializeLogs();
+
+      // after loading, controller will start emitting events
+      // event listeners can be set up prior to loading;
+      setupCustomEventListeners();
+
+      showScreen(".room-frame");
+    } catch (e) {
+      updateError(e.message);
+    }
+  }
+
+  function setupCustomEventListeners() {
+    // catch all events. Useful for logging or debugging;
+    sambaEmbedded.on("*", (data) => {
+      const logList = document.querySelector(".log-list");
+
+      if (logList) {
+        logList.innerHTML += `<div>
+            <p>[${(new Date).toLocaleTimeString()}] event: <b>${data?.type}</b></p>
+            ${data.data ? `<p>payload: ${JSON.stringify(data.data)}</p>` : ""}
+          </div>`;
+
+        logList.scrollTop = logList.scrollHeight;
+      }
+    });
+
+    // `roomJoined` is fired when local user has joined the room
+    // this listener is used to display media device controls after joining
+    sambaEmbedded.on("roomJoined", () => {
+      const controls = document.querySelector(".frame-controls");
+
+      controls.style.display = "flex";
+    });
+  }
+
+  function toggleVirtualBackground(shouldEnable) {
+    const vbOptions = document.querySelector(".vb-options");
+
+    if (shouldEnable) {
+      initialSettings.virtualBackground = VBstate;
+      vbOptions.style.display = "block";
+    } else {
+      initialSettings.virtualBackground = undefined;
+      vbOptions.style.display = "none";
+    }
+  }
+
+  function updateVBType(newType) {
+    VBstate.type = newType;
+    const currentOption = document.querySelector(".vb-value.show");
+    const newOption = document.querySelector(".vb-value-" + newType);
+    currentOption.className = currentOption.className.replace(" show", "");
+    newOption.className += " show";
+
+    VBstate.value = VBvalues[newType];
+  }
+</script>
+</body>
+</html>

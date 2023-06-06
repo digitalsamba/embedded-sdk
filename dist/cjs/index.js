@@ -37,7 +37,11 @@ class DigitalSambaEmbedded extends events_1.default {
             }
             if (url || (this.frame.src && this.frame.src !== window.location.href)) {
                 try {
-                    const frameSrc = new URL(url || this.frame.src).toString();
+                    let origString = url || this.frame.src;
+                    if (!origString.includes('https://')) {
+                        origString = 'https://' + origString;
+                    }
+                    const frameSrc = new URL(origString).toString();
                     this.frame.src = frameSrc;
                     this.savedIframeSrc = frameSrc;
                 }
@@ -212,7 +216,9 @@ class DigitalSambaEmbedded extends events_1.default {
                 this.frame.src = url;
             }
             else {
-                this.logError(errors_1.INVALID_CONFIG);
+                if (!this.initOptions.url) {
+                    this.logError(errors_1.INVALID_CONFIG);
+                }
                 return;
             }
             const allowedURL = new URL(this.frame.src);
@@ -225,6 +231,9 @@ class DigitalSambaEmbedded extends events_1.default {
         this.logError = (error) => {
             if (this.reportErrors) {
                 throw error;
+            }
+            else {
+                console.error(error);
             }
         };
         this.applyFrameProperties = (instanceProperties) => {
@@ -350,18 +359,14 @@ class DigitalSambaEmbedded extends events_1.default {
         this.getUser = (userId) => { var _b; return (_b = this.stored.users) === null || _b === void 0 ? void 0 : _b[userId]; };
         this.showCaptions = () => {
             this.roomSettings.showCaptions = true;
-            this.stored.roomState.captionsState.showCaptions = true;
             this.sendMessage({ type: 'showCaptions' });
         };
         this.hideCaptions = () => {
             this.roomSettings.showCaptions = false;
-            this.stored.roomState.captionsState.showCaptions = false;
             this.sendMessage({ type: 'hideCaptions' });
         };
         this.toggleCaptions = (show) => {
             if (typeof show === 'undefined') {
-                this.stored.roomState.captionsState.showCaptions =
-                    !this.stored.roomState.captionsState.showCaptions;
                 this.sendMessage({ type: 'toggleCaptions' });
             }
             else if (show) {
@@ -407,15 +412,16 @@ class DigitalSambaEmbedded extends events_1.default {
                     optionsToState.value = options[value];
                 }
             });
-            this.stored.roomState.virtualBackground = optionsToState;
             this.sendMessage({ type: 'configureVirtualBackground', data: options || {} });
         };
         this.enableVirtualBackground = (options) => this.configureVirtualBackground(options);
         this.disableVirtualBackground = () => {
             this.roomSettings.virtualBackground = undefined;
-            this.stored.roomState.virtualBackground = { enabled: false };
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
+        if (!window.isSecureContext) {
+            this.logError(errors_1.INSECURE_CONTEXT);
+        }
         this.initOptions = options;
         this.roomSettings = options.roomSettings || {};
         this.reportErrors = instanceProperties.reportErrors || false;
@@ -461,5 +467,5 @@ class DigitalSambaEmbedded extends events_1.default {
 }
 exports.DigitalSambaEmbedded = DigitalSambaEmbedded;
 _a = DigitalSambaEmbedded;
-DigitalSambaEmbedded.createControl = (initOptions) => new _a(initOptions, {}, false);
+DigitalSambaEmbedded.createControl = (initOptions, instanceProperties = {}) => new _a(initOptions, instanceProperties, false);
 exports.default = DigitalSambaEmbedded;
