@@ -204,23 +204,41 @@ a {
   flex-direction: column;
 }
 .room-content {
-  flex-grow: 1;
-  align-items: flex-start;
   max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 30px;
 }
 
 .room-frame {
   align-items: flex-start;
 }
 
+.frame-area {
+  justify-self: center;
+  grid-column: span 7 / span 7;
+}
+
 .room-frame .container {
   padding: 15px 15px;
 }
 
+iframe {
+  max-width: 100%;
+}
+
 .sidebar {
-  padding-left: 15px;
-  flex-grow: 1;
-  max-width: calc(100vw - 1055px);
+  grid-column: span 5 / span 5;
+}
+
+@media (max-width: 1023px) {
+  .frame-area {
+    grid-column: 1 / -1;
+  }
+
+  .sidebar {
+    grid-column: 1 / -1;
+  }
 }
 
 .sidebar-block {
