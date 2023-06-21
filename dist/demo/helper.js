@@ -114,3 +114,13 @@ function initializeParticipantList() {
 
   sidebar.appendChild(participantsList);
 }
+
+function logRoomLoad() {
+  try {
+    const [team, room] = `${ROOM_URL}`.replace(/\?.+/, '').replace('https://', '').split('.digitalsamba.com/');
+
+    plausible('Room loaded', {props: {team, room}});
+  } catch(e) {
+    // ignore if something went wrong;
+  }
+}

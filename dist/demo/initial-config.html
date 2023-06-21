@@ -7,6 +7,8 @@
   <title>Initial settings</title>
   <script src="./index.js"></script>
   <script src="./helper.js"></script>
+  <script defer data-domain="digitalsamba.github.io" src="https://plausible.wbcnf.net/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -222,6 +224,7 @@
 
       // load samba frame
       sambaEmbedded.load();
+      logRoomLoad();
 
       addJoiningHint(ROOM_URL);
       initializeLogs();
