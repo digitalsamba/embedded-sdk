@@ -607,6 +607,31 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     this.sendMessage({ type: 'disableVirtualBackground' });
   };
+
+  muteFrame = () => {
+    this.roomSettings.muteFrame = true;
+    this.stored.roomState.frameMuted = true;
+    this.sendMessage({ type: 'muteFrame' });
+  };
+
+  unmuteFrame = () => {
+    this.roomSettings.muteFrame = false;
+    this.stored.roomState.frameMuted = false;
+    this.sendMessage({ type: 'unmuteFrame' });
+  };
+
+  toggleMuteFrame = (mute?: boolean) => {
+    if (typeof mute === 'undefined') {
+      this.roomSettings.muteFrame = !this.roomSettings.muteFrame;
+      this.stored.roomState.frameMuted = !this.stored.roomState.frameMuted;
+
+      this.sendMessage({ type: 'toggleMuteFrame' });
+    } else if (mute) {
+      this.muteFrame();
+    } else {
+      this.unmuteFrame();
+    }
+  };
 }
 
 export default DigitalSambaEmbedded;

@@ -30,6 +30,7 @@ export enum PermissionTypes {
 export const defaultStoredState: Stored = {
   userId: '',
   roomState: {
+    frameMuted: false,
     media: {
       audioEnabled: false,
       videoEnabled: false,

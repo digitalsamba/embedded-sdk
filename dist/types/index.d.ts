@@ -65,5 +65,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     configureVirtualBackground: (options: VirtualBackgroundOptions) => void;
     enableVirtualBackground: (options: VirtualBackgroundOptions) => void;
     disableVirtualBackground: () => void;
+    muteFrame: () => void;
+    unmuteFrame: () => void;
+    toggleMuteFrame: (mute?: boolean) => void;
 }
 export default DigitalSambaEmbedded;
