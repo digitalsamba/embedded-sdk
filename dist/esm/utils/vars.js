@@ -26,6 +26,7 @@ export var PermissionTypes;
 export const defaultStoredState = {
     userId: '',
     roomState: {
+        frameMuted: false,
         media: {
             audioEnabled: false,
             videoEnabled: false,

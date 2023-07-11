@@ -413,6 +413,29 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.roomSettings.virtualBackground = undefined;
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
+        this.muteFrame = () => {
+            this.roomSettings.muteFrame = true;
+            this.stored.roomState.frameMuted = true;
+            this.sendMessage({ type: 'muteFrame' });
+        };
+        this.unmuteFrame = () => {
+            this.roomSettings.muteFrame = false;
+            this.stored.roomState.frameMuted = false;
+            this.sendMessage({ type: 'unmuteFrame' });
+        };
+        this.toggleMuteFrame = (mute) => {
+            if (typeof mute === 'undefined') {
+                this.roomSettings.muteFrame = !this.roomSettings.muteFrame;
+                this.stored.roomState.frameMuted = !this.stored.roomState.frameMuted;
+                this.sendMessage({ type: 'toggleMuteFrame' });
+            }
+            else if (mute) {
+                this.muteFrame();
+            }
+            else {
+                this.unmuteFrame();
+            }
+        };
         if (!window.isSecureContext) {
             this.logError(INSECURE_CONTEXT);
         }

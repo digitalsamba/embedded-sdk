@@ -12,6 +12,8 @@ export interface InitialRoomSettings {
   showToolbar: boolean;
   showCaptions: boolean;
   virtualBackground: VirtualBackgroundOptions;
+
+  muteFrame: boolean;
 }
 
 export type InitOptions = {
@@ -81,7 +83,10 @@ export type SendMessageType =
   | 'allowScreenshare'
   | 'disallowScreenshare'
   | 'configureVirtualBackground'
-  | 'disableVirtualBackground';
+  | 'disableVirtualBackground'
+  | 'muteFrame'
+  | 'unmuteFrame'
+  | 'toggleMuteFrame';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -194,6 +199,8 @@ export interface StoredVBState {
 }
 
 export interface RoomState {
+  frameMuted: boolean;
+
   media: {
     videoEnabled: boolean;
     audioEnabled: boolean;

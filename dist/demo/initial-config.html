@@ -63,6 +63,12 @@
             <input type="checkbox" id="initial-settings-toolbar" onchange="initialSettings.showToolbar = !initialSettings.showToolbar" />
           </label>
         </div>
+        <div>
+          <label class="checkbox-label" for="initial-settings-muted">
+            <span>Mute frame</span>
+            <input type="checkbox" id="initial-settings-muted" onchange="initialSettings.muteFrame = !initialSettings.muteFrame" />
+          </label>
+        </div>
         <fieldset style="margin-bottom: 10px;">
           <div style="display: flex;">
             <legend style="margin-right: 8px;">Layout mode</legend>
@@ -144,6 +150,9 @@
           <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
           <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
           <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+          <button onclick="sambaEmbedded.muteFrame()">mute frame</button>
+          <button onclick="sambaEmbedded.unmuteFrame()">unmute frame</button>
+          <button onclick="sambaEmbedded.toggleMuteFrame()">toggle mute frame</button>
         </div>
       </div>
       <div class="sidebar"></div>
@@ -159,6 +168,7 @@
 
   // defaults for pre-configured state;
   var initialSettings = {
+    muteFrame: false,
     username: "",
     audioEnabled: true,
     videoEnabled: true,
