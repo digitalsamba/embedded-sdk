@@ -86,7 +86,8 @@ export type SendMessageType =
   | 'disableVirtualBackground'
   | 'muteFrame'
   | 'unmuteFrame'
-  | 'toggleMuteFrame';
+  | 'toggleMuteFrame'
+  | 'changeToolbarPosition';
 
 export type ReceiveMessageType =
   | 'connected'

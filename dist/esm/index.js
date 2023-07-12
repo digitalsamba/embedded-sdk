@@ -307,6 +307,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.stored.roomState.layout.showToolbar = false;
             this.sendMessage({ type: 'hideToolbar' });
         };
+        this.changeToolbarPosition = (side) => {
+            this.sendMessage({ type: 'changeToolbarPosition', data: side });
+        };
         this.changeLayoutMode = (mode) => {
             this.roomSettings.layoutMode = mode;
             this.sendMessage({ type: 'changeLayoutMode', data: mode });

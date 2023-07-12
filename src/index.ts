@@ -480,6 +480,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'hideToolbar' });
   };
 
+  changeToolbarPosition = (side: 'left' | 'right' | 'bottom') => {
+    this.sendMessage({ type: 'changeToolbarPosition', data: side });
+  };
+
   changeLayoutMode = (mode: LayoutMode) => {
     this.roomSettings.layoutMode = mode;
 
