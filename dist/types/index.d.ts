@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, VirtualBackgroundOptions } from './types';
+import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -43,6 +43,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     showToolbar: () => void;
     hideToolbar: () => void;
     changeToolbarPosition: (side: 'left' | 'right' | 'bottom') => void;
+    changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
     changeLayoutMode: (mode: LayoutMode) => void;
     leaveSession: () => void;
     endSession: () => void;

@@ -316,6 +316,9 @@ class DigitalSambaEmbedded extends events_1.default {
         this.changeToolbarPosition = (side) => {
             this.sendMessage({ type: 'changeToolbarPosition', data: side });
         };
+        this.changeBrandingOptions = (brandingOptionsConfig) => {
+            this.sendMessage({ type: 'changeBrandingOptions', data: brandingOptionsConfig });
+        };
         this.changeLayoutMode = (mode) => {
             this.roomSettings.layoutMode = mode;
             this.sendMessage({ type: 'changeLayoutMode', data: mode });
