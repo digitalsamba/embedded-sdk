@@ -9,6 +9,7 @@ import {
 } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
 import {
+  BrandingOptionsConfig,
   CaptionsOptions,
   EmbeddedInstance,
   InitialRoomSettings,
@@ -482,6 +483,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   changeToolbarPosition = (side: 'left' | 'right' | 'bottom') => {
     this.sendMessage({ type: 'changeToolbarPosition', data: side });
+  };
+
+  changeBrandingOptions = (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => {
+    this.sendMessage({ type: 'changeBrandingOptions', data: brandingOptionsConfig });
   };
 
   changeLayoutMode = (mode: LayoutMode) => {

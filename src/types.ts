@@ -87,7 +87,8 @@ export type SendMessageType =
   | 'muteFrame'
   | 'unmuteFrame'
   | 'toggleMuteFrame'
-  | 'changeToolbarPosition';
+  | 'changeToolbarPosition'
+  | 'changeBrandingOptions';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -197,6 +198,13 @@ export interface StoredVBState {
   enforced?: boolean;
   type?: 'blur' | 'image' | 'imageUrl';
   value?: string | { src: string; thumb: string; alt: string };
+}
+
+export interface BrandingOptionsConfig {
+  paletteMode: 'dark' | 'light';
+  primaryColor: string;
+  toolbarColor: string;
+  roomBackgroundColor: string;
 }
 
 export interface RoomState {
