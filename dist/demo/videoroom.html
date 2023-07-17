@@ -60,8 +60,8 @@
                 <input type="checkbox" id="branding-palette" onchange="toggleBrandingOption('paletteMode')" />
               </label>
               <div  class="js--paletteMode-parent branding-control-parent disabled">
-                <label style="margin-right: 8px;" for="branding-palette-mode">Value</label>
-                <select name="branding-palette-mode" id="branding-palette-mode" onchange="brandingConfig.paletteMode = this.value">
+                <label style="margin-right: 8px;" for="branding-paletteMode-input">Value</label>
+                <select name="branding-palette-mode" id="branding-paletteMode-input" onchange="brandingConfig.paletteMode = this.value">
                   <option value="light">light</option>
                   <option value="dark">dark</option>
                 </select>
@@ -73,9 +73,9 @@
                 <input type="checkbox" id="branding-primary-color" onchange="toggleBrandingOption('primaryColor')" />
               </label>
               <div  class="js--primaryColor-parent branding-control-parent disabled">
-                <label for="branding-primary-color-input">
+                <label for="branding-primaryColor-input">
                   <span>Value</span>
-                  <input type="color" id="branding-primary-color-input" onchange="brandingConfig.primaryColor = this.value">
+                  <input type="color" id="branding-primaryColor-input" onchange="brandingConfig.primaryColor = this.value">
                 </label>
               </div>
             </div>
@@ -85,9 +85,9 @@
                 <input type="checkbox" id="branding-toolbar-color" onchange="toggleBrandingOption('toolbarColor')" />
               </label>
               <div  class="js--toolbarColor-parent branding-control-parent disabled">
-                <label for="branding-toolbar-color-input">
+                <label for="branding-toolbarColor-input">
                   <span>Value</span>
-                  <input type="color" id="branding-toolbar-color-input"  onchange="brandingConfig.toolbarColor = this.value">
+                  <input type="color" id="branding-toolbarColor-input"  onchange="brandingConfig.toolbarColor = this.value">
                 </label>
               </div>
             </div>
@@ -97,9 +97,9 @@
                 <input type="checkbox" id="branding-room-bg-color" onchange="toggleBrandingOption('roomBackgroundColor')" />
               </label>
               <div  class="js--roomBackgroundColor-parent branding-control-parent disabled">
-                <label for="branding-room-bg-color-input">
+                <label for="branding-roomBackgroundColor-input">
                   <span>Value</span>
-                  <input type="color" id="branding-room-bg-color-input" onchange="brandingConfig.roomBackgroundColor = this.value"></label>
+                  <input type="color" id="branding-roomBackgroundColor-input" onchange="brandingConfig.roomBackgroundColor = this.value"></label>
               </div>
             </div>
           </div>
@@ -202,7 +202,8 @@
       delete brandingConfig[option];
       controlParent.className += ' disabled'
     } else {
-      brandingConfig[option] = 'd';
+      const input = document.getElementById('branding-'+option+'-input');
+      brandingConfig[option] = input.value;
       controlParent.className =  controlParent.className.replace(' disabled', '');
     }
   }
