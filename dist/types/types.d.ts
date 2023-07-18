@@ -1,5 +1,7 @@
 import { PermissionsMap } from './utils/PermissionManager/types';
 import { LayoutMode, PermissionTypes } from './utils/vars';
+export type FeatureFlag = 'languageSelection' | 'screenshare' | 'participantsList' | 'chat' | 'qa' | 'contentLibrary' | 'whiteboard' | 'pin' | 'fullScreen' | 'minimizeOwnTile' | 'endSession' | 'recordings' | 'captions' | 'virtualBackgrounds' | 'raiseHand' | 'invite';
+export type FeatureSet = Record<FeatureFlag, boolean>;
 export interface InitialRoomSettings {
     videoEnabled: boolean;
     audioEnabled: boolean;
@@ -110,6 +112,7 @@ export interface Stored {
     users: UsersList;
     activeSpeaker?: UserId;
     roomState: RoomState;
+    features: FeatureSet;
 }
 export type RoomJoinedPayload = Stored & {
     permissionsMap: PermissionsMap;

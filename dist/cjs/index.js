@@ -177,12 +177,14 @@ class DigitalSambaEmbedded extends events_1.default {
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
-                    const { users, roomState, activeSpeaker, permissionsMap } = message.data;
+                    const { users, roomState, activeSpeaker, permissionsMap, features } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
                     this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, roomState), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
+                    this.stored.features = (0, proxy_1.createWatchedProxy)(Object.assign({}, features), this.emitFeatureSetUpdated);
                     this.permissionManager.permissionsMap = permissionsMap;
                     this.emitUsersUpdated();
+                    this.emitFeatureSetUpdated();
                     this.emitRoomStateUpdated();
                     this._emit('roomJoined', { type: 'roomJoined' });
                     break;
@@ -197,6 +199,12 @@ class DigitalSambaEmbedded extends events_1.default {
         };
         this.emitRoomStateUpdated = () => {
             this._emit('roomStateUpdated', { type: 'roomStateUpdated', data: { state: this.roomState } });
+        };
+        this.emitFeatureSetUpdated = () => {
+            this._emit('featureSetUpdated', {
+                type: 'featureSetUpdated',
+                data: { state: this.stored.features },
+            });
         };
         this.setFrameSrc = () => {
             let url = this.savedIframeSrc;
@@ -492,6 +500,12 @@ class DigitalSambaEmbedded extends events_1.default {
     }
     get localUser() {
         return this.stored.users[this.stored.userId];
+    }
+    get features() {
+        return this.stored.features;
+    }
+    featureEnabled(feature) {
+        return !!this.stored.features[feature];
     }
 }
 exports.DigitalSambaEmbedded = DigitalSambaEmbedded;
