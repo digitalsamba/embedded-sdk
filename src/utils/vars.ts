@@ -39,6 +39,7 @@ export const defaultStoredState: Stored = {
       mode: LayoutMode.tiled,
       showToolbar: true,
       toolbarPosition: 'left',
+      localTileMinimized: false,
     },
     captionsState: {
       showCaptions: false,

@@ -168,6 +168,12 @@ class DigitalSambaEmbedded extends events_1.default {
                     enabled: false,
                 };
             });
+            this.on('localTileMinimized', () => {
+                this.stored.roomState.layout.localTileMinimized = true;
+            });
+            this.on('localTileMaximized', () => {
+                this.stored.roomState.layout.localTileMinimized = false;
+            });
         };
         this._emit = (eventName, ...args) => {
             this.emit('*', ...args);
@@ -447,6 +453,27 @@ class DigitalSambaEmbedded extends events_1.default {
             else {
                 this.unmuteFrame();
             }
+        };
+        this.minimizeLocalTile = () => {
+            this.sendMessage({ type: 'minimizeLocalTile' });
+        };
+        this.maximizeLocalTile = () => {
+            this.sendMessage({ type: 'maximizeLocalTile' });
+        };
+        this.pinUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'pinUser', data: { tile, userId } });
+        };
+        this.unpinUser = () => {
+            this.minimizeContent();
+        };
+        this.fullscreenUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'fullscreenUser', data: { tile, userId } });
+        };
+        this.unfullscreenUser = () => {
+            this.minimizeContent();
+        };
+        this.minimizeContent = () => {
+            this.sendMessage({ type: 'minimizeContent' });
         };
         if (!window.isSecureContext) {
             this.logError(errors_1.INSECURE_CONTEXT);

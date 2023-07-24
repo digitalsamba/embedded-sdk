@@ -70,5 +70,12 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     muteFrame: () => void;
     unmuteFrame: () => void;
     toggleMuteFrame: (mute?: boolean) => void;
+    minimizeLocalTile: () => void;
+    maximizeLocalTile: () => void;
+    pinUser: (userId: UserId, tile?: 'media' | 'screenshare') => void;
+    unpinUser: () => void;
+    fullscreenUser: (userId: UserId, tile?: 'media' | 'screenshare') => void;
+    unfullscreenUser: () => void;
+    minimizeContent: () => void;
 }
 export default DigitalSambaEmbedded;

@@ -268,6 +268,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         enabled: false,
       };
     });
+
+    this.on('localTileMinimized', () => {
+      this.stored.roomState.layout.localTileMinimized = true;
+    });
+
+    this.on('localTileMaximized', () => {
+      this.stored.roomState.layout.localTileMinimized = false;
+    });
   };
 
   private _emit = (eventName: string | symbol, ...args: any[]) => {
@@ -640,6 +648,34 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     } else {
       this.unmuteFrame();
     }
+  };
+
+  minimizeLocalTile = () => {
+    this.sendMessage({ type: 'minimizeLocalTile' });
+  };
+
+  maximizeLocalTile = () => {
+    this.sendMessage({ type: 'maximizeLocalTile' });
+  };
+
+  pinUser = (userId: UserId, tile: 'media' | 'screenshare' = 'media') => {
+    this.sendMessage({ type: 'pinUser', data: { tile, userId } });
+  };
+
+  unpinUser = () => {
+    this.minimizeContent();
+  };
+
+  fullscreenUser = (userId: UserId, tile: 'media' | 'screenshare' = 'media') => {
+    this.sendMessage({ type: 'fullscreenUser', data: { tile, userId } });
+  };
+
+  unfullscreenUser = () => {
+    this.minimizeContent();
+  };
+
+  minimizeContent = () => {
+    this.sendMessage({ type: 'minimizeContent' });
   };
 }
 

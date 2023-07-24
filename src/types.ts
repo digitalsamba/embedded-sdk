@@ -88,7 +88,12 @@ export type SendMessageType =
   | 'unmuteFrame'
   | 'toggleMuteFrame'
   | 'changeToolbarPosition'
-  | 'changeBrandingOptions';
+  | 'changeBrandingOptions'
+  | 'minimizeLocalTile'
+  | 'maximizeLocalTile'
+  | 'pinUser'
+  | 'fullscreenUser'
+  | 'minimizeContent';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -118,7 +123,9 @@ export type ReceiveMessageType =
   | 'handLowered'
   | 'virtualBackgroundChanged'
   | 'virtualBackgroundDisabled'
-  | 'roomStateUpdated';
+  | 'roomStateUpdated'
+  | 'localTileMaximized'
+  | 'localTileMinimized';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -218,6 +225,7 @@ export interface RoomState {
     mode: LayoutMode;
     showToolbar: boolean;
     toolbarPosition: 'left' | 'right' | 'bottom';
+    localTileMinimized: boolean;
   };
   captionsState: {
     showCaptions: boolean;
