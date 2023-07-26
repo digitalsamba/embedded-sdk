@@ -108,7 +108,12 @@ export type SendMessageType =
   | 'unmuteFrame'
   | 'toggleMuteFrame'
   | 'changeToolbarPosition'
-  | 'changeBrandingOptions';
+  | 'changeBrandingOptions'
+  | 'minimizeLocalTile'
+  | 'maximizeLocalTile'
+  | 'pinUser'
+  | 'maximizeUser'
+  | 'minimizeContent';
 
 export type ReceiveMessageType =
   | 'connected'
@@ -138,7 +143,10 @@ export type ReceiveMessageType =
   | 'handLowered'
   | 'virtualBackgroundChanged'
   | 'virtualBackgroundDisabled'
-  | 'roomStateUpdated';
+  | 'roomStateUpdated'
+  | 'localTileMaximized'
+  | 'localTileMinimized'
+  | 'userMaximized';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -227,6 +235,8 @@ export interface BrandingOptionsConfig {
   roomBackgroundColor: string;
 }
 
+export type UserTileType = 'media' | 'screenshare';
+
 export interface RoomState {
   frameMuted: boolean;
 
@@ -238,6 +248,12 @@ export interface RoomState {
     mode: LayoutMode;
     showToolbar: boolean;
     toolbarPosition: 'left' | 'right' | 'bottom';
+    localTileMinimized: boolean;
+    contentMode?: 'maximize' | 'pin';
+    content?: {
+      userId: UserId;
+      type: UserTileType;
+    };
   };
   captionsState: {
     showCaptions: boolean;

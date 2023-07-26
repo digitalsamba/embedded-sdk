@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, VirtualBackgroundOptions } from './types';
+import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, UserTileType, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -73,5 +73,12 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     muteFrame: () => void;
     unmuteFrame: () => void;
     toggleMuteFrame: (mute?: boolean) => void;
+    minimizeLocalTile: () => void;
+    maximizeLocalTile: () => void;
+    pinUser: (userId: UserId, tile?: UserTileType) => void;
+    unpinUser: () => void;
+    maximizeUser: (userId: UserId, tile?: UserTileType) => void;
+    minimizeUser: () => void;
+    minimizeContent: () => void;
 }
 export default DigitalSambaEmbedded;

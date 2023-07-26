@@ -22,6 +22,7 @@ import {
   Stored,
   StoredVBState,
   UserId,
+  UserTileType,
   VirtualBackgroundOptions,
 } from './types';
 
@@ -268,6 +269,28 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.stored.roomState.virtualBackground = {
         enabled: false,
       };
+    });
+
+    this.on('localTileMinimized', () => {
+      this.stored.roomState.layout.localTileMinimized = true;
+    });
+
+    this.on('localTileMaximized', () => {
+      this.stored.roomState.layout.localTileMinimized = false;
+    });
+
+    this.on('userMaximized', ({ data }) => {
+      this.stored.roomState.layout.content = {
+        userId: data.userId,
+        type: data.type,
+      };
+
+      this.stored.roomState.layout.contentMode = data.mode;
+    });
+    this.on('userMinimized', () => {
+      this.stored.roomState.layout.content = undefined;
+
+      this.stored.roomState.layout.contentMode = undefined;
     });
   };
 
@@ -659,6 +682,34 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     } else {
       this.unmuteFrame();
     }
+  };
+
+  minimizeLocalTile = () => {
+    this.sendMessage({ type: 'minimizeLocalTile' });
+  };
+
+  maximizeLocalTile = () => {
+    this.sendMessage({ type: 'maximizeLocalTile' });
+  };
+
+  pinUser = (userId: UserId, tile: UserTileType = 'media') => {
+    this.sendMessage({ type: 'pinUser', data: { tile, userId } });
+  };
+
+  unpinUser = () => {
+    this.minimizeContent();
+  };
+
+  maximizeUser = (userId: UserId, tile: UserTileType = 'media') => {
+    this.sendMessage({ type: 'maximizeUser', data: { tile, userId } });
+  };
+
+  minimizeUser = () => {
+    this.minimizeContent();
+  };
+
+  minimizeContent = () => {
+    this.sendMessage({ type: 'minimizeContent' });
   };
 }
 

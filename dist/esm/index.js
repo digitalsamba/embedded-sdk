@@ -162,6 +162,23 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     enabled: false,
                 };
             });
+            this.on('localTileMinimized', () => {
+                this.stored.roomState.layout.localTileMinimized = true;
+            });
+            this.on('localTileMaximized', () => {
+                this.stored.roomState.layout.localTileMinimized = false;
+            });
+            this.on('userMaximized', ({ data }) => {
+                this.stored.roomState.layout.content = {
+                    userId: data.userId,
+                    type: data.type,
+                };
+                this.stored.roomState.layout.contentMode = data.mode;
+            });
+            this.on('userMinimized', () => {
+                this.stored.roomState.layout.content = undefined;
+                this.stored.roomState.layout.contentMode = undefined;
+            });
         };
         this._emit = (eventName, ...args) => {
             this.emit('*', ...args);
@@ -449,6 +466,27 @@ export class DigitalSambaEmbedded extends EventEmitter {
             else {
                 this.unmuteFrame();
             }
+        };
+        this.minimizeLocalTile = () => {
+            this.sendMessage({ type: 'minimizeLocalTile' });
+        };
+        this.maximizeLocalTile = () => {
+            this.sendMessage({ type: 'maximizeLocalTile' });
+        };
+        this.pinUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'pinUser', data: { tile, userId } });
+        };
+        this.unpinUser = () => {
+            this.minimizeContent();
+        };
+        this.maximizeUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'maximizeUser', data: { tile, userId } });
+        };
+        this.minimizeUser = () => {
+            this.minimizeContent();
+        };
+        this.minimizeContent = () => {
+            this.sendMessage({ type: 'minimizeContent' });
         };
         if (!window.isSecureContext) {
             this.logError(INSECURE_CONTEXT);
