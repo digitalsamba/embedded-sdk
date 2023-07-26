@@ -22,6 +22,7 @@ import {
   Stored,
   StoredVBState,
   UserId,
+  UserTileType,
   VirtualBackgroundOptions,
 } from './types';
 
@@ -276,6 +277,20 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     this.on('localTileMaximized', () => {
       this.stored.roomState.layout.localTileMinimized = false;
+    });
+
+    this.on('userMaximized', ({ data }) => {
+      this.stored.roomState.layout.content = {
+        userId: data.userId,
+        type: data.type,
+      };
+
+      this.stored.roomState.layout.contentMode = data.mode;
+    });
+    this.on('userMinimized', () => {
+      this.stored.roomState.layout.content = undefined;
+
+      this.stored.roomState.layout.contentMode = undefined;
     });
   };
 
@@ -677,7 +692,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'maximizeLocalTile' });
   };
 
-  pinUser = (userId: UserId, tile: 'media' | 'screenshare' = 'media') => {
+  pinUser = (userId: UserId, tile: UserTileType = 'media') => {
     this.sendMessage({ type: 'pinUser', data: { tile, userId } });
   };
 
@@ -685,11 +700,11 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.minimizeContent();
   };
 
-  fullscreenUser = (userId: UserId, tile: 'media' | 'screenshare' = 'media') => {
-    this.sendMessage({ type: 'fullscreenUser', data: { tile, userId } });
+  maximizeUser = (userId: UserId, tile: UserTileType = 'media') => {
+    this.sendMessage({ type: 'maximizeUser', data: { tile, userId } });
   };
 
-  unfullscreenUser = () => {
+  minimizeUser = () => {
     this.minimizeContent();
   };
 

@@ -112,7 +112,7 @@ export type SendMessageType =
   | 'minimizeLocalTile'
   | 'maximizeLocalTile'
   | 'pinUser'
-  | 'fullscreenUser'
+  | 'maximizeUser'
   | 'minimizeContent';
 
 export type ReceiveMessageType =
@@ -145,7 +145,8 @@ export type ReceiveMessageType =
   | 'virtualBackgroundDisabled'
   | 'roomStateUpdated'
   | 'localTileMaximized'
-  | 'localTileMinimized';
+  | 'localTileMinimized'
+  | 'userMaximized';
 
 export interface SendMessage<D> {
   type: SendMessageType;
@@ -234,6 +235,8 @@ export interface BrandingOptionsConfig {
   roomBackgroundColor: string;
 }
 
+export type UserTileType = 'media' | 'screenshare';
+
 export interface RoomState {
   frameMuted: boolean;
 
@@ -246,6 +249,11 @@ export interface RoomState {
     showToolbar: boolean;
     toolbarPosition: 'left' | 'right' | 'bottom';
     localTileMinimized: boolean;
+    contentMode?: 'maximize' | 'pin';
+    content?: {
+      userId: UserId;
+      type: UserTileType;
+    };
   };
   captionsState: {
     showCaptions: boolean;

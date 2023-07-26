@@ -231,6 +231,67 @@
           }
         }
 
+        if(sambaEmbedded.featureEnabled('pin')) {
+          const pinControl = document.createElement('button');
+          pinControl.innerHTML = 'pin';
+          pinControl.style.margin = '0 4px';
+          pinControl.className = 'pin-' + user.id;
+
+          pinControl.onclick = () => {
+            sambaEmbedded.pinUser(user.id)
+          }
+
+          row.appendChild(pinControl);
+        }
+
+         if(sambaEmbedded.featureEnabled('fullScreen')) {
+          const fsControl = document.createElement('button');
+          fsControl.innerHTML = 'maximize';
+          fsControl.style.margin = '0 4px';
+          fsControl.className = 'fs-' + user.id;
+
+          fsControl.onclick = () => {
+            sambaEmbedded.maximizeUser(user.id)
+          }
+
+          row.appendChild(fsControl);
+        }
+
+        const ssControls = document.createElement('div');
+        ssControls.className = 'screenshare-buttons-' + user.id;
+        ssControls.style.opacity = 0;
+
+        row.appendChild(ssControls);
+
+        if(sambaEmbedded.featureEnabled('screenshare')) {
+          if(sambaEmbedded.featureEnabled('pin')) {
+            const ssPinControl = document.createElement('button');
+            ssPinControl.innerHTML = 'pin screenshare';
+            ssPinControl.style.margin = '0 4px';
+            ssPinControl.className = 'ss-pin-' + user.id;
+
+            ssPinControl.onclick = () => {
+              sambaEmbedded.pinUser(user.id, 'screenshare')
+            }
+
+            ssControls.appendChild(ssPinControl);
+          }
+
+          if(sambaEmbedded.featureEnabled('fullScreen')) {
+            const ssFsControl = document.createElement('button');
+            ssFsControl.innerHTML = 'maximize screenshare';
+            ssFsControl.style.margin = '0 4px';
+            ssFsControl.className = 'ss-fs-' + user.id;
+
+            ssFsControl.onclick = () => {
+              sambaEmbedded.maximizeUser(user.id, 'screenshare')
+            }
+
+            ssControls.appendChild(ssFsControl);
+          }
+        }
+
+
         const raisedHandControl = document.createElement('button');
         raisedHandControl.id = 'lower-hand-' + user.id;
         raisedHandControl.innerHTML = 'lower hand'
@@ -274,6 +335,89 @@
         }
       }
     });
+
+    const resetButtons = () => {
+      const pinButton = document.querySelector(`.pin-${exposedUser}`);
+      const ssPinButton = document.querySelector(`.ss-pin-${exposedUser}`);
+      const fsButton = document.querySelector(`.fs-${exposedUser}`);
+      const ssFsButton = document.querySelector(`.ss-fs-${exposedUser}`);
+
+      if(pinButton) {
+        pinButton.innerHTML = 'pin'
+        const uid = exposedUser;
+        pinButton.onclick = () => sambaEmbedded.pinUser(uid);
+      }
+      if(ssPinButton) {
+        ssPinButton.innerHTML = 'pin screenshare'
+        const uid = exposedUser;
+        ssPinButton.onclick = () => sambaEmbedded.pinUser(uid, 'screenshare');
+      }
+
+      if(fsButton) {
+        fsButton.innerHTML = 'maximize';
+        const uid = exposedUser;
+        fsButton.onclick = () => sambaEmbedded.maximizeUser(uid);
+      }
+      if(ssFsButton) {
+        ssFsButton.innerHTML = 'maximize screenshare'
+        const uid = exposedUser;
+        ssFsButton.onclick = () => sambaEmbedded.maximizeUser(uid, 'screenshare');
+      }
+
+      exposedUser = '';
+    }
+
+
+    let exposedUser = '';
+
+    sambaEmbedded.on('userMaximized', ({ data }) => {
+      resetButtons();
+
+      const pinButton = document.querySelector(data.type === 'media' ? `.pin-${data.userId}`: `.ss-pin-${data.userId}`);
+      const fsButton = document.querySelector(data.type === 'media' ? `.fs-${data.userId}`: `.ss-fs-${data.userId}`);
+      exposedUser = data.userId;
+
+
+      if(data.mode === 'pin') {
+        if(pinButton) {
+          pinButton.innerHTML = data.type === 'media' ? 'unpin' :'unpin screenshare'
+          pinButton.onclick = sambaEmbedded.minimizeUser;
+        }
+
+        if(fsButton) {
+          fsButton.innerHTML = data.type === 'media'  ? 'maximize' : 'maximize screenshare'
+          fsButton.onclick = () => sambaEmbedded.maximizeUser(data.userId, data.type);
+        }
+      } else {
+        if(pinButton) {
+          pinButton.innerHTML = data.type === 'media'  ? 'pin' : 'pin screnshare'
+          pinButton.onclick = () => sambaEmbedded.pinUser(data.userId, data.type);
+        }
+
+        if(fsButton) {
+          fsButton.innerHTML = data.type === 'media'  ? 'minimize' : 'minimize screenshare'
+          fsButton.onclick = sambaEmbedded.minimizeUser
+        }
+      }
+    })
+
+    sambaEmbedded.on('userMinimized', resetButtons)
+
+    sambaEmbedded.on('screenshareStarted', ({data}) => {
+      const ssControls = document.querySelector('.screenshare-buttons-' + data.user.id);
+
+      if(ssControls) {
+        ssControls.style.opacity = 1;
+      }
+    })
+
+    sambaEmbedded.on('screenshareStopped', ({data}) => {
+      const ssControls = document.querySelector('.screenshare-buttons-' + data.user.id);
+
+      if(ssControls) {
+        ssControls.style.opacity = 0;
+      }
+    })
   }
 
 </script>

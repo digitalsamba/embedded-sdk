@@ -168,6 +168,17 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.on('localTileMaximized', () => {
                 this.stored.roomState.layout.localTileMinimized = false;
             });
+            this.on('userMaximized', ({ data }) => {
+                this.stored.roomState.layout.content = {
+                    userId: data.userId,
+                    type: data.type,
+                };
+                this.stored.roomState.layout.contentMode = data.mode;
+            });
+            this.on('userMinimized', () => {
+                this.stored.roomState.layout.content = undefined;
+                this.stored.roomState.layout.contentMode = undefined;
+            });
         };
         this._emit = (eventName, ...args) => {
             this.emit('*', ...args);
@@ -468,10 +479,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.unpinUser = () => {
             this.minimizeContent();
         };
-        this.fullscreenUser = (userId, tile = 'media') => {
-            this.sendMessage({ type: 'fullscreenUser', data: { tile, userId } });
+        this.maximizeUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'maximizeUser', data: { tile, userId } });
         };
-        this.unfullscreenUser = () => {
+        this.minimizeUser = () => {
             this.minimizeContent();
         };
         this.minimizeContent = () => {
