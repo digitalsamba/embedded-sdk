@@ -12,6 +12,7 @@ import {
   BrandingOptionsConfig,
   CaptionsOptions,
   EmbeddedInstance,
+  FeatureFlag,
   InitialRoomSettings,
   InitOptions,
   InstanceProperties,
@@ -289,16 +290,19 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     switch (message.type) {
       case 'roomJoined': {
-        const { users, roomState, activeSpeaker, permissionsMap } =
+        const { users, roomState, activeSpeaker, permissionsMap, features } =
           message.data as RoomJoinedPayload;
 
         this.stored.users = { ...this.stored.users, ...users };
         this.stored.roomState = createWatchedProxy({ ...roomState }, this.emitRoomStateUpdated);
         this.stored.activeSpeaker = activeSpeaker;
 
+        this.stored.features = createWatchedProxy({ ...features }, this.emitFeatureSetUpdated);
+
         this.permissionManager.permissionsMap = permissionsMap;
 
         this.emitUsersUpdated();
+        this.emitFeatureSetUpdated();
         this.emitRoomStateUpdated();
 
         this._emit('roomJoined', { type: 'roomJoined' });
@@ -316,6 +320,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   private emitRoomStateUpdated = () => {
     this._emit('roomStateUpdated', { type: 'roomStateUpdated', data: { state: this.roomState } });
+  };
+
+  private emitFeatureSetUpdated = () => {
+    this._emit('featureSetUpdated', {
+      type: 'featureSetUpdated',
+      data: { state: this.stored.features },
+    });
   };
 
   private setFrameSrc = () => {
@@ -416,6 +427,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   get localUser() {
     return this.stored.users[this.stored.userId];
+  }
+
+  get features() {
+    return this.stored.features;
+  }
+
+  featureEnabled(feature: FeatureFlag) {
+    return !!this.stored.features[feature];
   }
 
   // commands
