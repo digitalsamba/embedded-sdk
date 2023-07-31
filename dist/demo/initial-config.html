@@ -7,6 +7,8 @@
   <title>Initial settings</title>
   <script src="./index.js"></script>
   <script src="./helper.js"></script>
+  <script defer data-domain="digitalsamba.github.io" src="https://plausible.wbcnf.net/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -59,6 +61,12 @@
           <label class="checkbox-label" for="initial-settings-toolbar">
             <span>Show toolbar</span>
             <input type="checkbox" id="initial-settings-toolbar" onchange="initialSettings.showToolbar = !initialSettings.showToolbar" />
+          </label>
+        </div>
+        <div>
+          <label class="checkbox-label" for="initial-settings-muted">
+            <span>Mute frame</span>
+            <input type="checkbox" id="initial-settings-muted" onchange="initialSettings.muteFrame = !initialSettings.muteFrame" />
           </label>
         </div>
         <fieldset style="margin-bottom: 10px;">
@@ -142,6 +150,9 @@
           <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
           <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
           <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+          <button onclick="sambaEmbedded.muteFrame()">mute frame</button>
+          <button onclick="sambaEmbedded.unmuteFrame()">unmute frame</button>
+          <button onclick="sambaEmbedded.toggleMuteFrame()">toggle mute frame</button>
         </div>
       </div>
       <div class="sidebar"></div>
@@ -157,6 +168,7 @@
 
   // defaults for pre-configured state;
   var initialSettings = {
+    muteFrame: false,
     username: "",
     audioEnabled: true,
     videoEnabled: true,
@@ -222,6 +234,7 @@
 
       // load samba frame
       sambaEmbedded.load();
+      logRoomLoad();
 
       addJoiningHint(ROOM_URL);
       initializeLogs();

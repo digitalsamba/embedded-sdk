@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { CaptionsOptions, EmbeddedInstance, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, VirtualBackgroundOptions } from './types';
+import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, UserTileType, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -23,6 +23,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     private handleInternalMessage;
     private emitUsersUpdated;
     private emitRoomStateUpdated;
+    private emitFeatureSetUpdated;
     private setFrameSrc;
     private checkTarget;
     private sendMessage;
@@ -30,6 +31,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     private applyFrameProperties;
     get roomState(): import("./types").RoomState;
     get localUser(): import("./types").User;
+    get features(): import("./types").FeatureSet;
+    featureEnabled(feature: FeatureFlag): boolean;
     enableVideo: () => void;
     disableVideo: () => void;
     toggleVideo: (enable?: boolean) => void;
@@ -42,6 +45,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     stopRecording: () => void;
     showToolbar: () => void;
     hideToolbar: () => void;
+    changeToolbarPosition: (side: 'left' | 'right' | 'bottom') => void;
+    changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
     changeLayoutMode: (mode: LayoutMode) => void;
     leaveSession: () => void;
     endSession: () => void;
@@ -65,5 +70,15 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     configureVirtualBackground: (options: VirtualBackgroundOptions) => void;
     enableVirtualBackground: (options: VirtualBackgroundOptions) => void;
     disableVirtualBackground: () => void;
+    muteFrame: () => void;
+    unmuteFrame: () => void;
+    toggleMuteFrame: (mute?: boolean) => void;
+    minimizeLocalTile: () => void;
+    maximizeLocalTile: () => void;
+    pinUser: (userId: UserId, tile?: UserTileType) => void;
+    unpinUser: () => void;
+    maximizeUser: (userId: UserId, tile?: UserTileType) => void;
+    minimizeUser: () => void;
+    minimizeContent: () => void;
 }
 export default DigitalSambaEmbedded;

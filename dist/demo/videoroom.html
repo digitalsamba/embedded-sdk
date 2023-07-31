@@ -7,6 +7,8 @@
   <title>Simple videoroom</title>
   <script src="./index.js"></script>
   <script src="./helper.js"></script>
+  <script defer data-domain="digitalsamba.github.io" src="https://plausible.wbcnf.net/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -46,6 +48,62 @@
           <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
           <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
           <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+          <button onclick="sambaEmbedded.changeToolbarPosition('left')">toolbar to left</button>
+          <button onclick="sambaEmbedded.changeToolbarPosition('right')">toolbar to right</button>
+          <button onclick="sambaEmbedded.changeToolbarPosition('bottom')">toolbar to bottom</button>
+        </div>
+        <div class="branding-controls">
+          <div style="display: flex; flex-grow: 1; margin-bottom: 20px">
+            <div>
+              <label class="checkbox-label" for="branding-palette">
+                <span>Custom palette</span>
+                <input type="checkbox" id="branding-palette" onchange="toggleBrandingOption('paletteMode')" />
+              </label>
+              <div  class="js--paletteMode-parent branding-control-parent disabled">
+                <label style="margin-right: 8px;" for="branding-paletteMode-input">Value</label>
+                <select name="branding-palette-mode" id="branding-paletteMode-input" onchange="brandingConfig.paletteMode = this.value">
+                  <option value="light">light</option>
+                  <option value="dark">dark</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="checkbox-label" for="branding-primary-color">
+                <span>Custom primary color</span>
+                <input type="checkbox" id="branding-primary-color" onchange="toggleBrandingOption('primaryColor')" />
+              </label>
+              <div  class="js--primaryColor-parent branding-control-parent disabled">
+                <label for="branding-primaryColor-input">
+                  <span>Value</span>
+                  <input type="color" id="branding-primaryColor-input" onchange="brandingConfig.primaryColor = this.value">
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="checkbox-label" for="branding-toolbar-color">
+                <span>Custom toolbar color</span>
+                <input type="checkbox" id="branding-toolbar-color" onchange="toggleBrandingOption('toolbarColor')" />
+              </label>
+              <div  class="js--toolbarColor-parent branding-control-parent disabled">
+                <label for="branding-toolbarColor-input">
+                  <span>Value</span>
+                  <input type="color" id="branding-toolbarColor-input"  onchange="brandingConfig.toolbarColor = this.value">
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="checkbox-label" for="branding-room-bg-color">
+                <span>Custom room background</span>
+                <input type="checkbox" id="branding-room-bg-color" onchange="toggleBrandingOption('roomBackgroundColor')" />
+              </label>
+              <div  class="js--roomBackgroundColor-parent branding-control-parent disabled">
+                <label for="branding-roomBackgroundColor-input">
+                  <span>Value</span>
+                  <input type="color" id="branding-roomBackgroundColor-input" onchange="brandingConfig.roomBackgroundColor = this.value"></label>
+              </div>
+            </div>
+          </div>
+          <button onclick="sambaEmbedded.changeBrandingOptions(brandingConfig)">Apply custom branding</button>
         </div>
       </div>
       <div class="sidebar"></div>
@@ -58,7 +116,9 @@
   let ROOM_URL = 'https://localhost:3000/Public';
 
   var sambaEmbedded;
+  var brandingConfig = {
 
+  }
   // if room is predefined in search params, skip room URL field;
   checkDynamicRoomURL();
 
@@ -83,7 +143,7 @@
       // other init strategies are available, along with more detailed customization
       // see https://docs.digitalsamba.com/reference/sdk/digitalsambaembedded-class
       sambaEmbedded = DigitalSambaEmbedded.createControl(
-        { url: ROOM_URL, root: parent, roomSettings: {showToolbar: false} },
+        { url: ROOM_URL, root: parent, roomSettings: {showToolbar: false } },
         {reportErrors: true}
       );
 
@@ -95,6 +155,7 @@
 
       // load samba frame
       sambaEmbedded.load();
+      logRoomLoad();
 
       addJoiningHint(ROOM_URL);
       initializeLogs();
@@ -131,6 +192,20 @@
 
       controls.style.display = 'flex';
     })
+  }
+
+  function toggleBrandingOption(option) {
+    console.warn(option, brandingConfig[option]);
+    const controlParent = document.querySelector('.js--'+option+'-parent');
+
+    if(brandingConfig[option]) {
+      delete brandingConfig[option];
+      controlParent.className += ' disabled'
+    } else {
+      const input = document.getElementById('branding-'+option+'-input');
+      brandingConfig[option] = input.value;
+      controlParent.className =  controlParent.className.replace(' disabled', '');
+    }
   }
 </script>
 </body>

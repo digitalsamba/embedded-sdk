@@ -30,6 +30,7 @@ export enum PermissionTypes {
 export const defaultStoredState: Stored = {
   userId: '',
   roomState: {
+    frameMuted: false,
     media: {
       audioEnabled: false,
       videoEnabled: false,
@@ -38,6 +39,7 @@ export const defaultStoredState: Stored = {
       mode: LayoutMode.tiled,
       showToolbar: true,
       toolbarPosition: 'left',
+      localTileMinimized: false,
     },
     captionsState: {
       showCaptions: false,
@@ -49,4 +51,22 @@ export const defaultStoredState: Stored = {
     },
   },
   users: {},
+  features: {
+    chat: false,
+    contentLibrary: false,
+    captions: false,
+    qa: false,
+    endSession: false,
+    fullScreen: false,
+    languageSelection: false,
+    minimizeOwnTile: false,
+    participantsList: false,
+    pin: false,
+    screenshare: false,
+    whiteboard: false,
+    recordings: false,
+    virtualBackgrounds: false,
+    raiseHand: true,
+    invite: false,
+  },
 };

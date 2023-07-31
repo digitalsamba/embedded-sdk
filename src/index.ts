@@ -9,8 +9,10 @@ import {
 } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
 import {
+  BrandingOptionsConfig,
   CaptionsOptions,
   EmbeddedInstance,
+  FeatureFlag,
   InitialRoomSettings,
   InitOptions,
   InstanceProperties,
@@ -20,6 +22,7 @@ import {
   Stored,
   StoredVBState,
   UserId,
+  UserTileType,
   VirtualBackgroundOptions,
 } from './types';
 
@@ -267,6 +270,28 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         enabled: false,
       };
     });
+
+    this.on('localTileMinimized', () => {
+      this.stored.roomState.layout.localTileMinimized = true;
+    });
+
+    this.on('localTileMaximized', () => {
+      this.stored.roomState.layout.localTileMinimized = false;
+    });
+
+    this.on('userMaximized', ({ data }) => {
+      this.stored.roomState.layout.content = {
+        userId: data.userId,
+        type: data.type,
+      };
+
+      this.stored.roomState.layout.contentMode = data.mode;
+    });
+    this.on('userMinimized', () => {
+      this.stored.roomState.layout.content = undefined;
+
+      this.stored.roomState.layout.contentMode = undefined;
+    });
   };
 
   private _emit = (eventName: string | symbol, ...args: any[]) => {
@@ -280,16 +305,19 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     switch (message.type) {
       case 'roomJoined': {
-        const { users, roomState, activeSpeaker, permissionsMap } =
+        const { users, roomState, activeSpeaker, permissionsMap, features } =
           message.data as RoomJoinedPayload;
 
         this.stored.users = { ...this.stored.users, ...users };
         this.stored.roomState = createWatchedProxy({ ...roomState }, this.emitRoomStateUpdated);
         this.stored.activeSpeaker = activeSpeaker;
 
+        this.stored.features = createWatchedProxy({ ...features }, this.emitFeatureSetUpdated);
+
         this.permissionManager.permissionsMap = permissionsMap;
 
         this.emitUsersUpdated();
+        this.emitFeatureSetUpdated();
         this.emitRoomStateUpdated();
 
         this._emit('roomJoined', { type: 'roomJoined' });
@@ -307,6 +335,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   private emitRoomStateUpdated = () => {
     this._emit('roomStateUpdated', { type: 'roomStateUpdated', data: { state: this.roomState } });
+  };
+
+  private emitFeatureSetUpdated = () => {
+    this._emit('featureSetUpdated', {
+      type: 'featureSetUpdated',
+      data: { state: this.stored.features },
+    });
   };
 
   private setFrameSrc = () => {
@@ -409,6 +444,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     return this.stored.users[this.stored.userId];
   }
 
+  get features() {
+    return this.stored.features;
+  }
+
+  featureEnabled(feature: FeatureFlag) {
+    return !!this.stored.features[feature];
+  }
+
   // commands
   enableVideo = () => {
     this.roomSettings.videoEnabled = true;
@@ -478,6 +521,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.roomSettings.showToolbar = false;
     this.stored.roomState.layout.showToolbar = false;
     this.sendMessage({ type: 'hideToolbar' });
+  };
+
+  changeToolbarPosition = (side: 'left' | 'right' | 'bottom') => {
+    this.sendMessage({ type: 'changeToolbarPosition', data: side });
+  };
+
+  changeBrandingOptions = (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => {
+    this.sendMessage({ type: 'changeBrandingOptions', data: brandingOptionsConfig });
   };
 
   changeLayoutMode = (mode: LayoutMode) => {
@@ -606,6 +657,59 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.roomSettings.virtualBackground = undefined;
 
     this.sendMessage({ type: 'disableVirtualBackground' });
+  };
+
+  muteFrame = () => {
+    this.roomSettings.muteFrame = true;
+    this.stored.roomState.frameMuted = true;
+    this.sendMessage({ type: 'muteFrame' });
+  };
+
+  unmuteFrame = () => {
+    this.roomSettings.muteFrame = false;
+    this.stored.roomState.frameMuted = false;
+    this.sendMessage({ type: 'unmuteFrame' });
+  };
+
+  toggleMuteFrame = (mute?: boolean) => {
+    if (typeof mute === 'undefined') {
+      this.roomSettings.muteFrame = !this.roomSettings.muteFrame;
+      this.stored.roomState.frameMuted = !this.stored.roomState.frameMuted;
+
+      this.sendMessage({ type: 'toggleMuteFrame' });
+    } else if (mute) {
+      this.muteFrame();
+    } else {
+      this.unmuteFrame();
+    }
+  };
+
+  minimizeLocalTile = () => {
+    this.sendMessage({ type: 'minimizeLocalTile' });
+  };
+
+  maximizeLocalTile = () => {
+    this.sendMessage({ type: 'maximizeLocalTile' });
+  };
+
+  pinUser = (userId: UserId, tile: UserTileType = 'media') => {
+    this.sendMessage({ type: 'pinUser', data: { tile, userId } });
+  };
+
+  unpinUser = () => {
+    this.minimizeContent();
+  };
+
+  maximizeUser = (userId: UserId, tile: UserTileType = 'media') => {
+    this.sendMessage({ type: 'maximizeUser', data: { tile, userId } });
+  };
+
+  minimizeUser = () => {
+    this.minimizeContent();
+  };
+
+  minimizeContent = () => {
+    this.sendMessage({ type: 'minimizeContent' });
   };
 }
 

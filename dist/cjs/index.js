@@ -168,6 +168,23 @@ class DigitalSambaEmbedded extends events_1.default {
                     enabled: false,
                 };
             });
+            this.on('localTileMinimized', () => {
+                this.stored.roomState.layout.localTileMinimized = true;
+            });
+            this.on('localTileMaximized', () => {
+                this.stored.roomState.layout.localTileMinimized = false;
+            });
+            this.on('userMaximized', ({ data }) => {
+                this.stored.roomState.layout.content = {
+                    userId: data.userId,
+                    type: data.type,
+                };
+                this.stored.roomState.layout.contentMode = data.mode;
+            });
+            this.on('userMinimized', () => {
+                this.stored.roomState.layout.content = undefined;
+                this.stored.roomState.layout.contentMode = undefined;
+            });
         };
         this._emit = (eventName, ...args) => {
             this.emit('*', ...args);
@@ -177,12 +194,14 @@ class DigitalSambaEmbedded extends events_1.default {
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
-                    const { users, roomState, activeSpeaker, permissionsMap } = message.data;
+                    const { users, roomState, activeSpeaker, permissionsMap, features } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
                     this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, roomState), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
+                    this.stored.features = (0, proxy_1.createWatchedProxy)(Object.assign({}, features), this.emitFeatureSetUpdated);
                     this.permissionManager.permissionsMap = permissionsMap;
                     this.emitUsersUpdated();
+                    this.emitFeatureSetUpdated();
                     this.emitRoomStateUpdated();
                     this._emit('roomJoined', { type: 'roomJoined' });
                     break;
@@ -197,6 +216,12 @@ class DigitalSambaEmbedded extends events_1.default {
         };
         this.emitRoomStateUpdated = () => {
             this._emit('roomStateUpdated', { type: 'roomStateUpdated', data: { state: this.roomState } });
+        };
+        this.emitFeatureSetUpdated = () => {
+            this._emit('featureSetUpdated', {
+                type: 'featureSetUpdated',
+                data: { state: this.stored.features },
+            });
         };
         this.setFrameSrc = () => {
             let url = this.savedIframeSrc;
@@ -313,6 +338,12 @@ class DigitalSambaEmbedded extends events_1.default {
             this.stored.roomState.layout.showToolbar = false;
             this.sendMessage({ type: 'hideToolbar' });
         };
+        this.changeToolbarPosition = (side) => {
+            this.sendMessage({ type: 'changeToolbarPosition', data: side });
+        };
+        this.changeBrandingOptions = (brandingOptionsConfig) => {
+            this.sendMessage({ type: 'changeBrandingOptions', data: brandingOptionsConfig });
+        };
         this.changeLayoutMode = (mode) => {
             this.roomSettings.layoutMode = mode;
             this.sendMessage({ type: 'changeLayoutMode', data: mode });
@@ -419,6 +450,50 @@ class DigitalSambaEmbedded extends events_1.default {
             this.roomSettings.virtualBackground = undefined;
             this.sendMessage({ type: 'disableVirtualBackground' });
         };
+        this.muteFrame = () => {
+            this.roomSettings.muteFrame = true;
+            this.stored.roomState.frameMuted = true;
+            this.sendMessage({ type: 'muteFrame' });
+        };
+        this.unmuteFrame = () => {
+            this.roomSettings.muteFrame = false;
+            this.stored.roomState.frameMuted = false;
+            this.sendMessage({ type: 'unmuteFrame' });
+        };
+        this.toggleMuteFrame = (mute) => {
+            if (typeof mute === 'undefined') {
+                this.roomSettings.muteFrame = !this.roomSettings.muteFrame;
+                this.stored.roomState.frameMuted = !this.stored.roomState.frameMuted;
+                this.sendMessage({ type: 'toggleMuteFrame' });
+            }
+            else if (mute) {
+                this.muteFrame();
+            }
+            else {
+                this.unmuteFrame();
+            }
+        };
+        this.minimizeLocalTile = () => {
+            this.sendMessage({ type: 'minimizeLocalTile' });
+        };
+        this.maximizeLocalTile = () => {
+            this.sendMessage({ type: 'maximizeLocalTile' });
+        };
+        this.pinUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'pinUser', data: { tile, userId } });
+        };
+        this.unpinUser = () => {
+            this.minimizeContent();
+        };
+        this.maximizeUser = (userId, tile = 'media') => {
+            this.sendMessage({ type: 'maximizeUser', data: { tile, userId } });
+        };
+        this.minimizeUser = () => {
+            this.minimizeContent();
+        };
+        this.minimizeContent = () => {
+            this.sendMessage({ type: 'minimizeContent' });
+        };
         if (!window.isSecureContext) {
             this.logError(errors_1.INSECURE_CONTEXT);
         }
@@ -463,6 +538,12 @@ class DigitalSambaEmbedded extends events_1.default {
     }
     get localUser() {
         return this.stored.users[this.stored.userId];
+    }
+    get features() {
+        return this.stored.features;
+    }
+    featureEnabled(feature) {
+        return !!this.stored.features[feature];
     }
 }
 exports.DigitalSambaEmbedded = DigitalSambaEmbedded;

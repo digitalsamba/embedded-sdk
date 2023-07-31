@@ -26,6 +26,7 @@ export var PermissionTypes;
 export const defaultStoredState = {
     userId: '',
     roomState: {
+        frameMuted: false,
         media: {
             audioEnabled: false,
             videoEnabled: false,
@@ -34,6 +35,7 @@ export const defaultStoredState = {
             mode: LayoutMode.tiled,
             showToolbar: true,
             toolbarPosition: 'left',
+            localTileMinimized: false,
         },
         captionsState: {
             showCaptions: false,
@@ -45,4 +47,22 @@ export const defaultStoredState = {
         },
     },
     users: {},
+    features: {
+        chat: false,
+        contentLibrary: false,
+        captions: false,
+        qa: false,
+        endSession: false,
+        fullScreen: false,
+        languageSelection: false,
+        minimizeOwnTile: false,
+        participantsList: false,
+        pin: false,
+        screenshare: false,
+        whiteboard: false,
+        recordings: false,
+        virtualBackgrounds: false,
+        raiseHand: true,
+        invite: false,
+    },
 };

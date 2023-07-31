@@ -1,5 +1,7 @@
 import { PermissionsMap } from './utils/PermissionManager/types';
 import { LayoutMode, PermissionTypes } from './utils/vars';
+export type FeatureFlag = 'languageSelection' | 'screenshare' | 'participantsList' | 'chat' | 'qa' | 'contentLibrary' | 'whiteboard' | 'pin' | 'fullScreen' | 'minimizeOwnTile' | 'endSession' | 'recordings' | 'captions' | 'virtualBackgrounds' | 'raiseHand' | 'invite';
+export type FeatureSet = Record<FeatureFlag, boolean>;
 export interface InitialRoomSettings {
     videoEnabled: boolean;
     audioEnabled: boolean;
@@ -8,6 +10,7 @@ export interface InitialRoomSettings {
     showToolbar: boolean;
     showCaptions: boolean;
     virtualBackground: VirtualBackgroundOptions;
+    muteFrame: boolean;
 }
 export type InitOptions = {
     root: HTMLElement;
@@ -38,8 +41,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground';
-export type ReceiveMessageType = 'connected' | 'frameLoaded' | 'userJoined' | 'usersUpdated' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError' | 'captionsEnabled' | 'captionsDisabled' | 'captionsSpokenLanguageChanged' | 'captionsFontSizeChanged' | 'permissionsChanged' | 'handRaised' | 'handLowered' | 'virtualBackgroundChanged' | 'virtualBackgroundDisabled' | 'roomStateUpdated';
+export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent';
+export type ReceiveMessageType = 'connected' | 'frameLoaded' | 'userJoined' | 'usersUpdated' | 'userLeft' | 'roomJoined' | 'videoEnabled' | 'videoDisabled' | 'audioEnabled' | 'audioDisabled' | 'screenshareStarted' | 'screenshareStopped' | 'recordingStarted' | 'recordingStopped' | 'recordingFailed' | 'layoutModeChanged' | 'activeSpeakerChanged' | 'appError' | 'captionsEnabled' | 'captionsDisabled' | 'captionsSpokenLanguageChanged' | 'captionsFontSizeChanged' | 'permissionsChanged' | 'handRaised' | 'handLowered' | 'virtualBackgroundChanged' | 'virtualBackgroundDisabled' | 'roomStateUpdated' | 'localTileMaximized' | 'localTileMinimized' | 'userMaximized';
 export interface SendMessage<D> {
     type: SendMessageType;
     data?: D;
@@ -82,7 +85,15 @@ export interface StoredVBState {
         alt: string;
     };
 }
+export interface BrandingOptionsConfig {
+    paletteMode: 'dark' | 'light';
+    primaryColor: string;
+    toolbarColor: string;
+    roomBackgroundColor: string;
+}
+export type UserTileType = 'media' | 'screenshare';
 export interface RoomState {
+    frameMuted: boolean;
     media: {
         videoEnabled: boolean;
         audioEnabled: boolean;
@@ -91,6 +102,12 @@ export interface RoomState {
         mode: LayoutMode;
         showToolbar: boolean;
         toolbarPosition: 'left' | 'right' | 'bottom';
+        localTileMinimized: boolean;
+        contentMode?: 'maximize' | 'pin';
+        content?: {
+            userId: UserId;
+            type: UserTileType;
+        };
     };
     captionsState: {
         showCaptions: boolean;
@@ -102,6 +119,7 @@ export interface Stored {
     users: UsersList;
     activeSpeaker?: UserId;
     roomState: RoomState;
+    features: FeatureSet;
 }
 export type RoomJoinedPayload = Stored & {
     permissionsMap: PermissionsMap;
