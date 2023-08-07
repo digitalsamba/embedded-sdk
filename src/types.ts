@@ -147,7 +147,8 @@ export type ReceiveMessageType =
   | 'roomStateUpdated'
   | 'localTileMaximized'
   | 'localTileMinimized'
-  | 'userMaximized';
+  | 'userMaximized'
+  | 'mediaPermissionsFailed';
 
 export interface SendMessage<D> {
   type: SendMessageType;
