@@ -124,3 +124,22 @@ function logRoomLoad() {
     // ignore if something went wrong;
   }
 }
+
+
+const createRoom = async () => {
+  const res = await fetch("https://api.digitalsamba.com/api/public/rooms", { method: 'POST' });
+
+  return res.json();
+}
+
+function showCustomRoomForm() {
+  const form = document.querySelector('.custom-room-url-form');
+  const currentForm = document.querySelector('.dynamic-room-block');
+
+  if(currentForm) {
+    currentForm.style.display = 'none';
+  }
+  if(form) {
+    form.className += ' show';
+  }
+}

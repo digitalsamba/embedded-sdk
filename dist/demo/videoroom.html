@@ -24,16 +24,24 @@
 <div class="screen room-url-field show">
     <div class="container">
       <div class="vertical">
-        <label for="custom-room-url">
-          <span><b>Room URL</b></span>
-          <span>Can be found in <a href="https://dashboard.digitalsamba.com/" target="_blank" rel="noopener nofollow">dashboard</a></span>.
-        </label>
-        <div>
-          <input type="text" id="custom-room-url" name="custom-room-url" onkeydown="onURLChange()">
-          <!-- kicks off loading -->
-          <button onclick="loadCustomRoom()">load room</button>
+        <div class="dynamic-room-block">
+            <button onclick="loadDynamicRoom()">load test drive room</button>
+
+            <p style="text-align: center"><span class="custom-room-url-switch" onClick="showCustomRoomForm()">join a custom room</span></p>
         </div>
-        <p class="room-url-error"></p>
+
+        <div class="custom-room-url-form">
+          <label for="custom-room-url">
+            <span><b>Room URL</b></span>
+            <span>Can be found in <a href="https://dashboard.digitalsamba.com/" target="_blank" rel="noopener nofollow">dashboard</a></span>.
+          </label>
+          <div>
+            <input type="text" id="custom-room-url" name="custom-room-url" onkeydown="onURLChange()">
+            <!-- kicks off loading -->
+            <button onclick="loadCustomRoom()">load room</button>
+          </div>
+          <p class="room-url-error"></p>
+        </div>
       </div>
     </div>
 </div>
@@ -121,6 +129,12 @@
   }
   // if room is predefined in search params, skip room URL field;
   checkDynamicRoomURL();
+
+  async function loadDynamicRoom() {
+    const roomUrlResponse = await createRoom();
+    ROOM_URL = roomUrlResponse.room_url;
+    loadRoom();
+  }
 
   function loadCustomRoom() {
     const input = document.querySelector('#custom-room-url');
