@@ -133,6 +133,10 @@ export interface EmbeddedInstance {
     frame: HTMLIFrameElement;
     reportErrors: boolean;
     stored: Stored;
+    get roomState(): RoomState;
+    get localUser(): User;
+    get features(): FeatureSet;
+    featureEnabled(feature: FeatureFlag): boolean;
     enableVideo: () => void;
     disableVideo: () => void;
     toggleVideo: (enable?: boolean) => void;
@@ -145,6 +149,8 @@ export interface EmbeddedInstance {
     stopRecording: () => void;
     showToolbar: () => void;
     hideToolbar: () => void;
+    changeToolbarPosition: (side: 'left' | 'right' | 'bottom') => void;
+    changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
     changeLayoutMode: (mode: LayoutMode) => void;
     leaveSession: () => void;
     endSession: () => void;
@@ -154,8 +160,7 @@ export interface EmbeddedInstance {
     requestUnmute: (userId: UserId) => void;
     removeUser: (userId: UserId) => void;
     listUsers: () => User[];
-    get roomState(): RoomState;
-    get localUser(): User;
+    getUser: (userId: UserId) => User;
     showCaptions: () => void;
     hideCaptions: () => void;
     toggleCaptions: (show?: boolean) => void;
@@ -166,5 +171,18 @@ export interface EmbeddedInstance {
     disallowBroadcast: (userId: UserId) => void;
     allowScreenshare: (userId: UserId) => void;
     disallowScreenshare: (userId: UserId) => void;
+    configureVirtualBackground: (options: VirtualBackgroundOptions) => void;
+    enableVirtualBackground: (options: VirtualBackgroundOptions) => void;
+    disableVirtualBackground: () => void;
+    muteFrame: () => void;
+    unmuteFrame: () => void;
+    toggleMuteFrame: (mute?: boolean) => void;
+    minimizeLocalTile: () => void;
+    maximizeLocalTile: () => void;
+    pinUser: (userId: UserId, tile?: UserTileType) => void;
+    unpinUser: () => void;
+    maximizeUser: (userId: UserId, tile?: UserTileType) => void;
+    minimizeUser: () => void;
+    minimizeContent: () => void;
 }
 export {};
