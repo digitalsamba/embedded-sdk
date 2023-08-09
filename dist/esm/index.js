@@ -1,7 +1,7 @@
 var _a;
 import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
-import { CONNECT_TIMEOUT, defaultStoredState, internalEvents, } from './utils/vars';
+import { CONNECT_TIMEOUT, getDefaultStoredState, internalEvents, } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
 import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, INSECURE_CONTEXT, UNKNOWN_TARGET, } from './utils/errors';
 export class DigitalSambaEmbedded extends EventEmitter {
@@ -13,7 +13,6 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.connected = false;
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
-        this.stored = Object.assign({}, defaultStoredState);
         this.permissionManager = new PermissionManager(this);
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
@@ -488,6 +487,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.minimizeContent = () => {
             this.sendMessage({ type: 'minimizeContent' });
         };
+        this.stored = getDefaultStoredState();
         if (!window.isSecureContext) {
             this.logError(INSECURE_CONTEXT);
         }

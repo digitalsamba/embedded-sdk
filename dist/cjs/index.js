@@ -19,7 +19,6 @@ class DigitalSambaEmbedded extends events_1.default {
         this.connected = false;
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
-        this.stored = Object.assign({}, vars_1.defaultStoredState);
         this.permissionManager = new PermissionManager_1.PermissionManager(this);
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
@@ -494,6 +493,7 @@ class DigitalSambaEmbedded extends events_1.default {
         this.minimizeContent = () => {
             this.sendMessage({ type: 'minimizeContent' });
         };
+        this.stored = (0, vars_1.getDefaultStoredState)();
         if (!window.isSecureContext) {
             this.logError(errors_1.INSECURE_CONTEXT);
         }

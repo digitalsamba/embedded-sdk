@@ -23,7 +23,7 @@ export var PermissionTypes;
     PermissionTypes["raiseHand"] = "raise_hand";
     PermissionTypes["manageRoles"] = "manage_roles";
 })(PermissionTypes || (PermissionTypes = {}));
-export const defaultStoredState = {
+export const getDefaultStoredState = () => ({
     userId: '',
     roomState: {
         frameMuted: false,
@@ -65,4 +65,4 @@ export const defaultStoredState = {
         raiseHand: true,
         invite: false,
     },
-};
+});

@@ -27,7 +27,7 @@ export enum PermissionTypes {
   manageRoles = 'manage_roles',
 }
 
-export const defaultStoredState: Stored = {
+export const getDefaultStoredState: () => Stored = () => ({
   userId: '',
   roomState: {
     frameMuted: false,
@@ -69,4 +69,4 @@ export const defaultStoredState: Stored = {
     raiseHand: true,
     invite: false,
   },
-};
+});
