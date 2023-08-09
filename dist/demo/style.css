@@ -331,3 +331,16 @@ iframe {
   opacity: .5;
   pointer-events:  none;
 }
+
+.custom-room-url-form {
+  display: none;
+}
+.custom-room-url-form.show {
+  display: block;;
+}
+
+.custom-room-url-switch {
+  font-size: 14px;
+  color: #777;
+  cursor: pointer;
+}

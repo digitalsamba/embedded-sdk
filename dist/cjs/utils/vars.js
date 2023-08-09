@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultStoredState = exports.PermissionTypes = exports.LayoutMode = exports.internalEvents = exports.CONNECT_TIMEOUT = void 0;
+exports.getDefaultStoredState = exports.PermissionTypes = exports.LayoutMode = exports.internalEvents = exports.CONNECT_TIMEOUT = void 0;
 exports.CONNECT_TIMEOUT = 10000;
 exports.internalEvents = {
     roomJoined: true,
@@ -26,7 +26,7 @@ var PermissionTypes;
     PermissionTypes["raiseHand"] = "raise_hand";
     PermissionTypes["manageRoles"] = "manage_roles";
 })(PermissionTypes = exports.PermissionTypes || (exports.PermissionTypes = {}));
-exports.defaultStoredState = {
+const getDefaultStoredState = () => ({
     userId: '',
     roomState: {
         frameMuted: false,
@@ -68,4 +68,5 @@ exports.defaultStoredState = {
         raiseHand: true,
         invite: false,
     },
-};
+});
+exports.getDefaultStoredState = getDefaultStoredState;

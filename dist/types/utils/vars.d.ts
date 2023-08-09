@@ -20,4 +20,4 @@ export declare enum PermissionTypes {
     raiseHand = "raise_hand",
     manageRoles = "manage_roles"
 }
-export declare const defaultStoredState: Stored;
+export declare const getDefaultStoredState: () => Stored;

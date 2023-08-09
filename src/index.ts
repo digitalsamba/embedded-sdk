@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
-  defaultStoredState,
+  getDefaultStoredState,
   internalEvents,
   LayoutMode,
   PermissionTypes,
@@ -49,7 +49,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   reportErrors: boolean = false;
 
-  stored: Stored = { ...defaultStoredState };
+  stored: Stored;
 
   permissionManager = new PermissionManager(this);
 
@@ -59,6 +59,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     loadImmediately = true
   ) {
     super();
+
+    this.stored = getDefaultStoredState();
 
     if (!window.isSecureContext) {
       this.logError(INSECURE_CONTEXT);
