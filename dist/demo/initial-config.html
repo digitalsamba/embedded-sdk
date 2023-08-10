@@ -204,6 +204,9 @@
   async function loadDynamicRoom() {
     const roomUrlResponse = await createRoom();
     ROOM_URL = roomUrlResponse.room_url;
+
+    initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
+    
     loadRoom();
   }
 
