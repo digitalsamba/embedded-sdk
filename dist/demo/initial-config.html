@@ -65,6 +65,23 @@
           </label>
         </div>
         <div>
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="audioinput">Audio input device</label>
+            <select name="audioinput" id="audioinput" onchange="initialSettings.mediaDevices.audioinput = this.value">
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="audiooutput">Audio output device</label>
+            <select name="audiooutput" id="audiooutput" onchange="initialSettings.mediaDevices.audiooutput = this.value">
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="videoinput">Video input device</label>
+            <select name="videoinput" id="videoinput" onchange="initialSettings.mediaDevices.videoinput = this.value">
+            </select>
+          </div>
+        </div>
+        <div>
           <label class="checkbox-label" for="initial-settings-toolbar">
             <span>Show toolbar</span>
             <input type="checkbox" id="initial-settings-toolbar" onchange="initialSettings.showToolbar = !initialSettings.showToolbar" />
@@ -182,7 +199,8 @@
     showToolbar: false,
     showCaptions: false,
     layoutMode: "auto",
-    virtualBackground: undefined
+    virtualBackground: undefined,
+    mediaDevices: {}
   };
 
   var VBstate = {
@@ -197,6 +215,14 @@
     imageUrl: 'string'
   }
 
+  navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+    availableDevices.forEach(device => {
+      const select = document.querySelector('#' + device.kind);
+      if(select) {
+        select.innerHTML += `<option value="${device.deviceId}">${device.label}</option>`
+      }
+    })
+  })
 
   // if room is predefined in search params, skip room URL field;
   checkDynamicRoomURL();
@@ -206,7 +232,7 @@
     ROOM_URL = roomUrlResponse.room_url;
 
     initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
-    
+
     loadRoom();
   }
 
@@ -224,7 +250,7 @@
     }
   }
 
-  function loadRoom() {
+ async function loadRoom() {
     try {
       const parent = document.querySelector(".frame-parent");
       parent.innerHTML = null;

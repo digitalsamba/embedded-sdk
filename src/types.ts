@@ -35,6 +35,7 @@ export interface InitialRoomSettings {
   virtualBackground: VirtualBackgroundOptions;
 
   muteFrame: boolean;
+  mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }
 
 export type InitOptions = {

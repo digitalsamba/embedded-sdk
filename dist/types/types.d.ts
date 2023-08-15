@@ -11,6 +11,7 @@ export interface InitialRoomSettings {
     showCaptions: boolean;
     virtualBackground: VirtualBackgroundOptions;
     muteFrame: boolean;
+    mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }
 export type InitOptions = {
     root: HTMLElement;
