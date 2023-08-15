@@ -17,6 +17,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     static createControl: (initOptions: Partial<InitOptions>, instanceProperties?: InstanceProperties) => DigitalSambaEmbedded;
     private mountFrame;
     load: (instanceProperties?: InstanceProperties) => void;
+    private prepareRoomSettings;
     private onMessage;
     private setupInternalEventListeners;
     private _emit;

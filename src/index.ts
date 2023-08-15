@@ -67,7 +67,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
 
     this.initOptions = options;
-    this.roomSettings = options.roomSettings || {};
+    this.prepareRoomSettings(options.roomSettings || {});
 
     this.reportErrors = instanceProperties.reportErrors || false;
 
@@ -138,6 +138,24 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.applyFrameProperties(instanceProperties);
 
     this.frame.style.display = 'block';
+  };
+
+  private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
+    settings.mediaDevices ??= {};
+
+    if (settings.mediaDevices) {
+      const availabledevices = await navigator.mediaDevices.enumerateDevices();
+
+      Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
+        const match = availabledevices.find((device) => device.deviceId === deviceId);
+
+        if (match) {
+          settings.mediaDevices![kind as MediaDeviceKind] = match.label;
+        }
+      });
+    }
+
+    this.roomSettings = settings;
   };
 
   private onMessage = (event: MessageEvent<ReceiveMessage>) => {
@@ -387,7 +405,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     };
   };
 
-  private checkTarget() {
+  private async checkTarget() {
     this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
 
     const confirmationTimeout = window.setTimeout(() => {
