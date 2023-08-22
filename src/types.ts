@@ -43,6 +43,7 @@ export type InitOptions = {
   frame: HTMLIFrameElement;
 
   url: string;
+  cname: string;
   team: string;
   room: string;
   token?: string;

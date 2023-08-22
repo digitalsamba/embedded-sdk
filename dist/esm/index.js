@@ -241,9 +241,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
         };
         this.setFrameSrc = () => {
             let url = this.savedIframeSrc;
-            const { team, room, token } = this.initOptions;
+            const { cname, team, room, token } = this.initOptions;
             if (team && room) {
                 url = `https://${team}.digitalsamba.com/${room}`;
+            }
+            if (cname && room) {
+                url = `https://${cname}/${room}`;
             }
             if (url) {
                 const urlObj = new URL(url);
