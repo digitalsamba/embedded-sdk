@@ -24,9 +24,9 @@
   <div class="container">
     <div class="vertical">
       <div class="dynamic-room-block" style="display: flex; justify-content: center; flex-direction: column">
-        <button onclick="loadDynamicRoom()">load test drive room</button>
+        <button onclick="loadDynamicRoom()">load new room</button>
 
-        <p style="text-align: center"><span class="custom-room-url-switch" onClick="showCustomRoomForm()">join a custom room</span></p>
+        <p style="text-align: center"><span class="custom-room-url-switch" onClick="showCustomRoomForm()">or join an existing custom room</span></p>
       </div>
       <div class="custom-room-url-form">
       <label for="custom-room-url">
@@ -63,6 +63,23 @@
             <span>Audio enabled</span>
             <input type="checkbox" id="initial-settings-audio" checked onchange="initialSettings.audioEnabled = !initialSettings.audioEnabled" />
           </label>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="audioinput">Audio input device</label>
+            <select name="audioinput" id="audioinput" onchange="initialSettings.mediaDevices.audioinput = this.value">
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="audiooutput">Audio output device</label>
+            <select name="audiooutput" id="audiooutput" onchange="initialSettings.mediaDevices.audiooutput = this.value">
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: flex-start">
+            <label style="margin-right: 8px;" for="videoinput">Video input device</label>
+            <select name="videoinput" id="videoinput" onchange="initialSettings.mediaDevices.videoinput = this.value">
+            </select>
+          </div>
         </div>
         <div>
           <label class="checkbox-label" for="initial-settings-toolbar">
@@ -138,7 +155,7 @@
           <div>
             <label class="checkbox-label" for="initial-settings-enforce-vb">
               <span>Allow changing virtual background</span>
-              <input type="checkbox" id="initial-settings-enforce-vb" onchange="VBstate.enforce = !this.checked" />
+              <input type="checkbox" checked id="initial-settings-enforce-vb" onchange="VBstate.enforce = !this.checked" />
             </label>
           </div>
         </div>
@@ -182,7 +199,8 @@
     showToolbar: false,
     showCaptions: false,
     layoutMode: "auto",
-    virtualBackground: undefined
+    virtualBackground: undefined,
+    mediaDevices: {}
   };
 
   var VBstate = {
@@ -197,6 +215,14 @@
     imageUrl: 'string'
   }
 
+  navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+    availableDevices.forEach(device => {
+      const select = document.querySelector('#' + device.kind);
+      if(select) {
+        select.innerHTML += `<option value="${device.deviceId}">${device.label}</option>`
+      }
+    })
+  })
 
   // if room is predefined in search params, skip room URL field;
   checkDynamicRoomURL();
@@ -204,6 +230,9 @@
   async function loadDynamicRoom() {
     const roomUrlResponse = await createRoom();
     ROOM_URL = roomUrlResponse.room_url;
+
+    initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
+
     loadRoom();
   }
 
@@ -221,7 +250,7 @@
     }
   }
 
-  function loadRoom() {
+ async function loadRoom() {
     try {
       const parent = document.querySelector(".frame-parent");
       parent.innerHTML = null;

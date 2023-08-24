@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var _a;
 import EventEmitter from 'events';
 import { PermissionManager } from './utils/PermissionManager';
@@ -53,6 +62,20 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.applyFrameProperties(instanceProperties);
             this.frame.style.display = 'block';
         };
+        this.prepareRoomSettings = (settings) => __awaiter(this, void 0, void 0, function* () {
+            var _b;
+            (_b = settings.mediaDevices) !== null && _b !== void 0 ? _b : (settings.mediaDevices = {});
+            if (settings.mediaDevices) {
+                const availabledevices = yield navigator.mediaDevices.enumerateDevices();
+                Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
+                    const match = availabledevices.find((device) => device.deviceId === deviceId);
+                    if (match) {
+                        settings.mediaDevices[kind] = match.label;
+                    }
+                });
+            }
+            this.roomSettings = settings;
+        });
         this.onMessage = (event) => {
             if (event.origin !== this.allowedOrigin) {
                 // ignore messages from other sources;
@@ -218,9 +241,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
         };
         this.setFrameSrc = () => {
             let url = this.savedIframeSrc;
-            const { team, room, token } = this.initOptions;
+            const { cname, team, room, token } = this.initOptions;
             if (team && room) {
                 url = `https://${team}.digitalsamba.com/${room}`;
+            }
+            if (cname && room) {
+                url = `https://${cname}/${room}`;
             }
             if (url) {
                 const urlObj = new URL(url);
@@ -492,7 +518,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.logError(INSECURE_CONTEXT);
         }
         this.initOptions = options;
-        this.roomSettings = options.roomSettings || {};
+        this.prepareRoomSettings(options.roomSettings || {});
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
         this.frame.setAttribute('allowFullscreen', 'true');
@@ -507,13 +533,15 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.setupInternalEventListeners();
     }
     checkTarget() {
-        this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
-        const confirmationTimeout = window.setTimeout(() => {
-            this.logError(UNKNOWN_TARGET);
-        }, CONNECT_TIMEOUT);
-        this.on('connected', () => {
-            this.connected = true;
-            clearTimeout(confirmationTimeout);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
+            const confirmationTimeout = window.setTimeout(() => {
+                this.logError(UNKNOWN_TARGET);
+            }, CONNECT_TIMEOUT);
+            this.on('connected', () => {
+                this.connected = true;
+                clearTimeout(confirmationTimeout);
+            });
         });
     }
     sendMessage(message) {

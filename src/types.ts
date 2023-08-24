@@ -35,6 +35,7 @@ export interface InitialRoomSettings {
   virtualBackground: VirtualBackgroundOptions;
 
   muteFrame: boolean;
+  mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }
 
 export type InitOptions = {
@@ -42,6 +43,7 @@ export type InitOptions = {
   frame: HTMLIFrameElement;
 
   url: string;
+  cname: string;
   team: string;
   room: string;
   token?: string;

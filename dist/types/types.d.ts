@@ -11,11 +11,13 @@ export interface InitialRoomSettings {
     showCaptions: boolean;
     virtualBackground: VirtualBackgroundOptions;
     muteFrame: boolean;
+    mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }
 export type InitOptions = {
     root: HTMLElement;
     frame: HTMLIFrameElement;
     url: string;
+    cname: string;
     team: string;
     room: string;
     token?: string;
