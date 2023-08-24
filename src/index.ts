@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { isSambaEvent } from './utils/isSambaEvent';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
@@ -179,6 +180,27 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
+  on = (eventName: string | symbol, listener: (...args: any[]) => void) => {
+    // find because `includes` is dead set on only known types =(;
+    if (!isSambaEvent(eventName) && !super.listenerCount(eventName)) {
+      this.sendMessage({ type: 'connectEventListener', data: { eventName } });
+    }
+
+    super.on(eventName, listener);
+
+    return this; // compatibility with EventEmitter implementation
+  };
+
+  off = (eventName: string | symbol, listener: (...args: any[]) => void) => {
+    super.off(eventName, listener);
+
+    if (!isSambaEvent(eventName) && !super.listenerCount(eventName)) {
+      this.sendMessage({ type: 'disconnectEventListener', data: { eventName } });
+    }
+
+    return this; // compatibility with EventEmitter implementation
+  };
+
   private setupInternalEventListeners = () => {
     this.on('userJoined', (event) => {
       const { user, type } = event.data;
@@ -342,6 +364,9 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
         this._emit('roomJoined', { type: 'roomJoined' });
         break;
+      }
+      case 'documentEvent': {
+        console.warn('->>', message);
       }
       default: {
         break;

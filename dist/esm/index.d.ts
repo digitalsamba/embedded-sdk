@@ -19,6 +19,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     load: (instanceProperties?: InstanceProperties) => void;
     private prepareRoomSettings;
     private onMessage;
+    on: (eventName: string | symbol, listener: (...args: any[]) => void) => this;
+    off: (eventName: string | symbol, listener: (...args: any[]) => void) => this;
     private setupInternalEventListeners;
     private _emit;
     private handleInternalMessage;

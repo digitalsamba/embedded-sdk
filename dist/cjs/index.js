@@ -15,6 +15,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DigitalSambaEmbedded = void 0;
 const events_1 = __importDefault(require("events"));
+const isSambaEvent_1 = require("./utils/isSambaEvent");
 const PermissionManager_1 = require("./utils/PermissionManager");
 const vars_1 = require("./utils/vars");
 const proxy_1 = require("./utils/proxy");
@@ -99,6 +100,21 @@ class DigitalSambaEmbedded extends events_1.default {
                     this._emit(message.type, message);
                 }
             }
+        };
+        this.on = (eventName, listener) => {
+            // find because `includes` is dead set on only known types =(;
+            if (!(0, isSambaEvent_1.isSambaEvent)(eventName) && !super.listenerCount(eventName)) {
+                this.sendMessage({ type: 'connectEventListener', data: { eventName } });
+            }
+            super.on(eventName, listener);
+            return this; // compatibility with EventEmitter implementation
+        };
+        this.off = (eventName, listener) => {
+            super.off(eventName, listener);
+            if (!(0, isSambaEvent_1.isSambaEvent)(eventName) && !super.listenerCount(eventName)) {
+                this.sendMessage({ type: 'disconnectEventListener', data: { eventName } });
+            }
+            return this; // compatibility with EventEmitter implementation
         };
         this.setupInternalEventListeners = () => {
             this.on('userJoined', (event) => {
@@ -227,6 +243,9 @@ class DigitalSambaEmbedded extends events_1.default {
                     this.emitRoomStateUpdated();
                     this._emit('roomJoined', { type: 'roomJoined' });
                     break;
+                }
+                case 'documentEvent': {
+                    console.warn('->>', message);
                 }
                 default: {
                     break;
