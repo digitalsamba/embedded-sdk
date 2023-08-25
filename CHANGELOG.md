@@ -2,6 +2,11 @@
 
 Historical list of changes in releases
 
+## [v0.0.28] - 2023-08-24
+* Connect demos to test drive endpoint to dynamically create demo rooms
+* Allow pre-selecting media devices through initial settings ([#44](https://github.com/digitalsamba/embedded-sdk/pull/44))
+* Add support for custom CNAME, handle cname property in init options ([#45](https://github.com/digitalsamba/embedded-sdk/pull/45))
+
 ## [v0.0.27] - 2023-08-09
 * Fix an issue with stored state not resetting properly when creating a new control instance
 
