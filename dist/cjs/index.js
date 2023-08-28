@@ -100,6 +100,20 @@ class DigitalSambaEmbedded extends events_1.default {
                 }
             }
         };
+        this.addFrameEventListener = (eventName, target, listener) => {
+            const customEventName = `frameEvent_${eventName}_${target}`;
+            if (!this.listenerCount(customEventName)) {
+                this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+            }
+            this.on(customEventName, listener);
+        };
+        this.removeFrameEventListener = (eventName, target, listener) => {
+            const customEventName = `frameEvent_${eventName}_${target}`;
+            this.off(customEventName, listener);
+            if (!this.listenerCount(eventName)) {
+                this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+            }
+        };
         this.setupInternalEventListeners = () => {
             this.on('userJoined', (event) => {
                 const { user, type } = event.data;
@@ -227,6 +241,11 @@ class DigitalSambaEmbedded extends events_1.default {
                     this.emitRoomStateUpdated();
                     this._emit('roomJoined', { type: 'roomJoined' });
                     break;
+                }
+                case 'documentEvent': {
+                    const { eventName, target, payload } = message.data;
+                    const customEventName = `frameEvent_${eventName}_${target}`;
+                    this._emit(customEventName, JSON.parse(payload));
                 }
                 default: {
                     break;

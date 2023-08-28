@@ -116,41 +116,47 @@ export type SendMessageType =
   | 'maximizeLocalTile'
   | 'pinUser'
   | 'maximizeUser'
-  | 'minimizeContent';
+  | 'minimizeContent'
+  | 'connectEventListener'
+  | 'disconnectEventListener';
 
-export type ReceiveMessageType =
-  | 'connected'
-  | 'frameLoaded'
-  | 'userJoined'
-  | 'usersUpdated'
-  | 'userLeft'
-  | 'roomJoined'
-  | 'videoEnabled'
-  | 'videoDisabled'
-  | 'audioEnabled'
-  | 'audioDisabled'
-  | 'screenshareStarted'
-  | 'screenshareStopped'
-  | 'recordingStarted'
-  | 'recordingStopped'
-  | 'recordingFailed'
-  | 'layoutModeChanged'
-  | 'activeSpeakerChanged'
-  | 'appError'
-  | 'captionsEnabled'
-  | 'captionsDisabled'
-  | 'captionsSpokenLanguageChanged'
-  | 'captionsFontSizeChanged'
-  | 'permissionsChanged'
-  | 'handRaised'
-  | 'handLowered'
-  | 'virtualBackgroundChanged'
-  | 'virtualBackgroundDisabled'
-  | 'roomStateUpdated'
-  | 'localTileMaximized'
-  | 'localTileMinimized'
-  | 'userMaximized'
-  | 'mediaPermissionsFailed';
+export const receiveMessagesTypes = [
+  'connected',
+  'frameLoaded',
+  'userJoined',
+  'usersUpdated',
+  'userLeft',
+  'roomJoined',
+  'videoEnabled',
+  'videoDisabled',
+  'audioEnabled',
+  'audioDisabled',
+  'screenshareStarted',
+  'screenshareStopped',
+  'recordingStarted',
+  'recordingStopped',
+  'recordingFailed',
+  'layoutModeChanged',
+  'activeSpeakerChanged',
+  'appError',
+  'captionsEnabled',
+  'captionsDisabled',
+  'captionsSpokenLanguageChanged',
+  'captionsFontSizeChanged',
+  'permissionsChanged',
+  'handRaised',
+  'handLowered',
+  'virtualBackgroundChanged',
+  'virtualBackgroundDisabled',
+  'roomStateUpdated',
+  'localTileMaximized',
+  'localTileMinimized',
+  'userMaximized',
+  'mediaPermissionsFailed',
+  'documentEvent',
+] as const;
+
+export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
 
 export interface SendMessage<D> {
   type: SendMessageType;

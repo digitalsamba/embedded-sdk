@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { isSambaEvent } from './utils/isSambaEvent';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
@@ -179,6 +180,33 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
+  addFrameEventListener = (
+    eventName: string,
+    target: 'document' | 'window',
+    listener: (...args: any[]) => void
+  ) => {
+    const customEventName = `frameEvent_${eventName}_${target}`;
+
+    if (!this.listenerCount(customEventName)) {
+      this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+    }
+
+    this.on(customEventName, listener);
+  };
+
+  removeFrameEventListener = (
+    eventName: string,
+    target: 'document' | 'window',
+    listener: (...args: any[]) => void
+  ) => {
+    const customEventName = `frameEvent_${eventName}_${target}`;
+    this.off(customEventName, listener);
+
+    if (!this.listenerCount(eventName)) {
+      this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+    }
+  };
+
   private setupInternalEventListeners = () => {
     this.on('userJoined', (event) => {
       const { user, type } = event.data;
@@ -342,6 +370,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
         this._emit('roomJoined', { type: 'roomJoined' });
         break;
+      }
+      case 'documentEvent': {
+        const { eventName, target, payload } = message.data as any;
+
+        const customEventName = `frameEvent_${eventName}_${target}`;
+
+        this._emit(customEventName, JSON.parse(payload));
       }
       default: {
         break;
