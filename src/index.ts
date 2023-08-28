@@ -180,25 +180,31 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
-  on = (eventName: string | symbol, listener: (...args: any[]) => void) => {
-    // find because `includes` is dead set on only known types =(;
-    if (!isSambaEvent(eventName) && !super.listenerCount(eventName)) {
-      this.sendMessage({ type: 'connectEventListener', data: { eventName } });
+  addFrameEventListener = (
+    eventName: string,
+    target: 'document' | 'window',
+    listener: (...args: any[]) => void
+  ) => {
+    const customEventName = `frameEvent_${eventName}_${target}`;
+
+    if (!this.listenerCount(customEventName)) {
+      this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
     }
 
-    super.on(eventName, listener);
-
-    return this; // compatibility with EventEmitter implementation
+    this.on(customEventName, listener);
   };
 
-  off = (eventName: string | symbol, listener: (...args: any[]) => void) => {
-    super.off(eventName, listener);
+  removeFrameEventListener = (
+    eventName: string,
+    target: 'document' | 'window',
+    listener: (...args: any[]) => void
+  ) => {
+    const customEventName = `frameEvent_${eventName}_${target}`;
+    this.off(customEventName, listener);
 
-    if (!isSambaEvent(eventName) && !super.listenerCount(eventName)) {
-      this.sendMessage({ type: 'disconnectEventListener', data: { eventName } });
+    if (!this.listenerCount(eventName)) {
+      this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
     }
-
-    return this; // compatibility with EventEmitter implementation
   };
 
   private setupInternalEventListeners = () => {
@@ -366,7 +372,11 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         break;
       }
       case 'documentEvent': {
-        console.warn('->>', message);
+        const { eventName, target, payload } = message.data as any;
+
+        const customEventName = `frameEvent_${eventName}_${target}`;
+
+        this._emit(customEventName, JSON.parse(payload));
       }
       default: {
         break;

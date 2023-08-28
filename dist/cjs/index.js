@@ -15,7 +15,6 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DigitalSambaEmbedded = void 0;
 const events_1 = __importDefault(require("events"));
-const isSambaEvent_1 = require("./utils/isSambaEvent");
 const PermissionManager_1 = require("./utils/PermissionManager");
 const vars_1 = require("./utils/vars");
 const proxy_1 = require("./utils/proxy");
@@ -101,20 +100,19 @@ class DigitalSambaEmbedded extends events_1.default {
                 }
             }
         };
-        this.on = (eventName, listener) => {
-            // find because `includes` is dead set on only known types =(;
-            if (!(0, isSambaEvent_1.isSambaEvent)(eventName) && !super.listenerCount(eventName)) {
-                this.sendMessage({ type: 'connectEventListener', data: { eventName } });
+        this.addFrameEventListener = (eventName, target, listener) => {
+            const customEventName = `frameEvent_${eventName}_${target}`;
+            if (!this.listenerCount(customEventName)) {
+                this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
             }
-            super.on(eventName, listener);
-            return this; // compatibility with EventEmitter implementation
+            this.on(customEventName, listener);
         };
-        this.off = (eventName, listener) => {
-            super.off(eventName, listener);
-            if (!(0, isSambaEvent_1.isSambaEvent)(eventName) && !super.listenerCount(eventName)) {
-                this.sendMessage({ type: 'disconnectEventListener', data: { eventName } });
+        this.removeFrameEventListener = (eventName, target, listener) => {
+            const customEventName = `frameEvent_${eventName}_${target}`;
+            this.off(customEventName, listener);
+            if (!this.listenerCount(eventName)) {
+                this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
             }
-            return this; // compatibility with EventEmitter implementation
         };
         this.setupInternalEventListeners = () => {
             this.on('userJoined', (event) => {
@@ -245,7 +243,9 @@ class DigitalSambaEmbedded extends events_1.default {
                     break;
                 }
                 case 'documentEvent': {
-                    console.warn('->>', message);
+                    const { eventName, target, payload } = message.data;
+                    const customEventName = `frameEvent_${eventName}_${target}`;
+                    this._emit(customEventName, JSON.parse(payload));
                 }
                 default: {
                     break;
