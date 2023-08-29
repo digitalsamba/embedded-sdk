@@ -34,6 +34,8 @@ export interface InitialRoomSettings {
   showCaptions: boolean;
   virtualBackground: VirtualBackgroundOptions;
 
+  appLanguage: string;
+
   muteFrame: boolean;
   mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }

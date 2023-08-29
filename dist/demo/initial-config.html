@@ -159,6 +159,14 @@
             </label>
           </div>
         </div>
+        <div>
+          <label for="initial-settings-appLanguage">
+            App language, leave empty for default.
+          </label>
+          <div>
+            <input type="text" id="initial-settings-appLanguage" onchange="initialSettings.appLanguage = this.value">
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -200,6 +208,7 @@
     showCaptions: false,
     layoutMode: "auto",
     virtualBackground: undefined,
+    appLanguage: undefined,
     mediaDevices: {}
   };
 
