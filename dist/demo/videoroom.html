@@ -161,6 +161,8 @@
         {reportErrors: true}
       );
 
+      sambaEmbedded.addFrameEventListener('keyup', 'window', (a ) => console.warn(a))
+
       // controller instance exposes the frame, so we can customize it a little bit
       sambaEmbedded.frame.width = 1000;
       sambaEmbedded.frame.height = 700;

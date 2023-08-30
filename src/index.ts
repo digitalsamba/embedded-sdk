@@ -12,11 +12,13 @@ import { createWatchedProxy } from './utils/proxy';
 import {
   BrandingOptionsConfig,
   CaptionsOptions,
+  ConnectToFramePayload,
   EmbeddedInstance,
   FeatureFlag,
   InitialRoomSettings,
   InitOptions,
   InstanceProperties,
+  QueuedEventListener,
   ReceiveMessage,
   RoomJoinedPayload,
   SendMessage,
@@ -53,6 +55,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   stored: Stored;
 
   permissionManager = new PermissionManager(this);
+
+  queuedEventListeners: QueuedEventListener[] = [];
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -187,8 +191,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   ) => {
     const customEventName = `frameEvent_${eventName}_${target}`;
 
-    if (!this.listenerCount(customEventName)) {
-      this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+    if (this.connected) {
+      if (!this.listenerCount(customEventName)) {
+        this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+      }
+    } else {
+      this.queuedEventListeners.push({
+        operation: 'connectEventListener',
+        event: eventName,
+        target,
+      });
     }
 
     this.on(customEventName, listener);
@@ -202,8 +214,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     const customEventName = `frameEvent_${eventName}_${target}`;
     this.off(customEventName, listener);
 
-    if (!this.listenerCount(eventName)) {
-      this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+    if (this.connected) {
+      if (!this.listenerCount(eventName)) {
+        this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+      }
+    } else {
+      this.queuedEventListeners.push({
+        operation: 'disconnectEventListener',
+        event: eventName,
+        target,
+      });
     }
   };
 
@@ -445,7 +465,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private async checkTarget() {
-    this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
+    const payload: ConnectToFramePayload = {
+      ...this.roomSettings,
+      eventListeners: this.queuedEventListeners,
+    };
+
+    this.sendMessage({ type: 'connect', data: payload });
 
     const confirmationTimeout = window.setTimeout(() => {
       this.logError(UNKNOWN_TARGET);
@@ -453,6 +478,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     this.on('connected', () => {
       this.connected = true;
+      this.queuedEventListeners = [];
+
       clearTimeout(confirmationTimeout);
     });
   }

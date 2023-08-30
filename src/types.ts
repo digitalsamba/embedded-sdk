@@ -38,6 +38,16 @@ export interface InitialRoomSettings {
   mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }
 
+export interface QueuedEventListener {
+  operation: 'connectEventListener' | 'disconnectEventListener';
+  event: string;
+  target: string;
+}
+
+export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
+  eventListeners: QueuedEventListener[];
+}
+
 export type InitOptions = {
   root: HTMLElement;
   frame: HTMLIFrameElement;
