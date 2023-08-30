@@ -10,6 +10,7 @@ export interface InitialRoomSettings {
     showToolbar: boolean;
     showCaptions: boolean;
     virtualBackground: VirtualBackgroundOptions;
+    appLanguage: string;
     muteFrame: boolean;
     mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
 }
