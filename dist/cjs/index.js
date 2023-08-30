@@ -29,6 +29,7 @@ class DigitalSambaEmbedded extends events_1.default {
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
         this.permissionManager = new PermissionManager_1.PermissionManager(this);
+        this.queuedEventListeners = [];
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -102,16 +103,34 @@ class DigitalSambaEmbedded extends events_1.default {
         };
         this.addFrameEventListener = (eventName, target, listener) => {
             const customEventName = `frameEvent_${eventName}_${target}`;
-            if (!this.listenerCount(customEventName)) {
-                this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+            if (this.connected) {
+                if (!this.listenerCount(customEventName)) {
+                    this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+                }
+            }
+            else {
+                this.queuedEventListeners.push({
+                    operation: 'connectEventListener',
+                    event: eventName,
+                    target,
+                });
             }
             this.on(customEventName, listener);
         };
         this.removeFrameEventListener = (eventName, target, listener) => {
             const customEventName = `frameEvent_${eventName}_${target}`;
             this.off(customEventName, listener);
-            if (!this.listenerCount(eventName)) {
-                this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+            if (this.connected) {
+                if (!this.listenerCount(eventName)) {
+                    this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+                }
+            }
+            else {
+                this.queuedEventListeners.push({
+                    operation: 'disconnectEventListener',
+                    event: eventName,
+                    target,
+                });
             }
         };
         this.setupInternalEventListeners = () => {
@@ -559,12 +578,14 @@ class DigitalSambaEmbedded extends events_1.default {
     }
     checkTarget() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
+            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners });
+            this.sendMessage({ type: 'connect', data: payload });
             const confirmationTimeout = window.setTimeout(() => {
                 this.logError(errors_1.UNKNOWN_TARGET);
             }, vars_1.CONNECT_TIMEOUT);
             this.on('connected', () => {
                 this.connected = true;
+                this.queuedEventListeners = [];
                 clearTimeout(confirmationTimeout);
             });
         });
