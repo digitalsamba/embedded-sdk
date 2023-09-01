@@ -9,6 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@digitalsamba/embedded-sdk@workspace:."
   dependencies:
+    "@types/events": ^3.0.0
     "@typescript-eslint/eslint-plugin": ^5.48.0
     "@typescript-eslint/parser": ^5.48.0
     eslint: ^8.2.0
@@ -186,6 +187,13 @@ __metadata:
   version: 0.0.51
   resolution: "@types/estree@npm:0.0.51"
   checksum: e56a3bcf759fd9185e992e7fdb3c6a5f81e8ff120e871641607581fb3728d16c811702a7d40fa5f869b7f7b4437ab6a87eb8d98ffafeee51e85bbe955932a189
+  languageName: node
+  linkType: hard
+
+"@types/events@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/events@npm:3.0.0"
+  checksum: 9a424c2da210957d5636e0763e8c9fc3aaeee35bf411284ddec62a56a6abe31de9c7c2e713dabdd8a76ff98b47db2bd52f61310be6609641d6234cc842ecbbe3
   languageName: node
   linkType: hard
 
