@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
