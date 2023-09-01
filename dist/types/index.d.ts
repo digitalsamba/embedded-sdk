@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
 import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, Stored, UserId, UserTileType, VirtualBackgroundOptions } from './types';
