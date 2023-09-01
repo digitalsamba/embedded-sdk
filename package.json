@@ -1,7 +1,7 @@
 {
   "name": "@digitalsamba/embedded-sdk",
   "packageManager": "yarn@3.1.0",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "license": "BSD-2-Clause",
   "scripts": {
     "build": "npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:types && npm run build:update-demo",
@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@types/events": "^3.0.0",
+    "@types/node": "^20.5.7",
     "events": "^3.3.0"
   }
 }
