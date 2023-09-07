@@ -8,18 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DigitalSambaEmbedded = void 0;
-const events_1 = __importDefault(require("events"));
+const events_1 = require("events");
 const PermissionManager_1 = require("./utils/PermissionManager");
 const vars_1 = require("./utils/vars");
 const proxy_1 = require("./utils/proxy");
 const errors_1 = require("./utils/errors");
-class DigitalSambaEmbedded extends events_1.default {
+class DigitalSambaEmbedded extends events_1.EventEmitter {
     constructor(options = {}, instanceProperties = {}, loadImmediately = true) {
         super();
         this.roomSettings = {};

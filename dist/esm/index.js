@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a;
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { CONNECT_TIMEOUT, getDefaultStoredState, internalEvents, } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';

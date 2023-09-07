@@ -1,5 +1,4 @@
-import EventEmitter from 'events';
-import { isSambaEvent } from './utils/isSambaEvent';
+import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
