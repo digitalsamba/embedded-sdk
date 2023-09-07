@@ -4,6 +4,7 @@ exports.getDefaultStoredState = exports.PermissionTypes = exports.LayoutMode = e
 exports.CONNECT_TIMEOUT = 10000;
 exports.internalEvents = {
     roomJoined: true,
+    documentEvent: true,
 };
 var LayoutMode;
 (function (LayoutMode) {

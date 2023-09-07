@@ -1,6 +1,7 @@
 export const CONNECT_TIMEOUT = 10000;
 export const internalEvents = {
     roomJoined: true,
+    documentEvent: true,
 };
 export var LayoutMode;
 (function (LayoutMode) {

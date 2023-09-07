@@ -23,6 +23,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.frame = document.createElement('iframe');
         this.reportErrors = false;
         this.permissionManager = new PermissionManager(this);
+        this.queuedEventListeners = [];
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -92,6 +93,38 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 else {
                     this._emit(message.type, message);
                 }
+            }
+        };
+        this.addFrameEventListener = (eventName, target, listener) => {
+            const customEventName = `frameEvent_${eventName}_${target}`;
+            if (this.connected) {
+                if (!this.listenerCount(customEventName)) {
+                    this.sendMessage({ type: 'connectEventListener', data: { eventName, target } });
+                }
+            }
+            else {
+                this.queuedEventListeners.push({
+                    operation: 'connectEventListener',
+                    event: eventName,
+                    target,
+                });
+            }
+            this.on(customEventName, listener);
+        };
+        this.removeFrameEventListener = (eventName, target, listener) => {
+            const customEventName = `frameEvent_${eventName}_${target}`;
+            this.off(customEventName, listener);
+            if (this.connected) {
+                if (!this.listenerCount(eventName)) {
+                    this.sendMessage({ type: 'disconnectEventListener', data: { eventName, target } });
+                }
+            }
+            else {
+                this.queuedEventListeners.push({
+                    operation: 'disconnectEventListener',
+                    event: eventName,
+                    target,
+                });
             }
         };
         this.setupInternalEventListeners = () => {
@@ -221,6 +254,11 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     this.emitRoomStateUpdated();
                     this._emit('roomJoined', { type: 'roomJoined' });
                     break;
+                }
+                case 'documentEvent': {
+                    const { eventName, target, payload } = message.data;
+                    const customEventName = `frameEvent_${eventName}_${target}`;
+                    this._emit(customEventName, JSON.parse(payload));
                 }
                 default: {
                     break;
@@ -534,12 +572,14 @@ export class DigitalSambaEmbedded extends EventEmitter {
     }
     checkTarget() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.sendMessage({ type: 'connect', data: this.roomSettings || {} });
+            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners });
+            this.sendMessage({ type: 'connect', data: payload });
             const confirmationTimeout = window.setTimeout(() => {
                 this.logError(UNKNOWN_TARGET);
             }, CONNECT_TIMEOUT);
             this.on('connected', () => {
                 this.connected = true;
+                this.queuedEventListeners = [];
                 clearTimeout(confirmationTimeout);
             });
         });

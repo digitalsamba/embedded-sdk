@@ -2,6 +2,10 @@
 
 Historical list of changes in releases
 
+## [v0.0.31] - 2023-09-07
+* Allow listening to document or window events fired inside the frame ([#47](https://github.com/digitalsamba/embedded-sdk/pull/47))
+* Allow pre-selecting app language using init options ([#48](https://github.com/digitalsamba/embedded-sdk/pull/48))
+
 ## [v0.0.29] - 2023-09-01
 * Fix an issue with EventEmitter import in typescript declaration
 

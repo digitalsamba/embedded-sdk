@@ -4,6 +4,7 @@ export const CONNECT_TIMEOUT = 10000;
 
 export const internalEvents: Record<string, boolean> = {
   roomJoined: true,
+  documentEvent: true,
 };
 
 export enum LayoutMode {

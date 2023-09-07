@@ -34,8 +34,20 @@ export interface InitialRoomSettings {
   showCaptions: boolean;
   virtualBackground: VirtualBackgroundOptions;
 
+  appLanguage: string;
+
   muteFrame: boolean;
   mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
+}
+
+export interface QueuedEventListener {
+  operation: 'connectEventListener' | 'disconnectEventListener';
+  event: string;
+  target: string;
+}
+
+export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
+  eventListeners: QueuedEventListener[];
 }
 
 export type InitOptions = {
@@ -116,41 +128,47 @@ export type SendMessageType =
   | 'maximizeLocalTile'
   | 'pinUser'
   | 'maximizeUser'
-  | 'minimizeContent';
+  | 'minimizeContent'
+  | 'connectEventListener'
+  | 'disconnectEventListener';
 
-export type ReceiveMessageType =
-  | 'connected'
-  | 'frameLoaded'
-  | 'userJoined'
-  | 'usersUpdated'
-  | 'userLeft'
-  | 'roomJoined'
-  | 'videoEnabled'
-  | 'videoDisabled'
-  | 'audioEnabled'
-  | 'audioDisabled'
-  | 'screenshareStarted'
-  | 'screenshareStopped'
-  | 'recordingStarted'
-  | 'recordingStopped'
-  | 'recordingFailed'
-  | 'layoutModeChanged'
-  | 'activeSpeakerChanged'
-  | 'appError'
-  | 'captionsEnabled'
-  | 'captionsDisabled'
-  | 'captionsSpokenLanguageChanged'
-  | 'captionsFontSizeChanged'
-  | 'permissionsChanged'
-  | 'handRaised'
-  | 'handLowered'
-  | 'virtualBackgroundChanged'
-  | 'virtualBackgroundDisabled'
-  | 'roomStateUpdated'
-  | 'localTileMaximized'
-  | 'localTileMinimized'
-  | 'userMaximized'
-  | 'mediaPermissionsFailed';
+export const receiveMessagesTypes = [
+  'connected',
+  'frameLoaded',
+  'userJoined',
+  'usersUpdated',
+  'userLeft',
+  'roomJoined',
+  'videoEnabled',
+  'videoDisabled',
+  'audioEnabled',
+  'audioDisabled',
+  'screenshareStarted',
+  'screenshareStopped',
+  'recordingStarted',
+  'recordingStopped',
+  'recordingFailed',
+  'layoutModeChanged',
+  'activeSpeakerChanged',
+  'appError',
+  'captionsEnabled',
+  'captionsDisabled',
+  'captionsSpokenLanguageChanged',
+  'captionsFontSizeChanged',
+  'permissionsChanged',
+  'handRaised',
+  'handLowered',
+  'virtualBackgroundChanged',
+  'virtualBackgroundDisabled',
+  'roomStateUpdated',
+  'localTileMaximized',
+  'localTileMinimized',
+  'userMaximized',
+  'mediaPermissionsFailed',
+  'documentEvent',
+] as const;
+
+export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
 
 export interface SendMessage<D> {
   type: SendMessageType;
