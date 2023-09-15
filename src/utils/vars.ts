@@ -26,6 +26,10 @@ export enum PermissionTypes {
   askRemoteUnmute = 'ask_remote_unmute',
   raiseHand = 'raise_hand',
   manageRoles = 'manage_roles',
+  inviteParticipant = 'invite_participant',
+  seeParticipantsPanel = 'see_participants_panel',
+  controlRoomEntry = 'control_room_entry',
+  editWhiteboard = 'edit_whiteboard',
 }
 
 export const getDefaultStoredState: () => Stored = () => ({

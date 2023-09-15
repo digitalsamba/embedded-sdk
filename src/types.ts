@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { PermissionsMap } from './utils/PermissionManager/types';
 import { LayoutMode, PermissionTypes } from './utils/vars';
 
