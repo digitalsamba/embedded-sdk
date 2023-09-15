@@ -27,6 +27,7 @@ export interface InitialRoomSettings {
   audioEnabled: boolean;
   // user config
   username: string;
+  initials: string;
   // layout config
   layoutMode: LayoutMode;
   showToolbar: boolean;
@@ -163,6 +164,7 @@ export const receiveMessagesTypes = [
   'localTileMaximized',
   'localTileMinimized',
   'userMaximized',
+  'mediaDeviceChanged',
   'mediaPermissionsFailed',
   'documentEvent',
 ] as const;
@@ -180,6 +182,7 @@ export interface ReceiveMessage {
     data: unknown;
   };
 }
+
 export type UserId = string;
 
 export interface User {
@@ -258,12 +261,15 @@ export interface BrandingOptionsConfig {
 
 export type UserTileType = 'media' | 'screenshare';
 
+export type ActiveMediaDevices = Partial<Record<MediaDeviceKind, string>>;
+
 export interface RoomState {
   frameMuted: boolean;
 
   media: {
     videoEnabled: boolean;
     audioEnabled: boolean;
+    activeDevices: ActiveMediaDevices;
   };
   layout: {
     mode: LayoutMode;
@@ -302,10 +308,15 @@ export interface EmbeddedInstance {
   frame: HTMLIFrameElement;
   reportErrors: boolean;
   stored: Stored;
+
   get roomState(): RoomState;
+
   get localUser(): User;
+
   get features(): FeatureSet;
+
   featureEnabled(feature: FeatureFlag): boolean;
+
   enableVideo: () => void;
   disableVideo: () => void;
   toggleVideo: (enable?: boolean) => void;

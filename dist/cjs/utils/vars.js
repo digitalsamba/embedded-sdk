@@ -26,6 +26,10 @@ var PermissionTypes;
     PermissionTypes["askRemoteUnmute"] = "ask_remote_unmute";
     PermissionTypes["raiseHand"] = "raise_hand";
     PermissionTypes["manageRoles"] = "manage_roles";
+    PermissionTypes["inviteParticipant"] = "invite_participant";
+    PermissionTypes["seeParticipantsPanel"] = "see_participants_panel";
+    PermissionTypes["controlRoomEntry"] = "control_room_entry";
+    PermissionTypes["editWhiteboard"] = "edit_whiteboard";
 })(PermissionTypes = exports.PermissionTypes || (exports.PermissionTypes = {}));
 const getDefaultStoredState = () => ({
     userId: '',
@@ -34,6 +38,7 @@ const getDefaultStoredState = () => ({
         media: {
             audioEnabled: false,
             videoEnabled: false,
+            activeDevices: {},
         },
         layout: {
             mode: LayoutMode.tiled,

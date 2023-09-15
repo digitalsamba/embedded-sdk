@@ -33,6 +33,7 @@ exports.receiveMessagesTypes = [
     'localTileMaximized',
     'localTileMinimized',
     'userMaximized',
+    'mediaDeviceChanged',
     'mediaPermissionsFailed',
     'documentEvent',
 ];

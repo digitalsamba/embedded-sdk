@@ -359,6 +359,15 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       this.stored.roomState.layout.contentMode = undefined;
     });
+
+    this.on(
+      'mediaDeviceChanged',
+      ({ data }: { data: { kind: MediaDeviceKind; deviceId: string } }) => {
+        this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
+
+        this.emitRoomStateUpdated();
+      }
+    );
   };
 
   private _emit = (eventName: string | symbol, ...args: any[]) => {
@@ -397,6 +406,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
         this._emit(customEventName, JSON.parse(payload));
       }
+
       default: {
         break;
       }

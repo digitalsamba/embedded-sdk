@@ -39,6 +39,7 @@ export const getDefaultStoredState: () => Stored = () => ({
     media: {
       audioEnabled: false,
       videoEnabled: false,
+      activeDevices: {},
     },
     layout: {
       mode: LayoutMode.tiled,
