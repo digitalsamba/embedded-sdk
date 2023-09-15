@@ -237,6 +237,10 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 this.stored.roomState.layout.content = undefined;
                 this.stored.roomState.layout.contentMode = undefined;
             });
+            this.on('mediaDeviceChanged', ({ data }) => {
+                this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
+                this.emitRoomStateUpdated();
+            });
         };
         this._emit = (eventName, ...args) => {
             this.emit('*', ...args);
