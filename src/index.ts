@@ -159,6 +159,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       });
     }
 
+    if (settings.appLanguage) {
+      this.stored.roomState.appLanguage = settings.appLanguage;
+    }
+
     this.roomSettings = settings;
   };
 
@@ -248,6 +252,17 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       }
 
       this.emitUsersUpdated();
+    });
+
+    this.on(
+      'mediaDeviceChanged',
+      ({ data }: { data: { kind: MediaDeviceKind; deviceId: string } }) => {
+        this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
+      }
+    );
+
+    this.on('appLanguageChanged', ({ data }: { data: { language: string } }) => {
+      this.stored.roomState.appLanguage = data.language;
     });
 
     this.on('permissionsChanged', (event) => {
@@ -354,20 +369,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       this.stored.roomState.layout.contentMode = data.mode;
     });
+
     this.on('userMinimized', () => {
       this.stored.roomState.layout.content = undefined;
 
       this.stored.roomState.layout.contentMode = undefined;
     });
-
-    this.on(
-      'mediaDeviceChanged',
-      ({ data }: { data: { kind: MediaDeviceKind; deviceId: string } }) => {
-        this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
-
-        this.emitRoomStateUpdated();
-      }
-    );
   };
 
   private _emit = (eventName: string | symbol, ...args: any[]) => {

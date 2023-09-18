@@ -35,6 +35,7 @@ export enum PermissionTypes {
 export const getDefaultStoredState: () => Stored = () => ({
   userId: '',
   roomState: {
+    appLanguage: 'en',
     frameMuted: false,
     media: {
       audioEnabled: false,
