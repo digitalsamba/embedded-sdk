@@ -167,6 +167,7 @@ export const receiveMessagesTypes = [
   'mediaDeviceChanged',
   'mediaPermissionsFailed',
   'documentEvent',
+  'appLanguageChanged',
 ] as const;
 
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
@@ -265,12 +266,14 @@ export type ActiveMediaDevices = Partial<Record<MediaDeviceKind, string>>;
 
 export interface RoomState {
   frameMuted: boolean;
+  appLanguage: string;
 
   media: {
     videoEnabled: boolean;
     audioEnabled: boolean;
     activeDevices: ActiveMediaDevices;
   };
+
   layout: {
     mode: LayoutMode;
     showToolbar: boolean;
@@ -282,6 +285,7 @@ export interface RoomState {
       type: UserTileType;
     };
   };
+
   captionsState: {
     showCaptions: boolean;
   } & CaptionsOptions;
