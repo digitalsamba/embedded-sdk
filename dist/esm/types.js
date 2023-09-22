@@ -30,7 +30,8 @@ export const receiveMessagesTypes = [
     'localTileMaximized',
     'localTileMinimized',
     'userMaximized',
-    'mediaDeviceChanged',
+    'internalMediaDeviceChanged',
     'mediaPermissionsFailed',
     'documentEvent',
+    'appLanguageChanged',
 ];

@@ -1,3 +1,4 @@
+import { match } from 'assert';
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import {
@@ -17,6 +18,7 @@ import {
   InitialRoomSettings,
   InitOptions,
   InstanceProperties,
+  MediaDeviceUpdatePayload,
   QueuedEventListener,
   ReceiveMessage,
   RoomJoinedPayload,
@@ -263,15 +265,17 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     });
 
     this.on(
-      'mediaDeviceChanged',
-      ({ data }: { data: { kind: MediaDeviceKind; deviceId: string } }) => {
-        this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
+      'appLanguageChanged',
+      ({
+        data,
+      }: {
+        data: {
+          language: string;
+        };
+      }) => {
+        this.stored.roomState.appLanguage = data.language;
       }
     );
-
-    this.on('appLanguageChanged', ({ data }: { data: { language: string } }) => {
-      this.stored.roomState.appLanguage = data.language;
-    });
 
     this.on('permissionsChanged', (event) => {
       if (this.stored.users[this.stored.userId]) {
@@ -391,7 +395,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     return this.emit(eventName, ...args);
   };
 
-  private handleInternalMessage = (event: ReceiveMessage) => {
+  private handleInternalMessage = async (event: ReceiveMessage) => {
     const message = event.DSPayload;
 
     switch (message.type) {
@@ -420,6 +424,46 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         const customEventName = `frameEvent_${eventName}_${target}`;
 
         this._emit(customEventName, JSON.parse(payload));
+      }
+
+      case 'internalMediaDeviceChanged': {
+        const data = message.data as MediaDeviceUpdatePayload;
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const matchingDevice = devices.find(
+          (device) => device.kind === data.kind && device.label === data.label
+        );
+
+        if (matchingDevice) {
+          const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+
+          this._emit('mediaDeviceChanged', {
+            type: 'mediaDeviceChanged',
+            data: {
+              ...data,
+              previousDeviceId,
+              deviceId: matchingDevice.deviceId,
+            },
+          });
+
+          this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+        }
+        //
+        // this.on(
+        //   'internalMediaDeviceChanged',
+        //   ({
+        //     data,
+        //   }: {
+        //     data: {
+        //       kind: MediaDeviceKind;
+        //       deviceId: string;
+        //     };
+        //   }) => {
+        //     this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
+        //     // DODO;
+        //   }
+        // );
+        console.warn(data, 'ddd');
+        break;
       }
 
       default: {

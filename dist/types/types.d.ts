@@ -54,7 +54,7 @@ export interface InstanceProperties {
     reportErrors?: boolean;
 }
 export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener';
-export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "mediaDeviceChanged", "mediaPermissionsFailed", "documentEvent"];
+export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "appLanguageChanged"];
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
 export interface SendMessage<D> {
     type: SendMessageType;
@@ -108,6 +108,7 @@ export type UserTileType = 'media' | 'screenshare';
 export type ActiveMediaDevices = Partial<Record<MediaDeviceKind, string>>;
 export interface RoomState {
     frameMuted: boolean;
+    appLanguage: string;
     media: {
         videoEnabled: boolean;
         audioEnabled: boolean;
@@ -138,6 +139,12 @@ export interface Stored {
 }
 export type RoomJoinedPayload = Stored & {
     permissionsMap: PermissionsMap;
+};
+export type MediaDeviceUpdatePayload = {
+    deviceId: string;
+    previousDeviceId?: string;
+    kind: MediaDeviceKind;
+    label: string;
 };
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;

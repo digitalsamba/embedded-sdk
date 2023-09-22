@@ -164,7 +164,7 @@ export const receiveMessagesTypes = [
   'localTileMaximized',
   'localTileMinimized',
   'userMaximized',
-  'mediaDeviceChanged',
+  'internalMediaDeviceChanged',
   'mediaPermissionsFailed',
   'documentEvent',
   'appLanguageChanged',
@@ -302,6 +302,12 @@ export interface Stored {
 }
 
 export type RoomJoinedPayload = Stored & { permissionsMap: PermissionsMap };
+export type MediaDeviceUpdatePayload = {
+  deviceId: string;
+  previousDeviceId?: string;
+  kind: MediaDeviceKind;
+  label: string;
+};
 
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;

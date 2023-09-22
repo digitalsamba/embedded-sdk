@@ -2,6 +2,7 @@ export const CONNECT_TIMEOUT = 10000;
 export const internalEvents = {
     roomJoined: true,
     documentEvent: true,
+    internalMediaDeviceChanged: true,
 };
 export var LayoutMode;
 (function (LayoutMode) {
@@ -31,6 +32,7 @@ export var PermissionTypes;
 export const getDefaultStoredState = () => ({
     userId: '',
     roomState: {
+        appLanguage: 'en',
         frameMuted: false,
         media: {
             audioEnabled: false,
