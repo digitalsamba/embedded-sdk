@@ -163,6 +163,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.stored.roomState.appLanguage = settings.appLanguage;
     }
 
+    if (settings.initials) {
+      try {
+        settings.initials = settings.initials.trim();
+      } catch {
+        settings.initials = undefined;
+      }
+    }
+
     this.roomSettings = settings;
   };
 
