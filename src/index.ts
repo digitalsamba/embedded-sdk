@@ -1,4 +1,3 @@
-import { match } from 'assert';
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import {
@@ -67,6 +66,11 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     super();
 
     this.stored = getDefaultStoredState();
+
+    this.stored.roomState = createWatchedProxy(
+      { ...this.stored.roomState },
+      this.emitRoomStateUpdated
+    );
 
     if (!window.isSecureContext) {
       this.logError(INSECURE_CONTEXT);
@@ -404,7 +408,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
           message.data as RoomJoinedPayload;
 
         this.stored.users = { ...this.stored.users, ...users };
-        this.stored.roomState = createWatchedProxy({ ...roomState }, this.emitRoomStateUpdated);
+
+        this.stored.roomState = createWatchedProxy(
+          { ...this.stored.roomState, ...roomState },
+          this.emitRoomStateUpdated
+        );
+
         this.stored.activeSpeaker = activeSpeaker;
 
         this.stored.features = createWatchedProxy({ ...features }, this.emitFeatureSetUpdated);
@@ -447,22 +456,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
           this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
         }
-        //
-        // this.on(
-        //   'internalMediaDeviceChanged',
-        //   ({
-        //     data,
-        //   }: {
-        //     data: {
-        //       kind: MediaDeviceKind;
-        //       deviceId: string;
-        //     };
-        //   }) => {
-        //     this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
-        //     // DODO;
-        //   }
-        // );
-        console.warn(data, 'ddd');
+
         break;
       }
 

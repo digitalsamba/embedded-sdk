@@ -262,7 +262,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 case 'roomJoined': {
                     const { users, roomState, activeSpeaker, permissionsMap, features } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
-                    this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, roomState), this.emitRoomStateUpdated);
+                    this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign(Object.assign({}, this.stored.roomState), roomState), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
                     this.stored.features = (0, proxy_1.createWatchedProxy)(Object.assign({}, features), this.emitFeatureSetUpdated);
                     this.permissionManager.permissionsMap = permissionsMap;
@@ -289,22 +289,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                         });
                         this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
                     }
-                    //
-                    // this.on(
-                    //   'internalMediaDeviceChanged',
-                    //   ({
-                    //     data,
-                    //   }: {
-                    //     data: {
-                    //       kind: MediaDeviceKind;
-                    //       deviceId: string;
-                    //     };
-                    //   }) => {
-                    //     this.stored.roomState.media.activeDevices[data.kind] = data.deviceId;
-                    //     // DODO;
-                    //   }
-                    // );
-                    console.warn(data, 'ddd');
                     break;
                 }
                 default: {
@@ -599,6 +583,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.sendMessage({ type: 'minimizeContent' });
         };
         this.stored = (0, vars_1.getDefaultStoredState)();
+        this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);
         if (!window.isSecureContext) {
             this.logError(errors_1.INSECURE_CONTEXT);
         }
