@@ -410,7 +410,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         this.stored.users = { ...this.stored.users, ...users };
 
         this.stored.roomState = createWatchedProxy(
-          { ...this.stored.roomState, ...roomState },
+          {
+            ...this.stored.roomState,
+            ...roomState,
+            media: {
+              ...this.stored.roomState.media,
+              ...roomState.media,
+            },
+          },
           this.emitRoomStateUpdated
         );
 

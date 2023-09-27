@@ -259,7 +259,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 case 'roomJoined': {
                     const { users, roomState, activeSpeaker, permissionsMap, features } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
-                    this.stored.roomState = createWatchedProxy(Object.assign(Object.assign({}, this.stored.roomState), roomState), this.emitRoomStateUpdated);
+                    this.stored.roomState = createWatchedProxy(Object.assign(Object.assign(Object.assign({}, this.stored.roomState), roomState), { media: Object.assign(Object.assign({}, this.stored.roomState.media), roomState.media) }), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
                     this.stored.features = createWatchedProxy(Object.assign({}, features), this.emitFeatureSetUpdated);
                     this.permissionManager.permissionsMap = permissionsMap;
