@@ -218,11 +218,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.stored.roomState.captionsState.fontSize = event.data.fontSize;
             });
             this.on('virtualBackgroundChanged', (event) => {
-                const { type, value, enforced } = event.data.virtualBackgroundConfig;
+                const { type, value, enforced, name } = event.data.virtualBackgroundConfig;
                 this.stored.roomState.virtualBackground = {
                     enabled: true,
                     type,
                     value,
+                    name,
                     enforced,
                 };
             });

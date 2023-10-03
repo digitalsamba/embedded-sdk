@@ -250,6 +250,7 @@ export interface StoredVBState {
   enabled: boolean;
   enforced?: boolean;
   type?: 'blur' | 'image' | 'imageUrl';
+  name?: string;
   value?: string | { src: string; thumb: string; alt: string };
 }
 
