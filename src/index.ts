@@ -17,6 +17,7 @@ import {
   InitialRoomSettings,
   InitOptions,
   InstanceProperties,
+  MediaDeviceUpdatePayload,
   QueuedEventListener,
   ReceiveMessage,
   RoomJoinedPayload,
@@ -65,6 +66,11 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     super();
 
     this.stored = getDefaultStoredState();
+
+    this.stored.roomState = createWatchedProxy(
+      { ...this.stored.roomState },
+      this.emitRoomStateUpdated
+    );
 
     if (!window.isSecureContext) {
       this.logError(INSECURE_CONTEXT);
@@ -159,6 +165,18 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       });
     }
 
+    if (settings.appLanguage) {
+      this.stored.roomState.appLanguage = settings.appLanguage;
+    }
+
+    if (settings.initials) {
+      try {
+        settings.initials = settings.initials.trim();
+      } catch {
+        settings.initials = undefined;
+      }
+    }
+
     this.roomSettings = settings;
   };
 
@@ -250,6 +268,19 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.emitUsersUpdated();
     });
 
+    this.on(
+      'appLanguageChanged',
+      ({
+        data,
+      }: {
+        data: {
+          language: string;
+        };
+      }) => {
+        this.stored.roomState.appLanguage = data.language;
+      }
+    );
+
     this.on('permissionsChanged', (event) => {
       if (this.stored.users[this.stored.userId]) {
         let modifiedPermissions: string[] = [
@@ -322,12 +353,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     });
 
     this.on('virtualBackgroundChanged', (event) => {
-      const { type, value, enforced } = event.data.virtualBackgroundConfig;
+      const { type, value, enforced, name } = event.data.virtualBackgroundConfig;
 
       this.stored.roomState.virtualBackground = {
         enabled: true,
         type,
         value,
+        name,
         enforced,
       };
     });
@@ -354,6 +386,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       this.stored.roomState.layout.contentMode = data.mode;
     });
+
     this.on('userMinimized', () => {
       this.stored.roomState.layout.content = undefined;
 
@@ -367,7 +400,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     return this.emit(eventName, ...args);
   };
 
-  private handleInternalMessage = (event: ReceiveMessage) => {
+  private handleInternalMessage = async (event: ReceiveMessage) => {
     const message = event.DSPayload;
 
     switch (message.type) {
@@ -376,7 +409,19 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
           message.data as RoomJoinedPayload;
 
         this.stored.users = { ...this.stored.users, ...users };
-        this.stored.roomState = createWatchedProxy({ ...roomState }, this.emitRoomStateUpdated);
+
+        this.stored.roomState = createWatchedProxy(
+          {
+            ...this.stored.roomState,
+            ...roomState,
+            media: {
+              ...this.stored.roomState.media,
+              ...roomState.media,
+            },
+          },
+          this.emitRoomStateUpdated
+        );
+
         this.stored.activeSpeaker = activeSpeaker;
 
         this.stored.features = createWatchedProxy({ ...features }, this.emitFeatureSetUpdated);
@@ -397,6 +442,32 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
         this._emit(customEventName, JSON.parse(payload));
       }
+
+      case 'internalMediaDeviceChanged': {
+        const data = message.data as MediaDeviceUpdatePayload;
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const matchingDevice = devices.find(
+          (device) => device.kind === data.kind && device.label === data.label
+        );
+
+        if (matchingDevice) {
+          const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+
+          this._emit('mediaDeviceChanged', {
+            type: 'mediaDeviceChanged',
+            data: {
+              ...data,
+              previousDeviceId,
+              deviceId: matchingDevice.deviceId,
+            },
+          });
+
+          this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+        }
+
+        break;
+      }
+
       default: {
         break;
       }

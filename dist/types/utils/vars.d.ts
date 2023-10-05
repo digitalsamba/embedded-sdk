@@ -18,6 +18,10 @@ export declare enum PermissionTypes {
     remoteMuting = "remote_muting",
     askRemoteUnmute = "ask_remote_unmute",
     raiseHand = "raise_hand",
-    manageRoles = "manage_roles"
+    manageRoles = "manage_roles",
+    inviteParticipant = "invite_participant",
+    seeParticipantsPanel = "see_participants_panel",
+    controlRoomEntry = "control_room_entry",
+    editWhiteboard = "edit_whiteboard"
 }
 export declare const getDefaultStoredState: () => Stored;

@@ -5,6 +5,7 @@ exports.CONNECT_TIMEOUT = 10000;
 exports.internalEvents = {
     roomJoined: true,
     documentEvent: true,
+    internalMediaDeviceChanged: true,
 };
 var LayoutMode;
 (function (LayoutMode) {
@@ -26,14 +27,20 @@ var PermissionTypes;
     PermissionTypes["askRemoteUnmute"] = "ask_remote_unmute";
     PermissionTypes["raiseHand"] = "raise_hand";
     PermissionTypes["manageRoles"] = "manage_roles";
+    PermissionTypes["inviteParticipant"] = "invite_participant";
+    PermissionTypes["seeParticipantsPanel"] = "see_participants_panel";
+    PermissionTypes["controlRoomEntry"] = "control_room_entry";
+    PermissionTypes["editWhiteboard"] = "edit_whiteboard";
 })(PermissionTypes = exports.PermissionTypes || (exports.PermissionTypes = {}));
 const getDefaultStoredState = () => ({
     userId: '',
     roomState: {
+        appLanguage: 'en',
         frameMuted: false,
         media: {
             audioEnabled: false,
             videoEnabled: false,
+            activeDevices: {},
         },
         layout: {
             mode: LayoutMode.tiled,

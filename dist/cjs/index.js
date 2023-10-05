@@ -78,6 +78,17 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     }
                 });
             }
+            if (settings.appLanguage) {
+                this.stored.roomState.appLanguage = settings.appLanguage;
+            }
+            if (settings.initials) {
+                try {
+                    settings.initials = settings.initials.trim();
+                }
+                catch (_c) {
+                    settings.initials = undefined;
+                }
+            }
             this.roomSettings = settings;
         });
         this.onMessage = (event) => {
@@ -146,6 +157,9 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 }
                 this.emitUsersUpdated();
             });
+            this.on('appLanguageChanged', ({ data, }) => {
+                this.stored.roomState.appLanguage = data.language;
+            });
             this.on('permissionsChanged', (event) => {
                 if (this.stored.users[this.stored.userId]) {
                     let modifiedPermissions = [
@@ -207,11 +221,12 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 this.stored.roomState.captionsState.fontSize = event.data.fontSize;
             });
             this.on('virtualBackgroundChanged', (event) => {
-                const { type, value, enforced } = event.data.virtualBackgroundConfig;
+                const { type, value, enforced, name } = event.data.virtualBackgroundConfig;
                 this.stored.roomState.virtualBackground = {
                     enabled: true,
                     type,
                     value,
+                    name,
                     enforced,
                 };
             });
@@ -242,13 +257,13 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.emit('*', ...args);
             return this.emit(eventName, ...args);
         };
-        this.handleInternalMessage = (event) => {
+        this.handleInternalMessage = (event) => __awaiter(this, void 0, void 0, function* () {
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
                     const { users, roomState, activeSpeaker, permissionsMap, features } = message.data;
                     this.stored.users = Object.assign(Object.assign({}, this.stored.users), users);
-                    this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, roomState), this.emitRoomStateUpdated);
+                    this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign(Object.assign(Object.assign({}, this.stored.roomState), roomState), { media: Object.assign(Object.assign({}, this.stored.roomState.media), roomState.media) }), this.emitRoomStateUpdated);
                     this.stored.activeSpeaker = activeSpeaker;
                     this.stored.features = (0, proxy_1.createWatchedProxy)(Object.assign({}, features), this.emitFeatureSetUpdated);
                     this.permissionManager.permissionsMap = permissionsMap;
@@ -263,11 +278,25 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     const customEventName = `frameEvent_${eventName}_${target}`;
                     this._emit(customEventName, JSON.parse(payload));
                 }
+                case 'internalMediaDeviceChanged': {
+                    const data = message.data;
+                    const devices = yield navigator.mediaDevices.enumerateDevices();
+                    const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
+                    if (matchingDevice) {
+                        const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+                        this._emit('mediaDeviceChanged', {
+                            type: 'mediaDeviceChanged',
+                            data: Object.assign(Object.assign({}, data), { previousDeviceId, deviceId: matchingDevice.deviceId }),
+                        });
+                        this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+                    }
+                    break;
+                }
                 default: {
                     break;
                 }
             }
-        };
+        });
         this.emitUsersUpdated = () => {
             this._emit('usersUpdated', { type: 'usersUpdated', data: { users: this.listUsers() } });
         };
@@ -555,6 +584,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.sendMessage({ type: 'minimizeContent' });
         };
         this.stored = (0, vars_1.getDefaultStoredState)();
+        this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);
         if (!window.isSecureContext) {
             this.logError(errors_1.INSECURE_CONTEXT);
         }

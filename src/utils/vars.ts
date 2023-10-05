@@ -5,6 +5,7 @@ export const CONNECT_TIMEOUT = 10000;
 export const internalEvents: Record<string, boolean> = {
   roomJoined: true,
   documentEvent: true,
+  internalMediaDeviceChanged: true,
 };
 
 export enum LayoutMode {
@@ -26,15 +27,21 @@ export enum PermissionTypes {
   askRemoteUnmute = 'ask_remote_unmute',
   raiseHand = 'raise_hand',
   manageRoles = 'manage_roles',
+  inviteParticipant = 'invite_participant',
+  seeParticipantsPanel = 'see_participants_panel',
+  controlRoomEntry = 'control_room_entry',
+  editWhiteboard = 'edit_whiteboard',
 }
 
 export const getDefaultStoredState: () => Stored = () => ({
   userId: '',
   roomState: {
+    appLanguage: 'en',
     frameMuted: false,
     media: {
       audioEnabled: false,
       videoEnabled: false,
+      activeDevices: {},
     },
     layout: {
       mode: LayoutMode.tiled,
