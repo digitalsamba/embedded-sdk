@@ -1,6 +1,10 @@
 # Changelog
 
 Historical list of changes in releases
+## [v0.0.33] - 2023-10-05
+* Add `appLanguage` field to room state to match rooms localization language
+* Add virtual background image `name` field to room state
+* Expose list of active media devices in room state
 
 ## [v0.0.31] - 2023-09-07
 * Allow listening to document or window events fired inside the frame ([#47](https://github.com/digitalsamba/embedded-sdk/pull/47))
