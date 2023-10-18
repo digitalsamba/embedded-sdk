@@ -36,5 +36,6 @@ exports.receiveMessagesTypes = [
     'internalMediaDeviceChanged',
     'mediaPermissionsFailed',
     'documentEvent',
+    'UICallback',
     'appLanguageChanged',
 ];

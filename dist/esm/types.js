@@ -33,5 +33,6 @@ export const receiveMessagesTypes = [
     'internalMediaDeviceChanged',
     'mediaPermissionsFailed',
     'documentEvent',
+    'UICallback',
     'appLanguageChanged',
 ];

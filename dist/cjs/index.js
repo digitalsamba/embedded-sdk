@@ -27,6 +27,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.reportErrors = false;
         this.permissionManager = new PermissionManager_1.PermissionManager(this);
         this.queuedEventListeners = [];
+        this.queuedUICallbacks = [];
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -138,6 +139,36 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     operation: 'disconnectEventListener',
                     event: eventName,
                     target,
+                });
+            }
+        };
+        this.addUICallback = (name, listener) => {
+            const customEventName = `UICallback_${name}`;
+            if (this.connected) {
+                if (!this.listenerCount(customEventName)) {
+                    this.sendMessage({ type: 'connectUICallback', data: { name } });
+                }
+            }
+            else {
+                this.queuedUICallbacks.push({
+                    operation: 'connectUICallback',
+                    name,
+                });
+            }
+            this.on(customEventName, listener);
+        };
+        this.removeUICallback = (name, listener) => {
+            const customEventName = `UICallback_${name}`;
+            this.off(customEventName, listener);
+            if (this.connected) {
+                if (!this.listenerCount(customEventName)) {
+                    this.sendMessage({ type: 'disconnectUICallback', data: { name } });
+                }
+            }
+            else {
+                this.queuedUICallbacks.push({
+                    operation: 'disconnectUICallback',
+                    name,
                 });
             }
         };
@@ -277,6 +308,13 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     const { eventName, target, payload } = message.data;
                     const customEventName = `frameEvent_${eventName}_${target}`;
                     this._emit(customEventName, JSON.parse(payload));
+                    break;
+                }
+                case 'UICallback': {
+                    const { name } = message.data;
+                    const customEventName = `UICallback_${name}`;
+                    this._emit(customEventName, {});
+                    break;
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
@@ -605,7 +643,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
     }
     checkTarget() {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners });
+            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners, UICallbacks: this.queuedUICallbacks });
             this.sendMessage({ type: 'connect', data: payload });
             const confirmationTimeout = window.setTimeout(() => {
                 this.logError(errors_1.UNKNOWN_TARGET);
@@ -613,6 +651,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.on('connected', () => {
                 this.connected = true;
                 this.queuedEventListeners = [];
+                this.queuedUICallbacks = [];
                 clearTimeout(confirmationTimeout);
             });
         });
