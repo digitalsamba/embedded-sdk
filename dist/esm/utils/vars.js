@@ -2,6 +2,7 @@ export const CONNECT_TIMEOUT = 10000;
 export const internalEvents = {
     roomJoined: true,
     documentEvent: true,
+    UICallback: true,
     internalMediaDeviceChanged: true,
 };
 export var LayoutMode;

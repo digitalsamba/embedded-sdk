@@ -19,11 +19,13 @@ import {
   InstanceProperties,
   MediaDeviceUpdatePayload,
   QueuedEventListener,
+  QueuedUICallback,
   ReceiveMessage,
   RoomJoinedPayload,
   SendMessage,
   Stored,
   StoredVBState,
+  UICallbackName,
   UserId,
   UserTileType,
   VirtualBackgroundOptions,
@@ -57,6 +59,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   permissionManager = new PermissionManager(this);
 
   queuedEventListeners: QueuedEventListener[] = [];
+
+  queuedUICallbacks: QueuedUICallback[] = [];
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -240,6 +244,39 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         operation: 'disconnectEventListener',
         event: eventName,
         target,
+      });
+    }
+  };
+
+  addUICallback = (name: UICallbackName, listener: (...args: any[]) => void) => {
+    const customEventName = `UICallback_${name}`;
+
+    if (this.connected) {
+      if (!this.listenerCount(customEventName)) {
+        this.sendMessage({ type: 'connectUICallback', data: { name } });
+      }
+    } else {
+      this.queuedUICallbacks.push({
+        operation: 'connectUICallback',
+        name,
+      });
+    }
+
+    this.on(customEventName, listener);
+  };
+
+  removeUICallback = (name: UICallbackName, listener: (...args: any[]) => void) => {
+    const customEventName = `UICallback_${name}`;
+    this.off(customEventName, listener);
+
+    if (this.connected) {
+      if (!this.listenerCount(customEventName)) {
+        this.sendMessage({ type: 'disconnectUICallback', data: { name } });
+      }
+    } else {
+      this.queuedUICallbacks.push({
+        operation: 'disconnectUICallback',
+        name,
       });
     }
   };
@@ -441,6 +478,17 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         const customEventName = `frameEvent_${eventName}_${target}`;
 
         this._emit(customEventName, JSON.parse(payload));
+        break;
+      }
+
+      case 'UICallback': {
+        const { name } = message.data as any;
+
+        const customEventName = `UICallback_${name}`;
+
+        this._emit(customEventName, {});
+
+        break;
       }
 
       case 'internalMediaDeviceChanged': {
@@ -538,6 +586,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     const payload: ConnectToFramePayload = {
       ...this.roomSettings,
       eventListeners: this.queuedEventListeners,
+      UICallbacks: this.queuedUICallbacks,
     };
 
     this.sendMessage({ type: 'connect', data: payload });
@@ -549,6 +598,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.on('connected', () => {
       this.connected = true;
       this.queuedEventListeners = [];
+      this.queuedUICallbacks = [];
 
       clearTimeout(confirmationTimeout);
     });
