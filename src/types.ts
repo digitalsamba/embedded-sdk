@@ -138,7 +138,8 @@ export type SendMessageType =
   | 'connectEventListener'
   | 'disconnectEventListener'
   | 'connectUICallback'
-  | 'disconnectUICallback';
+  | 'disconnectUICallback'
+  | 'changeRole';
 
 export const receiveMessagesTypes = [
   'connected',
@@ -177,6 +178,7 @@ export const receiveMessagesTypes = [
   'documentEvent',
   'UICallback',
   'appLanguageChanged',
+  'roleChanged',
 ] as const;
 
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];

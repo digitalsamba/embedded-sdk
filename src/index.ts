@@ -341,6 +341,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       }
     });
 
+    this.on('roleChanged', (event) => {
+      const { userId, to } = event.data;
+
+      if (this.stored.users[userId]) {
+        this.stored.users[userId].role = to;
+      }
+    });
+
     this.on('activeSpeakerChanged', (event) => {
       this.stored.activeSpeaker = event.data?.user?.id;
     });
@@ -916,6 +924,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   minimizeContent = () => {
     this.sendMessage({ type: 'minimizeContent' });
+  };
+
+  changeRole = (userId: UserId, role: string) => {
+    this.sendMessage({ type: 'changeRole', data: { userId, role } });
   };
 }
 

@@ -87,5 +87,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     maximizeUser: (userId: UserId, tile?: UserTileType) => void;
     minimizeUser: () => void;
     minimizeContent: () => void;
+    changeRole: (userId: UserId, role: string) => void;
 }
 export default DigitalSambaEmbedded;

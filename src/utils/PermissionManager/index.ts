@@ -6,7 +6,7 @@ import {
   RefinePermissionsOptions,
 } from './types';
 import { PermissionTypes } from '../vars';
-import { EmbeddedInstance } from '../../types';
+import { EmbeddedInstance, UserId } from '../../types';
 
 export class PermissionManager {
   parent: EmbeddedInstance;

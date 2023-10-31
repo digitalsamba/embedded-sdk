@@ -38,4 +38,5 @@ exports.receiveMessagesTypes = [
     'documentEvent',
     'UICallback',
     'appLanguageChanged',
+    'roleChanged',
 ];
