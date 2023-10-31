@@ -208,6 +208,12 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                         modifiedPermissions;
                 }
             });
+            this.on('roleChanged', (event) => {
+                const { userId, to } = event.data;
+                if (this.stored.users[userId]) {
+                    this.stored.users[userId].role = to;
+                }
+            });
             this.on('activeSpeakerChanged', (event) => {
                 var _b, _c;
                 this.stored.activeSpeaker = (_c = (_b = event.data) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.id;
@@ -620,6 +626,9 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         };
         this.minimizeContent = () => {
             this.sendMessage({ type: 'minimizeContent' });
+        };
+        this.changeRole = (userId, role) => {
+            this.sendMessage({ type: 'changeRole', data: { userId, role } });
         };
         this.stored = (0, vars_1.getDefaultStoredState)();
         this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);

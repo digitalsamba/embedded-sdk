@@ -35,4 +35,5 @@ export const receiveMessagesTypes = [
     'documentEvent',
     'UICallback',
     'appLanguageChanged',
+    'roleChanged',
 ];
