@@ -5,6 +5,7 @@ exports.CONNECT_TIMEOUT = 10000;
 exports.internalEvents = {
     roomJoined: true,
     documentEvent: true,
+    UICallback: true,
     internalMediaDeviceChanged: true,
 };
 var LayoutMode;

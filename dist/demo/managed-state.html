@@ -432,6 +432,14 @@
         ssControls.style.opacity = 0;
       }
     })
+
+    sambaEmbedded.addUICallback('leaveSession', () => {
+      if(sambaEmbedded.stored.users) {
+
+      } else {
+
+      }
+    })
   }
 
 </script>

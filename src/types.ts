@@ -46,8 +46,14 @@ export interface QueuedEventListener {
   target: string;
 }
 
+export interface QueuedUICallback {
+  operation: 'connectUICallback' | 'disconnectUICallback';
+  name: UICallbackName;
+}
+
 export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
   eventListeners: QueuedEventListener[];
+  UICallbacks: QueuedUICallback[];
 }
 
 export type InitOptions = {
@@ -130,7 +136,10 @@ export type SendMessageType =
   | 'maximizeUser'
   | 'minimizeContent'
   | 'connectEventListener'
-  | 'disconnectEventListener';
+  | 'disconnectEventListener'
+  | 'connectUICallback'
+  | 'disconnectUICallback'
+  | 'changeRole';
 
 export const receiveMessagesTypes = [
   'connected',
@@ -167,10 +176,14 @@ export const receiveMessagesTypes = [
   'internalMediaDeviceChanged',
   'mediaPermissionsFailed',
   'documentEvent',
+  'UICallback',
   'appLanguageChanged',
+  'roleChanged',
 ] as const;
 
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
+
+export type UICallbackName = 'leaveSession';
 
 export interface SendMessage<D> {
   type: SendMessageType;

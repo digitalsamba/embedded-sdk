@@ -1,6 +1,11 @@
 # Changelog
 
 Historical list of changes in releases
+## [v0.0.34] - 2023-11-01
+* Add `UICallback` commands to attach listeners for custom interface actions in embedded app ([#59](https://github.com/digitalsamba/embedded-sdk/pull/59))
+* Add `changeRole` command and `roleChanged` event ([#60](https://github.com/digitalsamba/embedded-sdk/pull/60))
+
+
 ## [v0.0.33] - 2023-10-05
 * Add `appLanguage` field to room state to match rooms localization language
 * Add virtual background image `name` field to room state

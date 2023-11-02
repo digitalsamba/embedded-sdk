@@ -24,6 +24,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.reportErrors = false;
         this.permissionManager = new PermissionManager(this);
         this.queuedEventListeners = [];
+        this.queuedUICallbacks = [];
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -138,6 +139,36 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 });
             }
         };
+        this.addUICallback = (name, listener) => {
+            const customEventName = `UICallback_${name}`;
+            if (this.connected) {
+                if (!this.listenerCount(customEventName)) {
+                    this.sendMessage({ type: 'connectUICallback', data: { name } });
+                }
+            }
+            else {
+                this.queuedUICallbacks.push({
+                    operation: 'connectUICallback',
+                    name,
+                });
+            }
+            this.on(customEventName, listener);
+        };
+        this.removeUICallback = (name, listener) => {
+            const customEventName = `UICallback_${name}`;
+            this.off(customEventName, listener);
+            if (this.connected) {
+                if (!this.listenerCount(customEventName)) {
+                    this.sendMessage({ type: 'disconnectUICallback', data: { name } });
+                }
+            }
+            else {
+                this.queuedUICallbacks.push({
+                    operation: 'disconnectUICallback',
+                    name,
+                });
+            }
+        };
         this.setupInternalEventListeners = () => {
             this.on('userJoined', (event) => {
                 const { user, type } = event.data;
@@ -172,6 +203,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     });
                     this.stored.users[this.stored.userId].dynamicPermissions =
                         modifiedPermissions;
+                }
+            });
+            this.on('roleChanged', (event) => {
+                const { userId, to } = event.data;
+                if (this.stored.users[userId]) {
+                    this.stored.users[userId].role = to;
                 }
             });
             this.on('activeSpeakerChanged', (event) => {
@@ -274,6 +311,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     const { eventName, target, payload } = message.data;
                     const customEventName = `frameEvent_${eventName}_${target}`;
                     this._emit(customEventName, JSON.parse(payload));
+                    break;
+                }
+                case 'UICallback': {
+                    const { name } = message.data;
+                    const customEventName = `UICallback_${name}`;
+                    this._emit(customEventName, {});
+                    break;
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
@@ -580,6 +624,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.minimizeContent = () => {
             this.sendMessage({ type: 'minimizeContent' });
         };
+        this.changeRole = (userId, role) => {
+            this.sendMessage({ type: 'changeRole', data: { userId, role } });
+        };
         this.stored = getDefaultStoredState();
         this.stored.roomState = createWatchedProxy(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);
         if (!window.isSecureContext) {
@@ -602,7 +649,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
     }
     checkTarget() {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners });
+            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners, UICallbacks: this.queuedUICallbacks });
             this.sendMessage({ type: 'connect', data: payload });
             const confirmationTimeout = window.setTimeout(() => {
                 this.logError(UNKNOWN_TARGET);
@@ -610,6 +657,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.on('connected', () => {
                 this.connected = true;
                 this.queuedEventListeners = [];
+                this.queuedUICallbacks = [];
                 clearTimeout(confirmationTimeout);
             });
         });

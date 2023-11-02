@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, Stored, UserId, UserTileType, VirtualBackgroundOptions } from './types';
+import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, Stored, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -14,6 +14,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     stored: Stored;
     permissionManager: PermissionManager;
     queuedEventListeners: QueuedEventListener[];
+    queuedUICallbacks: QueuedUICallback[];
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: Partial<InitOptions>, instanceProperties?: InstanceProperties) => DigitalSambaEmbedded;
     private mountFrame;
@@ -22,6 +23,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     private onMessage;
     addFrameEventListener: (eventName: string, target: 'document' | 'window', listener: (...args: any[]) => void) => void;
     removeFrameEventListener: (eventName: string, target: 'document' | 'window', listener: (...args: any[]) => void) => void;
+    addUICallback: (name: UICallbackName, listener: (...args: any[]) => void) => void;
+    removeUICallback: (name: UICallbackName, listener: (...args: any[]) => void) => void;
     private setupInternalEventListeners;
     private _emit;
     private handleInternalMessage;
@@ -84,5 +87,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     maximizeUser: (userId: UserId, tile?: UserTileType) => void;
     minimizeUser: () => void;
     minimizeContent: () => void;
+    changeRole: (userId: UserId, role: string) => void;
 }
 export default DigitalSambaEmbedded;
