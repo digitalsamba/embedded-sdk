@@ -1,6 +1,9 @@
 # Changelog
 
 Historical list of changes in releases
+## [v0.0.35] - 2023-11-16
+* Add `sessionEnded`  event to type definitions ([#146f159](https://github.com/digitalsamba/embedded-sdk/commit/146f1599e74590aa0a3f130bf38cee1071120874))
+
 ## [v0.0.34] - 2023-11-01
 * Add `UICallback` commands to attach listeners for custom interface actions in embedded app ([#59](https://github.com/digitalsamba/embedded-sdk/pull/59))
 * Add `changeRole` command and `roleChanged` event ([#60](https://github.com/digitalsamba/embedded-sdk/pull/60))
