@@ -4,6 +4,7 @@ export const receiveMessagesTypes = [
     'userJoined',
     'usersUpdated',
     'userLeft',
+    'sessionEnded',
     'roomJoined',
     'videoEnabled',
     'videoDisabled',
