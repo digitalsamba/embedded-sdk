@@ -40,4 +40,5 @@ exports.receiveMessagesTypes = [
     'UICallback',
     'appLanguageChanged',
     'roleChanged',
+    'tileAction',
 ];
