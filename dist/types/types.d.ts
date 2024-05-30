@@ -24,9 +24,16 @@ export interface QueuedUICallback {
     operation: 'connectUICallback' | 'disconnectUICallback';
     name: UICallbackName;
 }
+export interface QueuedTileAction {
+    operation: 'addTileAction' | 'removeTileAction';
+    name: string;
+    properties?: TileActionProperties;
+    listener?: AnyFn;
+}
 export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
     eventListeners: QueuedEventListener[];
     UICallbacks: QueuedUICallback[];
+    tileActions: QueuedTileAction[];
 }
 export type InitOptions = {
     root: HTMLElement;
@@ -58,8 +65,8 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole';
-export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged"];
+export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction';
+export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction"];
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
 export type UICallbackName = 'leaveSession';
 export interface SendMessage<D> {
@@ -153,6 +160,12 @@ export type MediaDeviceUpdatePayload = {
     kind: MediaDeviceKind;
     label: string;
 };
+type TileActionScope = 'remote' | 'local' | 'screenshare-local' | 'screenshare-remote';
+export type TileActionProperties = {
+    label: string;
+    scope: TileActionScope;
+    icon?: string;
+};
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -214,4 +227,5 @@ export interface EmbeddedInstance {
     minimizeUser: () => void;
     minimizeContent: () => void;
 }
+export type AnyFn = (...args: any[]) => void;
 export {};

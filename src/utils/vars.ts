@@ -7,6 +7,7 @@ export const internalEvents: Record<string, boolean> = {
   documentEvent: true,
   UICallback: true,
   internalMediaDeviceChanged: true,
+  tileAction: true,
 };
 
 export enum LayoutMode {

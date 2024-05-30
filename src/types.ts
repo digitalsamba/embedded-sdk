@@ -51,9 +51,17 @@ export interface QueuedUICallback {
   name: UICallbackName;
 }
 
+export interface QueuedTileAction {
+  operation: 'addTileAction' | 'removeTileAction';
+  name: string;
+  properties?: TileActionProperties;
+  listener?: AnyFn;
+}
+
 export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
   eventListeners: QueuedEventListener[];
   UICallbacks: QueuedUICallback[];
+  tileActions: QueuedTileAction[];
 }
 
 export type InitOptions = {
@@ -139,7 +147,9 @@ export type SendMessageType =
   | 'disconnectEventListener'
   | 'connectUICallback'
   | 'disconnectUICallback'
-  | 'changeRole';
+  | 'changeRole'
+  | 'addTileAction'
+  | 'removeTileAction';
 
 export const receiveMessagesTypes = [
   'connected',
@@ -180,6 +190,7 @@ export const receiveMessagesTypes = [
   'UICallback',
   'appLanguageChanged',
   'roleChanged',
+  'tileAction',
 ] as const;
 
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
@@ -324,6 +335,15 @@ export type MediaDeviceUpdatePayload = {
   label: string;
 };
 
+type TileActionScope = 'all' | 'remote' | 'local' | 'screenshare-local' | 'screenshare-remote';
+
+export type TileActionProperties = {
+  label: string;
+  scope: TileActionScope;
+  // only support native samba icons. not recommended to use in this version;
+  icon?: string;
+};
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -390,3 +410,5 @@ export interface EmbeddedInstance {
   minimizeUser: () => void;
   minimizeContent: () => void;
 }
+
+export type AnyFn = (...args: any[]) => void;
