@@ -191,6 +191,7 @@ export const receiveMessagesTypes = [
   'appLanguageChanged',
   'roleChanged',
   'tileAction',
+  'chatMessageReceived',
 ] as const;
 
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
