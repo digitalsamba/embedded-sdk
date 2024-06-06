@@ -60,7 +60,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
     changeLayoutMode: (mode: LayoutMode) => void;
     leaveSession: () => void;
-    endSession: () => void;
+    endSession: (requireConfirmation?: boolean) => void;
     toggleToolbar: (show?: boolean) => void;
     requestToggleAudio: (userId: UserId, shouldMute?: boolean) => void;
     requestMute: (userId: UserId) => void;

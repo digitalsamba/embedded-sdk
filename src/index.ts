@@ -810,8 +810,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'leaveSession' });
   };
 
-  endSession = () => {
-    this.sendMessage({ type: 'endSession' });
+  endSession = (requireConfirmation = true) => {
+    this.sendMessage({ type: 'endSession', data: requireConfirmation });
   };
 
   toggleToolbar = (show?: boolean) => {

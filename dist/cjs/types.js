@@ -41,4 +41,5 @@ exports.receiveMessagesTypes = [
     'appLanguageChanged',
     'roleChanged',
     'tileAction',
+    'chatMessageReceived',
 ];

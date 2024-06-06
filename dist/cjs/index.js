@@ -525,8 +525,8 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.leaveSession = () => {
             this.sendMessage({ type: 'leaveSession' });
         };
-        this.endSession = () => {
-            this.sendMessage({ type: 'endSession' });
+        this.endSession = (requireConfirmation = true) => {
+            this.sendMessage({ type: 'endSession', data: requireConfirmation });
         };
         this.toggleToolbar = (show) => {
             if (typeof show === 'undefined') {

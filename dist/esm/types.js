@@ -38,4 +38,5 @@ export const receiveMessagesTypes = [
     'appLanguageChanged',
     'roleChanged',
     'tileAction',
+    'chatMessageReceived',
 ];
