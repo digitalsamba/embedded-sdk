@@ -37,4 +37,6 @@ export const receiveMessagesTypes = [
     'UICallback',
     'appLanguageChanged',
     'roleChanged',
+    'tileAction',
+    'chatMessageReceived',
 ];

@@ -9,6 +9,7 @@ import {
 } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
 import {
+  AnyFn,
   BrandingOptionsConfig,
   CaptionsOptions,
   ConnectToFramePayload,
@@ -20,11 +21,13 @@ import {
   MediaDeviceUpdatePayload,
   QueuedEventListener,
   QueuedUICallback,
+  QueuedTileAction,
   ReceiveMessage,
   RoomJoinedPayload,
   SendMessage,
   Stored,
   StoredVBState,
+  TileActionProperties,
   UICallbackName,
   UserId,
   UserTileType,
@@ -61,6 +64,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   queuedEventListeners: QueuedEventListener[] = [];
 
   queuedUICallbacks: QueuedUICallback[] = [];
+
+  queuedTileActions: QueuedTileAction[] = [];
+
+  private tileActionListeners: Record<string, AnyFn> = {};
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -265,7 +272,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.on(customEventName, listener);
   };
 
-  removeUICallback = (name: UICallbackName, listener: (...args: any[]) => void) => {
+  removeUICallback = (name: UICallbackName, listener: AnyFn) => {
     const customEventName = `UICallback_${name}`;
     this.off(customEventName, listener);
 
@@ -276,6 +283,43 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     } else {
       this.queuedUICallbacks.push({
         operation: 'disconnectUICallback',
+        name,
+      });
+    }
+  };
+
+  addTileAction = (name: string, properties: TileActionProperties, listener: AnyFn) => {
+    if (this.tileActionListeners[name]) {
+      this.removeTileAction(name);
+    }
+
+    this.tileActionListeners[name] = listener;
+
+    if (this.connected) {
+      this.sendMessage({ type: 'addTileAction', data: { name, properties } });
+      this.on(`tileAction_${name}`, (data) => {
+        this.tileActionListeners[name](data);
+      });
+    } else {
+      this.queuedTileActions.push({
+        operation: 'addTileAction',
+        name,
+        properties,
+        listener,
+      });
+    }
+  };
+
+  removeTileAction = (name: string) => {
+    this.off(`tileAction_${name}`, this.tileActionListeners[name]);
+
+    delete this.tileActionListeners[name];
+
+    if (this.connected) {
+      this.sendMessage({ type: 'removeTileAction', data: { name } });
+    } else {
+      this.queuedTileActions.push({
+        operation: 'removeTileAction',
         name,
       });
     }
@@ -499,6 +543,15 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         break;
       }
 
+      case 'tileAction': {
+        const { name, source } = message.data as any;
+        const customEventName = `tileAction_${name}`;
+
+        this._emit(customEventName, source);
+
+        break;
+      }
+
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -595,6 +648,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       ...this.roomSettings,
       eventListeners: this.queuedEventListeners,
       UICallbacks: this.queuedUICallbacks,
+      tileActions: this.queuedTileActions,
     };
 
     this.sendMessage({ type: 'connect', data: payload });
@@ -607,6 +661,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.connected = true;
       this.queuedEventListeners = [];
       this.queuedUICallbacks = [];
+      this.queuedTileActions = [];
 
       clearTimeout(confirmationTimeout);
     });
@@ -755,8 +810,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'leaveSession' });
   };
 
-  endSession = () => {
-    this.sendMessage({ type: 'endSession' });
+  endSession = (requireConfirmation = true) => {
+    this.sendMessage({ type: 'endSession', data: requireConfirmation });
   };
 
   toggleToolbar = (show?: boolean) => {

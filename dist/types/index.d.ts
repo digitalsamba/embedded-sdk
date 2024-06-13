@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, Stored, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -15,6 +15,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     permissionManager: PermissionManager;
     queuedEventListeners: QueuedEventListener[];
     queuedUICallbacks: QueuedUICallback[];
+    queuedTileActions: QueuedTileAction[];
+    private tileActionListeners;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: Partial<InitOptions>, instanceProperties?: InstanceProperties) => DigitalSambaEmbedded;
     private mountFrame;
@@ -24,7 +26,9 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     addFrameEventListener: (eventName: string, target: 'document' | 'window', listener: (...args: any[]) => void) => void;
     removeFrameEventListener: (eventName: string, target: 'document' | 'window', listener: (...args: any[]) => void) => void;
     addUICallback: (name: UICallbackName, listener: (...args: any[]) => void) => void;
-    removeUICallback: (name: UICallbackName, listener: (...args: any[]) => void) => void;
+    removeUICallback: (name: UICallbackName, listener: AnyFn) => void;
+    addTileAction: (name: string, properties: TileActionProperties, listener: AnyFn) => void;
+    removeTileAction: (name: string) => void;
     private setupInternalEventListeners;
     private _emit;
     private handleInternalMessage;
@@ -56,7 +60,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
     changeLayoutMode: (mode: LayoutMode) => void;
     leaveSession: () => void;
-    endSession: () => void;
+    endSession: (requireConfirmation?: boolean) => void;
     toggleToolbar: (show?: boolean) => void;
     requestToggleAudio: (userId: UserId, shouldMute?: boolean) => void;
     requestMute: (userId: UserId) => void;

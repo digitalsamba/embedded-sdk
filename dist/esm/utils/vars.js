@@ -4,6 +4,7 @@ export const internalEvents = {
     documentEvent: true,
     UICallback: true,
     internalMediaDeviceChanged: true,
+    tileAction: true,
 };
 export var LayoutMode;
 (function (LayoutMode) {

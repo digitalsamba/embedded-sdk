@@ -25,6 +25,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.permissionManager = new PermissionManager(this);
         this.queuedEventListeners = [];
         this.queuedUICallbacks = [];
+        this.queuedTileActions = [];
+        this.tileActionListeners = {};
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -165,6 +167,39 @@ export class DigitalSambaEmbedded extends EventEmitter {
             else {
                 this.queuedUICallbacks.push({
                     operation: 'disconnectUICallback',
+                    name,
+                });
+            }
+        };
+        this.addTileAction = (name, properties, listener) => {
+            if (this.tileActionListeners[name]) {
+                this.removeTileAction(name);
+            }
+            this.tileActionListeners[name] = listener;
+            if (this.connected) {
+                this.sendMessage({ type: 'addTileAction', data: { name, properties } });
+                this.on(`tileAction_${name}`, (data) => {
+                    this.tileActionListeners[name](data);
+                });
+            }
+            else {
+                this.queuedTileActions.push({
+                    operation: 'addTileAction',
+                    name,
+                    properties,
+                    listener,
+                });
+            }
+        };
+        this.removeTileAction = (name) => {
+            this.off(`tileAction_${name}`, this.tileActionListeners[name]);
+            delete this.tileActionListeners[name];
+            if (this.connected) {
+                this.sendMessage({ type: 'removeTileAction', data: { name } });
+            }
+            else {
+                this.queuedTileActions.push({
+                    operation: 'removeTileAction',
                     name,
                 });
             }
@@ -317,6 +352,12 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     const { name } = message.data;
                     const customEventName = `UICallback_${name}`;
                     this._emit(customEventName, {});
+                    break;
+                }
+                case 'tileAction': {
+                    const { name, source } = message.data;
+                    const customEventName = `tileAction_${name}`;
+                    this._emit(customEventName, source);
                     break;
                 }
                 case 'internalMediaDeviceChanged': {
@@ -481,8 +522,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.leaveSession = () => {
             this.sendMessage({ type: 'leaveSession' });
         };
-        this.endSession = () => {
-            this.sendMessage({ type: 'endSession' });
+        this.endSession = (requireConfirmation = true) => {
+            this.sendMessage({ type: 'endSession', data: requireConfirmation });
         };
         this.toggleToolbar = (show) => {
             if (typeof show === 'undefined') {
@@ -649,7 +690,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
     }
     checkTarget() {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners, UICallbacks: this.queuedUICallbacks });
+            const payload = Object.assign(Object.assign({}, this.roomSettings), { eventListeners: this.queuedEventListeners, UICallbacks: this.queuedUICallbacks, tileActions: this.queuedTileActions });
             this.sendMessage({ type: 'connect', data: payload });
             const confirmationTimeout = window.setTimeout(() => {
                 this.logError(UNKNOWN_TARGET);
@@ -658,6 +699,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.connected = true;
                 this.queuedEventListeners = [];
                 this.queuedUICallbacks = [];
+                this.queuedTileActions = [];
                 clearTimeout(confirmationTimeout);
             });
         });
