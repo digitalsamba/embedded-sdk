@@ -186,11 +186,11 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 });
             }
             else {
+                this.tileActionListeners[name] = listener;
                 this.queuedTileActions.push({
                     operation: 'addTileAction',
                     name,
                     properties,
-                    listener,
                 });
             }
         };
