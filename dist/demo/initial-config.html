@@ -117,6 +117,12 @@
             <input type="checkbox" id="initial-settings-vb" onchange="toggleVirtualBackground(this.checked)" />
           </label>
         </div>
+        <div>
+          <label class="checkbox-label" for="initial-settings-vb">
+            <span>Require confirmation to remove participants</span>
+            <input type="checkbox" checked id="initial-settings-kick-confirmation" onchange="initialSettings.requireRemoveUserConfirmation = this.checked" />
+          </label>
+        </div>
         <div class="vb-options" style ="display: none">
           <div style="display: flex; align-items: center; justify-content: flex-start">
             <label style="margin-right: 8px;" for="vb-type">Virtual background type</label>
@@ -215,6 +221,7 @@
     layoutMode: "auto",
     virtualBackground: undefined,
     appLanguage: undefined,
+    requireRemoveUserConfirmation: true,
     mediaDevices: {}
   };
 
