@@ -297,19 +297,17 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
     if (this.connected) {
       this.sendMessage({ type: 'addTileAction', data: { name, properties } });
-
-      this.on(`tileAction_${name}`, (data) => {
-        this.tileActionListeners[name](data);
-      });
     } else {
-      this.tileActionListeners[name] = listener;
-
       this.queuedTileActions.push({
         operation: 'addTileAction',
         name,
         properties,
       });
     }
+
+    this.on(`tileAction_${name}`, (data) => {
+      this.tileActionListeners[name](data);
+    });
   };
 
   removeTileAction = (name: string) => {
