@@ -1,7 +1,7 @@
 # Changelog
 
 Historical list of changes in releases
-## [v0.0.39] - 2024-07-10
+## [v0.0.40] - 2024-07-12
 * Add a `requireRemoveUserConfirmation` param to initial settings ([#564e3ac](https://github.com/digitalsamba/embedded-sdk/commit/564e3acc718ed2f3a172d96b07b538fda2ed8fb3)).
 
 ## [v0.0.37] - 2024-06-13
