@@ -9,24 +9,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Clone repository
-      uses: actions/checkout@v3
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-    - name: Setup .npmrc file to publish to npm
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-        registry-url: 'https://registry.npmjs.org'
+      - name: Setup .npmrc file to publish to npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
+      - name: Setup git identity
+        run: |
+          git config --global user.email "github@digitalsamba.com"
+          git config --global user.name "Digital Samba"
 
-    - name: Setup git identity
-      run: |
-        git config --global user.email "github@digitalsamba.com"
-        git config --global user.name "Digital Samba"
+      - name: Set Yarn version
+        run: corepack prepare yarn@3.1.0 --activate
 
-    - name: execute yarn
-      run: yarn
+      - name: execute yarn
+        run: yarn
 
-    - name: yarn publish
-      run: yarn publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.EMBEDDED_SDK_NPM_TOKEN }}
+      - name: Configure npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.EMBEDDED_SDK_NPM_TOKEN }}" > ~/.npmrc
+      - name: Debug - Check npm token
+        run: cat ~/.npmrc
+
+      - name: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.EMBEDDED_SDK_NPM_TOKEN }}
+        run: npm publish --access public
+
