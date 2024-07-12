@@ -1,6 +1,9 @@
 # Changelog
 
 Historical list of changes in releases
+## [v0.0.40] - 2024-07-12
+* Add a `requireRemoveUserConfirmation` param to initial settings ([#564e3ac](https://github.com/digitalsamba/embedded-sdk/commit/564e3acc718ed2f3a172d96b07b538fda2ed8fb3)).
+
 ## [v0.0.37] - 2024-06-13
 * Add support for custom 'tileActions' ([#64](https://github.com/digitalsamba/embedded-sdk/pull/64)).
 * Add `chatMessageReceived`  event to type definitions ([#ed7cd15](https://github.com/digitalsamba/embedded-sdk/commit/ed7cd15c8e5fdde32935c814e2573f6a4d72ce9d))

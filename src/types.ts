@@ -38,6 +38,8 @@ export interface InitialRoomSettings {
 
   muteFrame: boolean;
   mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
+
+  requireRemoveUserConfirmation: boolean;
 }
 
 export interface QueuedEventListener {
