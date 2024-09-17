@@ -1,6 +1,9 @@
 # Changelog
 
 Historical list of changes in releases
+## [v0.0.41] - 2024-09-17
+* Support `userLeftBatch` event from frontend, emit individual `userLeft` events for users in the payload. ([#6474ee5](https://github.com/digitalsamba/embedded-sdk/commit/6474ee5a38b1d557ade2ed6fcc9411eab0287f83)).
+
 ## [v0.0.40] - 2024-07-12
 * Add a `requireRemoveUserConfirmation` param to initial settings ([#564e3ac](https://github.com/digitalsamba/embedded-sdk/commit/564e3acc718ed2f3a172d96b07b538fda2ed8fb3)).
 
