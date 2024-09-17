@@ -194,6 +194,7 @@ export const receiveMessagesTypes = [
   'roleChanged',
   'tileAction',
   'chatMessageReceived',
+  'userLeftBatch',
 ] as const;
 
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
