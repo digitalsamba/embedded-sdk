@@ -42,4 +42,5 @@ exports.receiveMessagesTypes = [
     'roleChanged',
     'tileAction',
     'chatMessageReceived',
+    'userLeftBatch',
 ];

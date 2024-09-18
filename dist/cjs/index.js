@@ -181,18 +181,17 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.tileActionListeners[name] = listener;
             if (this.connected) {
                 this.sendMessage({ type: 'addTileAction', data: { name, properties } });
-                this.on(`tileAction_${name}`, (data) => {
-                    this.tileActionListeners[name](data);
-                });
             }
             else {
-                this.tileActionListeners[name] = listener;
                 this.queuedTileActions.push({
                     operation: 'addTileAction',
                     name,
                     properties,
                 });
             }
+            this.on(`tileAction_${name}`, (data) => {
+                this.tileActionListeners[name](data);
+            });
         };
         this.removeTileAction = (name) => {
             this.off(`tileAction_${name}`, this.tileActionListeners[name]);
@@ -222,6 +221,22 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     delete this.stored.users[event.data.user.id];
                 }
                 this.emitUsersUpdated();
+            });
+            this.on('userLeftBatch', (event) => {
+                var _b;
+                if ((_b = event.data) === null || _b === void 0 ? void 0 : _b.userIds) {
+                    for (const userId of event.data.userIds) {
+                        const user = Object.assign({}, this.stored.users[userId]);
+                        this._emit('userLeft', {
+                            type: 'userLeft',
+                            data: {
+                                user,
+                            },
+                        });
+                        delete this.stored.users[userId];
+                    }
+                    this.emitUsersUpdated();
+                }
             });
             this.on('appLanguageChanged', ({ data, }) => {
                 this.stored.roomState.appLanguage = data.language;
