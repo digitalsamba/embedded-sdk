@@ -39,4 +39,5 @@ export const receiveMessagesTypes = [
     'roleChanged',
     'tileAction',
     'chatMessageReceived',
+    'userLeftBatch',
 ];

@@ -178,18 +178,17 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.tileActionListeners[name] = listener;
             if (this.connected) {
                 this.sendMessage({ type: 'addTileAction', data: { name, properties } });
-                this.on(`tileAction_${name}`, (data) => {
-                    this.tileActionListeners[name](data);
-                });
             }
             else {
-                this.tileActionListeners[name] = listener;
                 this.queuedTileActions.push({
                     operation: 'addTileAction',
                     name,
                     properties,
                 });
             }
+            this.on(`tileAction_${name}`, (data) => {
+                this.tileActionListeners[name](data);
+            });
         };
         this.removeTileAction = (name) => {
             this.off(`tileAction_${name}`, this.tileActionListeners[name]);
@@ -327,6 +326,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             return this.emit(eventName, ...args);
         };
         this.handleInternalMessage = (event) => __awaiter(this, void 0, void 0, function* () {
+            var _d;
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
@@ -358,6 +358,23 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     const { name, source } = message.data;
                     const customEventName = `tileAction_${name}`;
                     this._emit(customEventName, source);
+                    break;
+                }
+                case 'userLeftBatch': {
+                    const userIds = (_d = message.data) === null || _d === void 0 ? void 0 : _d.userIds;
+                    if (userIds) {
+                        for (const userId of userIds) {
+                            const user = Object.assign({}, this.stored.users[userId]);
+                            this._emit('userLeft', {
+                                type: 'userLeft',
+                                data: {
+                                    user,
+                                },
+                            });
+                            delete this.stored.users[userId];
+                        }
+                        this.emitUsersUpdated();
+                    }
                     break;
                 }
                 case 'internalMediaDeviceChanged': {

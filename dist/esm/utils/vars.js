@@ -5,6 +5,7 @@ export const internalEvents = {
     UICallback: true,
     internalMediaDeviceChanged: true,
     tileAction: true,
+    userLeftBatch: true,
 };
 export var LayoutMode;
 (function (LayoutMode) {

@@ -14,6 +14,7 @@ export interface InitialRoomSettings {
     appLanguage: string;
     muteFrame: boolean;
     mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
+    requireRemoveUserConfirmation: boolean;
 }
 export interface QueuedEventListener {
     operation: 'connectEventListener' | 'disconnectEventListener';
@@ -66,7 +67,7 @@ export interface InstanceProperties {
     reportErrors?: boolean;
 }
 export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction';
-export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction", "chatMessageReceived"];
+export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction", "chatMessageReceived", "userLeftBatch"];
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
 export type UICallbackName = 'leaveSession';
 export interface SendMessage<D> {

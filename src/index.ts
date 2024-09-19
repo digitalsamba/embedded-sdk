@@ -552,6 +552,29 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         break;
       }
 
+      case 'userLeftBatch': {
+        const userIds = (message.data as any)?.userIds;
+
+        if (userIds) {
+          for (const userId of userIds) {
+            const user = { ...this.stored.users[userId] };
+
+            this._emit('userLeft', {
+              type: 'userLeft',
+              data: {
+                user,
+              },
+            });
+
+            delete this.stored.users[userId];
+          }
+
+          this.emitUsersUpdated();
+        }
+
+        break;
+      }
+
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
         const devices = await navigator.mediaDevices.enumerateDevices();

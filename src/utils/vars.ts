@@ -8,6 +8,7 @@ export const internalEvents: Record<string, boolean> = {
   UICallback: true,
   internalMediaDeviceChanged: true,
   tileAction: true,
+  userLeftBatch: true,
 };
 
 export enum LayoutMode {

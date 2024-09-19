@@ -8,6 +8,7 @@ exports.internalEvents = {
     UICallback: true,
     internalMediaDeviceChanged: true,
     tileAction: true,
+    userLeftBatch: true,
 };
 var LayoutMode;
 (function (LayoutMode) {
