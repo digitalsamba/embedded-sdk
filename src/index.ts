@@ -349,25 +349,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.emitUsersUpdated();
     });
 
-    this.on('userLeftBatch', (event) => {
-      if (event.data?.userIds) {
-        for (const userId of event.data.userIds) {
-          const user = { ...this.stored.users[userId] };
-
-          this._emit('userLeft', {
-            type: 'userLeft',
-            data: {
-              user,
-            },
-          });
-
-          delete this.stored.users[userId];
-        }
-
-        this.emitUsersUpdated();
-      }
-    });
-
     this.on(
       'appLanguageChanged',
       ({
@@ -567,6 +548,29 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         const customEventName = `tileAction_${name}`;
 
         this._emit(customEventName, source);
+
+        break;
+      }
+
+      case 'userLeftBatch': {
+        const userIds = (message.data as any)?.userIds;
+
+        if (userIds) {
+          for (const userId of userIds) {
+            const user = { ...this.stored.users[userId] };
+
+            this._emit('userLeft', {
+              type: 'userLeft',
+              data: {
+                user,
+              },
+            });
+
+            delete this.stored.users[userId];
+          }
+
+          this.emitUsersUpdated();
+        }
 
         break;
       }

@@ -222,22 +222,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 }
                 this.emitUsersUpdated();
             });
-            this.on('userLeftBatch', (event) => {
-                var _b;
-                if ((_b = event.data) === null || _b === void 0 ? void 0 : _b.userIds) {
-                    for (const userId of event.data.userIds) {
-                        const user = Object.assign({}, this.stored.users[userId]);
-                        this._emit('userLeft', {
-                            type: 'userLeft',
-                            data: {
-                                user,
-                            },
-                        });
-                        delete this.stored.users[userId];
-                    }
-                    this.emitUsersUpdated();
-                }
-            });
             this.on('appLanguageChanged', ({ data, }) => {
                 this.stored.roomState.appLanguage = data.language;
             });
@@ -345,6 +329,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             return this.emit(eventName, ...args);
         };
         this.handleInternalMessage = (event) => __awaiter(this, void 0, void 0, function* () {
+            var _d;
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
@@ -376,6 +361,23 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     const { name, source } = message.data;
                     const customEventName = `tileAction_${name}`;
                     this._emit(customEventName, source);
+                    break;
+                }
+                case 'userLeftBatch': {
+                    const userIds = (_d = message.data) === null || _d === void 0 ? void 0 : _d.userIds;
+                    if (userIds) {
+                        for (const userId of userIds) {
+                            const user = Object.assign({}, this.stored.users[userId]);
+                            this._emit('userLeft', {
+                                type: 'userLeft',
+                                data: {
+                                    user,
+                                },
+                            });
+                            delete this.stored.users[userId];
+                        }
+                        this.emitUsersUpdated();
+                    }
                     break;
                 }
                 case 'internalMediaDeviceChanged': {
