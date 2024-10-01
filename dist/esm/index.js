@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 import { EventEmitter } from 'events';
+import { enumerateDevices } from './utils/enumerateDevices';
 import { PermissionManager } from './utils/PermissionManager';
-import { CONNECT_TIMEOUT, getDefaultStoredState, internalEvents, } from './utils/vars';
+import { CONNECT_TIMEOUT, getDefaultStoredState, internalEvents, PACKAGE_VERSION, } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
 import { ALLOW_ATTRIBUTE_MISSING, INVALID_CONFIG, INVALID_URL, INSECURE_CONTEXT, UNKNOWN_TARGET, } from './utils/errors';
 export class DigitalSambaEmbedded extends EventEmitter {
@@ -70,7 +71,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             var _b;
             (_b = settings.mediaDevices) !== null && _b !== void 0 ? _b : (settings.mediaDevices = {});
             if (settings.mediaDevices) {
-                const availabledevices = yield navigator.mediaDevices.enumerateDevices();
+                const availabledevices = yield enumerateDevices();
                 Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
                     const match = availabledevices.find((device) => device.deviceId === deviceId);
                     if (match) {
@@ -379,7 +380,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
-                    const devices = yield navigator.mediaDevices.enumerateDevices();
+                    const devices = yield enumerateDevices();
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
                     if (matchingDevice) {
                         const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
@@ -685,6 +686,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.changeRole = (userId, role) => {
             this.sendMessage({ type: 'changeRole', data: { userId, role } });
         };
+        console.log(`DigitalSambaEmbedded SDK version: ${PACKAGE_VERSION}`);
         this.stored = getDefaultStoredState();
         this.stored.roomState = createWatchedProxy(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);
         if (!window.isSecureContext) {

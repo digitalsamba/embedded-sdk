@@ -1,10 +1,12 @@
 import { EventEmitter } from 'events';
+import { enumerateDevices } from './utils/enumerateDevices';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
   getDefaultStoredState,
   internalEvents,
   LayoutMode,
+  PACKAGE_VERSION,
   PermissionTypes,
 } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
@@ -75,6 +77,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     loadImmediately = true
   ) {
     super();
+    console.log(`DigitalSambaEmbedded SDK version: ${PACKAGE_VERSION}`);
 
     this.stored = getDefaultStoredState();
 
@@ -165,11 +168,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     settings.mediaDevices ??= {};
 
     if (settings.mediaDevices) {
-      const availabledevices = await navigator.mediaDevices.enumerateDevices();
+      const availabledevices = await enumerateDevices();
 
       Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
         const match = availabledevices.find((device) => device.deviceId === deviceId);
-
         if (match) {
           settings.mediaDevices![kind as MediaDeviceKind] = match.label;
         }
@@ -577,7 +579,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
-        const devices = await navigator.mediaDevices.enumerateDevices();
+        const devices = await enumerateDevices();
+
         const matchingDevice = devices.find(
           (device) => device.kind === data.kind && device.label === data.label
         );

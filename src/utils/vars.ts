@@ -1,5 +1,7 @@
 import { Stored } from '../types';
 
+export const PACKAGE_VERSION = '0.0.41';
+
 export const CONNECT_TIMEOUT = 10000;
 
 export const internalEvents: Record<string, boolean> = {
