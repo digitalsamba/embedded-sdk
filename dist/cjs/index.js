@@ -31,7 +31,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.queuedUICallbacks = [];
         this.queuedTileActions = [];
         this.tileActionListeners = {};
-        this.defaultMediaDevices = {};
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -72,8 +71,17 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.frame.style.display = 'block';
         };
         this.prepareRoomSettings = (settings) => __awaiter(this, void 0, void 0, function* () {
-            this.defaultMediaDevices = settings.mediaDevices || {};
-            settings.mediaDevices = {};
+            var _b;
+            (_b = settings.mediaDevices) !== null && _b !== void 0 ? _b : (settings.mediaDevices = {});
+            if (settings.mediaDevices) {
+                const availabledevices = yield (0, enumerateDevices_1.enumerateDevices)();
+                Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
+                    const match = availabledevices.find((device) => device.deviceId === deviceId);
+                    if (match) {
+                        settings.mediaDevices[kind] = match.label;
+                    }
+                });
+            }
             if (settings.appLanguage) {
                 this.stored.roomState.appLanguage = settings.appLanguage;
             }
@@ -81,7 +89,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 try {
                     settings.initials = settings.initials.trim();
                 }
-                catch (_b) {
+                catch (_c) {
                     settings.initials = undefined;
                 }
             }
@@ -322,7 +330,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             return this.emit(eventName, ...args);
         };
         this.handleInternalMessage = (event) => __awaiter(this, void 0, void 0, function* () {
-            var _c;
+            var _d;
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
@@ -357,7 +365,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     break;
                 }
                 case 'userLeftBatch': {
-                    const userIds = (_c = message.data) === null || _c === void 0 ? void 0 : _c.userIds;
+                    const userIds = (_d = message.data) === null || _d === void 0 ? void 0 : _d.userIds;
                     if (userIds) {
                         for (const userId of userIds) {
                             const user = Object.assign({}, this.stored.users[userId]);
@@ -376,10 +384,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
                     const devices = yield (0, enumerateDevices_1.enumerateDevices)();
-                    if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
-                        this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
-                        this.defaultMediaDevices = {};
-                    }
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
                     if (matchingDevice) {
                         const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
@@ -465,11 +469,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 this.reportErrors = true;
             }
         };
-        this.setTemplateParams = (params) => {
-            if (params && Object.keys(params).length > 0) {
-                this.sendMessage({ type: 'setTemplateParams', data: params });
-            }
-        };
         // commands
         this.enableVideo = () => {
             this.roomSettings.videoEnabled = true;
@@ -508,18 +507,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             else {
                 this.disableAudio();
             }
-        };
-        this.openWhiteboard = () => {
-            this.sendMessage({ type: 'openWhiteboard' });
-        };
-        this.closeWhiteboard = () => {
-            this.sendMessage({ type: 'closeWhiteboard' });
-        };
-        this.toggleWhiteboard = (show) => {
-            this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
-        };
-        this.addImageToWhiteboard = (options) => {
-            this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });
         };
         this.startScreenshare = () => {
             this.sendMessage({ type: 'startScreenshare' });
@@ -702,14 +689,13 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.changeRole = (userId, role) => {
             this.sendMessage({ type: 'changeRole', data: { userId, role } });
         };
-        console.log(`SDK Version: ${vars_1.PACKAGE_VERSION}`);
+        console.log(`DigitalSambaEmbedded SDK version: ${vars_1.PACKAGE_VERSION}`);
         this.stored = (0, vars_1.getDefaultStoredState)();
         this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);
         if (!window.isSecureContext) {
             this.logError(errors_1.INSECURE_CONTEXT);
         }
         this.initOptions = options;
-        this.templateParams = options.templateParams;
         this.prepareRoomSettings(options.roomSettings || {});
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
@@ -736,7 +722,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 this.queuedEventListeners = [];
                 this.queuedUICallbacks = [];
                 this.queuedTileActions = [];
-                this.setTemplateParams(this.templateParams);
                 clearTimeout(confirmationTimeout);
             });
         });

@@ -7,16 +7,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const isFirefox = () => navigator.userAgent.toLowerCase().includes('firefox');
 export const enumerateDevices = () => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     let devices = [];
-    try {
-        const stream = yield navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-        devices = yield navigator.mediaDevices.enumerateDevices();
-        (_a = stream.getTracks()) === null || _a === void 0 ? void 0 : _a.forEach((track) => track.stop());
+    if (isFirefox()) {
+        // getUserMedia call for FF;
+        yield navigator.mediaDevices
+            .getUserMedia({ audio: true, video: true })
+            .then(() => __awaiter(void 0, void 0, void 0, function* () {
+            devices = yield navigator.mediaDevices.enumerateDevices();
+        }))
+            .catch(() => __awaiter(void 0, void 0, void 0, function* () {
+            devices = yield navigator.mediaDevices.enumerateDevices();
+        }));
     }
-    catch (err) {
-        console.error('Could not enumerate available devices, ', err);
+    else {
         devices = yield navigator.mediaDevices.enumerateDevices();
     }
     return devices;
