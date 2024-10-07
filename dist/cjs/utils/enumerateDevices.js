@@ -14,15 +14,14 @@ const isFirefox = () => navigator.userAgent.toLowerCase().includes('firefox');
 const enumerateDevices = () => __awaiter(void 0, void 0, void 0, function* () {
     let devices = [];
     if (isFirefox()) {
-        // getUserMedia call for FF;
-        yield navigator.mediaDevices
-            .getUserMedia({ audio: true, video: true })
-            .then(() => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const stream = yield navigator.mediaDevices.getUserMedia({ audio: true, video: true });
             devices = yield navigator.mediaDevices.enumerateDevices();
-        }))
-            .catch(() => __awaiter(void 0, void 0, void 0, function* () {
+            stream.getTracks().forEach((track) => track.stop());
+        }
+        catch (err) {
             devices = yield navigator.mediaDevices.enumerateDevices();
-        }));
+        }
     }
     else {
         devices = yield navigator.mediaDevices.enumerateDevices();
