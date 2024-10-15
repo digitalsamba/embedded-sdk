@@ -77,7 +77,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     loadImmediately = true
   ) {
     super();
-    console.log(`DigitalSambaEmbedded SDK version: ${PACKAGE_VERSION}`);
+    console.log(`SDK Version: ${PACKAGE_VERSION}`);
 
     this.stored = getDefaultStoredState();
 

@@ -242,27 +242,31 @@
     imageUrl: "string"
   };
 
-  navigator.mediaDevices
-    .getUserMedia({ audio: true, video: true }).then(() => {
-    navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
-      availableDevices.forEach(device => {
-        const select = document.querySelector("#" + device.kind);
-        if (select) {
-          select.innerHTML += `<option value="${device.deviceId}">${device.label}</option>`;
-        }
-      });
+  const fillDeviceOptions = (availableDevices) => {
+    availableDevices.forEach(device => {
+      const select = document.querySelector("#" + device.kind);
+      if (select) {
+        const deviceLabel = device.label || `Device (${device.deviceId || device.kind})`;
+        select.innerHTML += `<option value="${device.deviceId}">${deviceLabel}</option>`;
+      }
     });
-  }).catch(e => {
-    navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
-      availableDevices.forEach(device => {
-        const select = document.querySelector("#" + device.kind);
-        if (select) {
-          select.innerHTML += `<option value="${device.deviceId}">${device.label}</option>`;
-        }
-      });
-    });
-  });
+  };
 
+  try {
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
+      navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+        fillDeviceOptions(availableDevices);
+      });
+
+      stream.getTracks()?.forEach(track => track.stop());
+    });
+  } catch (e) {
+    console.error("could not request user devices, error", e);
+
+    navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+      fillDeviceOptions(availableDevices);
+    });
+  }
 
   // if room is predefined in search params, skip room URL field;
   checkDynamicRoomURL();
