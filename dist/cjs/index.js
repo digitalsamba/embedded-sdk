@@ -689,7 +689,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.changeRole = (userId, role) => {
             this.sendMessage({ type: 'changeRole', data: { userId, role } });
         };
-        console.log(`DigitalSambaEmbedded SDK version: ${vars_1.PACKAGE_VERSION}`);
+        console.log(`SDK Version: ${vars_1.PACKAGE_VERSION}`);
         this.stored = (0, vars_1.getDefaultStoredState)();
         this.stored.roomState = (0, proxy_1.createWatchedProxy)(Object.assign({}, this.stored.roomState), this.emitRoomStateUpdated);
         if (!window.isSecureContext) {
