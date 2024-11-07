@@ -167,7 +167,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
     settings.mediaDevices ??= {};
 
-    if (settings.mediaDevices) {
+    if (settings.mediaDevices.audioinput || settings.mediaDevices.videoinput) {
       const availabledevices = await enumerateDevices();
 
       Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {

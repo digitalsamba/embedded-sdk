@@ -70,7 +70,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.prepareRoomSettings = (settings) => __awaiter(this, void 0, void 0, function* () {
             var _b;
             (_b = settings.mediaDevices) !== null && _b !== void 0 ? _b : (settings.mediaDevices = {});
-            if (settings.mediaDevices) {
+            if (settings.mediaDevices.audioinput || settings.mediaDevices.videoinput) {
                 const availabledevices = yield enumerateDevices();
                 Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
                     const match = availabledevices.find((device) => device.deviceId === deviceId);
