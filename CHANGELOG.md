@@ -1,6 +1,9 @@
 # Changelog
 
 Historical list of changes in releases
+## [v0.0.42] - 2024-11-07
+* Don't try to request user media to enumerate media devices if no devices were preconfigured ([#cce3487](https://github.com/digitalsamba/embedded-sdk/commit/cce34876ad17935c76d0d94f3472ff822a43bd72)).
+
 ## [v0.0.41] - 2024-09-17
 * Support `userLeftBatch` event from frontend, emit individual `userLeft` events for users in the payload. ([#6474ee5](https://github.com/digitalsamba/embedded-sdk/commit/6474ee5a38b1d557ade2ed6fcc9411eab0287f83)).
 
