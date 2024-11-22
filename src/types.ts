@@ -160,6 +160,7 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'applyMediaDevices'
   | 'openWhiteboard'
   | 'closeWhiteboard'
   | 'toggleWhiteboard'
