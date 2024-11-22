@@ -21,6 +21,8 @@ export type FeatureFlag =
 
 export type FeatureSet = Record<FeatureFlag, boolean>;
 
+export type MediaDeviceSettings = Partial<Record<MediaDeviceKind, string>>;
+
 export interface InitialRoomSettings {
   // device config
   videoEnabled: boolean;
@@ -37,7 +39,7 @@ export interface InitialRoomSettings {
   appLanguage: string;
 
   muteFrame: boolean;
-  mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
+  mediaDevices?: MediaDeviceSettings;
 
   requireRemoveUserConfirmation: boolean;
 }
@@ -151,7 +153,8 @@ export type SendMessageType =
   | 'disconnectUICallback'
   | 'changeRole'
   | 'addTileAction'
-  | 'removeTileAction';
+  | 'removeTileAction'
+  | 'applyMediaDevices';
 
 export const receiveMessagesTypes = [
   'connected',

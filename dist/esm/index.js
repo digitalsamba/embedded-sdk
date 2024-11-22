@@ -28,6 +28,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.queuedUICallbacks = [];
         this.queuedTileActions = [];
         this.tileActionListeners = {};
+        this.defaultMediaDevices = {};
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -68,17 +69,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.frame.style.display = 'block';
         };
         this.prepareRoomSettings = (settings) => __awaiter(this, void 0, void 0, function* () {
-            var _b;
-            (_b = settings.mediaDevices) !== null && _b !== void 0 ? _b : (settings.mediaDevices = {});
-            if (settings.mediaDevices.audioinput || settings.mediaDevices.videoinput) {
-                const availabledevices = yield enumerateDevices();
-                Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
-                    const match = availabledevices.find((device) => device.deviceId === deviceId);
-                    if (match) {
-                        settings.mediaDevices[kind] = match.label;
-                    }
-                });
-            }
+            this.defaultMediaDevices = settings.mediaDevices || {};
+            settings.mediaDevices = {};
             if (settings.appLanguage) {
                 this.stored.roomState.appLanguage = settings.appLanguage;
             }
@@ -86,7 +78,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 try {
                     settings.initials = settings.initials.trim();
                 }
-                catch (_c) {
+                catch (_b) {
                     settings.initials = undefined;
                 }
             }
@@ -327,7 +319,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             return this.emit(eventName, ...args);
         };
         this.handleInternalMessage = (event) => __awaiter(this, void 0, void 0, function* () {
-            var _d;
+            var _c;
             const message = event.DSPayload;
             switch (message.type) {
                 case 'roomJoined': {
@@ -362,7 +354,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                     break;
                 }
                 case 'userLeftBatch': {
-                    const userIds = (_d = message.data) === null || _d === void 0 ? void 0 : _d.userIds;
+                    const userIds = (_c = message.data) === null || _c === void 0 ? void 0 : _c.userIds;
                     if (userIds) {
                         for (const userId of userIds) {
                             const user = Object.assign({}, this.stored.users[userId]);
@@ -381,6 +373,10 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
                     const devices = yield enumerateDevices();
+                    if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
+                        this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
+                        this.defaultMediaDevices = {};
+                    }
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
                     if (matchingDevice) {
                         const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];

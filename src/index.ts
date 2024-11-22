@@ -34,6 +34,7 @@ import {
   UserId,
   UserTileType,
   VirtualBackgroundOptions,
+  MediaDeviceSettings,
 } from './types';
 
 import {
@@ -70,6 +71,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   queuedTileActions: QueuedTileAction[] = [];
 
   private tileActionListeners: Record<string, AnyFn> = {};
+
+  private defaultMediaDevices: MediaDeviceSettings = {};
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -165,18 +168,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
-    settings.mediaDevices ??= {};
-
-    if (settings.mediaDevices.audioinput || settings.mediaDevices.videoinput) {
-      const availabledevices = await enumerateDevices();
-
-      Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
-        const match = availabledevices.find((device) => device.deviceId === deviceId);
-        if (match) {
-          settings.mediaDevices![kind as MediaDeviceKind] = match.label;
-        }
-      });
-    }
+    this.defaultMediaDevices = settings.mediaDevices || {};
+    settings.mediaDevices = {};
 
     if (settings.appLanguage) {
       this.stored.roomState.appLanguage = settings.appLanguage;
@@ -580,6 +573,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
         const devices = await enumerateDevices();
+
+        if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
+          this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
+
+          this.defaultMediaDevices = {};
+        }
 
         const matchingDevice = devices.find(
           (device) => device.kind === data.kind && device.label === data.label
