@@ -269,6 +269,12 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     this.stored.roomState.media.audioEnabled = false;
                 }
             });
+            this.on('openWhiteboard', () => {
+                this.stored.roomState.whiteboard.enabled = true;
+            });
+            this.on('closeWhiteboard', () => {
+                this.stored.roomState.whiteboard.enabled = false;
+            });
             this.on('layoutModeChanged', (event) => {
                 this.stored.roomState.layout.mode = event.data.mode;
             });
@@ -503,6 +509,15 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             else {
                 this.disableAudio();
             }
+        };
+        this.openWhiteboard = () => {
+            this.sendMessage({ type: 'openWhiteboard' });
+        };
+        this.closeWhiteboard = () => {
+            this.sendMessage({ type: 'closeWhiteboard' });
+        };
+        this.toggleWhiteboard = (show) => {
+            this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
         };
         this.startScreenshare = () => {
             this.sendMessage({ type: 'startScreenshare' });
