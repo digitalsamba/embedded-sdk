@@ -322,10 +322,6 @@ export interface RoomState {
     };
   };
 
-  whiteboard: {
-    enabled: boolean
-  }
-
   captionsState: {
     showCaptions: boolean;
   } & CaptionsOptions;

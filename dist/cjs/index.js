@@ -269,12 +269,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     this.stored.roomState.media.audioEnabled = false;
                 }
             });
-            this.on('openWhiteboard', () => {
-                this.stored.roomState.whiteboard.enabled = true;
-            });
-            this.on('closeWhiteboard', () => {
-                this.stored.roomState.whiteboard.enabled = false;
-            });
             this.on('layoutModeChanged', (event) => {
                 this.stored.roomState.layout.mode = event.data.mode;
             });

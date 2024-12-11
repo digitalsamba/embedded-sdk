@@ -49,9 +49,6 @@ export const getDefaultStoredState = () => ({
             toolbarPosition: 'left',
             localTileMinimized: false,
         },
-        whiteboard: {
-            enabled: false
-        },
         captionsState: {
             showCaptions: false,
             spokenLanguage: 'en',

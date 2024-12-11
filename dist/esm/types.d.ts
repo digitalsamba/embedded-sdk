@@ -141,9 +141,6 @@ export interface RoomState {
             type: UserTileType;
         };
     };
-    whiteboard: {
-        enabled: boolean;
-    };
     captionsState: {
         showCaptions: boolean;
     } & CaptionsOptions;
