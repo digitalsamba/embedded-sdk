@@ -154,6 +154,9 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'openWhiteboard'
+  | 'closeWhiteboard'
+  | 'toggleWhiteboard'
   | 'applyMediaDevices';
 
 export const receiveMessagesTypes = [
@@ -375,6 +378,9 @@ export interface EmbeddedInstance {
   enableAudio: () => void;
   disableAudio: () => void;
   toggleAudio: (enable?: boolean) => void;
+  openWhiteboard: () => void;
+  closeWhiteboard: () => void;
+  toggleWhiteboard: (show?: boolean) => void;
   startScreenshare: () => void;
   stopScreenshare: () => void;
   startRecording: () => void;

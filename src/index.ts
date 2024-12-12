@@ -789,6 +789,18 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
+  openWhiteboard = () => {
+    this.sendMessage({ type: 'openWhiteboard' });
+  };
+
+  closeWhiteboard = () => {
+    this.sendMessage({ type: 'closeWhiteboard' });
+  };
+
+  toggleWhiteboard = (show?: boolean) => {
+    this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+  };
+
   startScreenshare = () => {
     this.sendMessage({ type: 'startScreenshare' });
   };
