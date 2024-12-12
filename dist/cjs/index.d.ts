@@ -2,10 +2,9 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
-    templateParams?: TemplateParams;
     roomSettings: Partial<InitialRoomSettings>;
     savedIframeSrc: string;
     allowedOrigin: string;
@@ -42,7 +41,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     private sendMessage;
     private logError;
     private applyFrameProperties;
-    private setTemplateParams;
     get roomState(): import("./types").RoomState;
     get localUser(): import("./types").User;
     get features(): import("./types").FeatureSet;
@@ -56,7 +54,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     openWhiteboard: () => void;
     closeWhiteboard: () => void;
     toggleWhiteboard: (show?: boolean) => void;
-    addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
     startScreenshare: () => void;
     stopScreenshare: () => void;
     startRecording: () => void;

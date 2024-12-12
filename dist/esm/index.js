@@ -501,6 +501,15 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.disableAudio();
             }
         };
+        this.openWhiteboard = () => {
+            this.sendMessage({ type: 'openWhiteboard' });
+        };
+        this.closeWhiteboard = () => {
+            this.sendMessage({ type: 'closeWhiteboard' });
+        };
+        this.toggleWhiteboard = (show) => {
+            this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+        };
         this.startScreenshare = () => {
             this.sendMessage({ type: 'startScreenshare' });
         };
