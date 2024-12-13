@@ -35,6 +35,7 @@ import {
   UserTileType,
   VirtualBackgroundOptions,
   MediaDeviceSettings,
+  AddImageToWhiteboardOptions,
 } from './types';
 
 import {
@@ -799,6 +800,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   toggleWhiteboard = (show?: boolean) => {
     this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+  };
+
+  addImageToWhiteboard = (options: AddImageToWhiteboardOptions) => {
+    this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });
   };
 
   startScreenshare = () => {
