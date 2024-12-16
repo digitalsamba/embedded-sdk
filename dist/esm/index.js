@@ -510,6 +510,9 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.toggleWhiteboard = (show) => {
             this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
         };
+        this.addImageToWhiteboard = (options) => {
+            this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });
+        };
         this.startScreenshare = () => {
             this.sendMessage({ type: 'startScreenshare' });
         };
