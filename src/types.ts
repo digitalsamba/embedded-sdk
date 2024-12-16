@@ -111,6 +111,7 @@ export type SendMessageType =
   | 'disableAudio'
   | 'toggleVideo'
   | 'toggleAudio'
+  | 'addImageToWhiteboard'
   | 'startScreenshare'
   | 'stopScreenshare'
   | 'startRecording'
@@ -354,6 +355,15 @@ export type TileActionProperties = {
   icon?: string;
 };
 
+export type AddImageToWhiteboardOptions = {
+  base64?: string;
+  url?: string;
+  position?: {
+    x: number;
+    y: number;
+  }
+};
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -378,6 +388,7 @@ export interface EmbeddedInstance {
   enableAudio: () => void;
   disableAudio: () => void;
   toggleAudio: (enable?: boolean) => void;
+  addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
   openWhiteboard: () => void;
   closeWhiteboard: () => void;
   toggleWhiteboard: (show?: boolean) => void;

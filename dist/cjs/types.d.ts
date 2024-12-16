@@ -67,7 +67,7 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
+export type SendMessageType = 'connect' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
 export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction", "chatMessageReceived", "userLeftBatch"];
 export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
 export type UICallbackName = 'leaveSession';
@@ -168,6 +168,14 @@ export type TileActionProperties = {
     scope: TileActionScope;
     icon?: string;
 };
+export type AddImageToWhiteboardOptions = {
+    base64?: string;
+    url?: string;
+    position?: {
+        x: number;
+        y: number;
+    };
+};
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -187,6 +195,7 @@ export interface EmbeddedInstance {
     enableAudio: () => void;
     disableAudio: () => void;
     toggleAudio: (enable?: boolean) => void;
+    addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
     openWhiteboard: () => void;
     closeWhiteboard: () => void;
     toggleWhiteboard: (show?: boolean) => void;
