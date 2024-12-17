@@ -179,6 +179,7 @@ export const receiveMessagesTypes = [
   'recordingFailed',
   'layoutModeChanged',
   'activeSpeakerChanged',
+  'speakerStoppedTalking',
   'appError',
   'captionsEnabled',
   'captionsDisabled',
