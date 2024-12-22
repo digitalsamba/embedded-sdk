@@ -155,6 +155,7 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'createWhiteboard'
   | 'openWhiteboard'
   | 'closeWhiteboard'
   | 'toggleWhiteboard'
@@ -365,6 +366,16 @@ export type AddImageToWhiteboardOptions = {
   }
 };
 
+export type ToggleWhiteboardOptions = {
+  id?: string,
+  show?: boolean
+}
+
+export type CreateWhiteboardOptions = {
+  personal: boolean;
+  folderId: string;
+}
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -390,9 +401,10 @@ export interface EmbeddedInstance {
   disableAudio: () => void;
   toggleAudio: (enable?: boolean) => void;
   addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
-  openWhiteboard: () => void;
-  closeWhiteboard: () => void;
-  toggleWhiteboard: (show?: boolean) => void;
+  createWhiteboard: (options: CreateWhiteboardOptions) => void;
+  openWhiteboard: (id?: string) => void;
+  closeWhiteboard: (id?: string) => void;
+  toggleWhiteboard: (options?: ToggleWhiteboardOptions) => void;
   startScreenshare: () => void;
   stopScreenshare: () => void;
   startRecording: () => void;
