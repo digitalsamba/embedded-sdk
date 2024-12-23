@@ -21,6 +21,8 @@ export type FeatureFlag =
 
 export type FeatureSet = Record<FeatureFlag, boolean>;
 
+export type MediaDeviceSettings = Partial<Record<MediaDeviceKind, string>>;
+
 export interface InitialRoomSettings {
   // device config
   videoEnabled: boolean;
@@ -37,7 +39,7 @@ export interface InitialRoomSettings {
   appLanguage: string;
 
   muteFrame: boolean;
-  mediaDevices?: Partial<Record<MediaDeviceKind, string>>;
+  mediaDevices?: MediaDeviceSettings;
 
   requireRemoveUserConfirmation: boolean;
 }
@@ -109,6 +111,7 @@ export type SendMessageType =
   | 'disableAudio'
   | 'toggleVideo'
   | 'toggleAudio'
+  | 'addImageToWhiteboard'
   | 'startScreenshare'
   | 'stopScreenshare'
   | 'startRecording'
@@ -151,7 +154,11 @@ export type SendMessageType =
   | 'disconnectUICallback'
   | 'changeRole'
   | 'addTileAction'
-  | 'removeTileAction';
+  | 'removeTileAction'
+  | 'openWhiteboard'
+  | 'closeWhiteboard'
+  | 'toggleWhiteboard'
+  | 'applyMediaDevices';
 
 export const receiveMessagesTypes = [
   'connected',
@@ -172,6 +179,7 @@ export const receiveMessagesTypes = [
   'recordingFailed',
   'layoutModeChanged',
   'activeSpeakerChanged',
+  'speakerStoppedTalking',
   'appError',
   'captionsEnabled',
   'captionsDisabled',
@@ -348,6 +356,15 @@ export type TileActionProperties = {
   icon?: string;
 };
 
+export type AddImageToWhiteboardOptions = {
+  base64?: string;
+  url?: string;
+  position?: {
+    x: number;
+    y: number;
+  }
+};
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -372,6 +389,10 @@ export interface EmbeddedInstance {
   enableAudio: () => void;
   disableAudio: () => void;
   toggleAudio: (enable?: boolean) => void;
+  addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
+  openWhiteboard: () => void;
+  closeWhiteboard: () => void;
+  toggleWhiteboard: (show?: boolean) => void;
   startScreenshare: () => void;
   stopScreenshare: () => void;
   startRecording: () => void;
