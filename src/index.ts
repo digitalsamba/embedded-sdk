@@ -36,6 +36,7 @@ import {
   VirtualBackgroundOptions,
   MediaDeviceSettings,
   AddImageToWhiteboardOptions,
+  CreateWhiteboardOptions,
 } from './types';
 
 import {
@@ -790,16 +791,20 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
-  openWhiteboard = () => {
-    this.sendMessage({ type: 'openWhiteboard' });
+  createWhiteboard = (options: CreateWhiteboardOptions) => {
+    this.sendMessage({ type: 'createWhiteboard', data: options });
   };
 
-  closeWhiteboard = () => {
-    this.sendMessage({ type: 'closeWhiteboard' });
+  openWhiteboard = (id?: string) => {
+    this.sendMessage({ type: 'openWhiteboard', data: { id } });
   };
 
-  toggleWhiteboard = (show?: boolean) => {
-    this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+  closeWhiteboard = (id?: string) => {
+    this.sendMessage({ type: 'closeWhiteboard', data: { id } });
+  };
+
+  toggleWhiteboard = (show?: boolean, id?: string) => {
+    this.sendMessage({ type: 'toggleWhiteboard', data: { show, id } });
   };
 
   addImageToWhiteboard = (options: AddImageToWhiteboardOptions) => {
