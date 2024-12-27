@@ -1,10 +1,12 @@
 import { EventEmitter } from 'events';
+import { enumerateDevices } from './utils/enumerateDevices';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
   getDefaultStoredState,
   internalEvents,
   LayoutMode,
+  PACKAGE_VERSION,
   PermissionTypes,
 } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
@@ -32,6 +34,8 @@ import {
   UserId,
   UserTileType,
   VirtualBackgroundOptions,
+  MediaDeviceSettings,
+  AddImageToWhiteboardOptions,
 } from './types';
 
 import {
@@ -69,12 +73,15 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   private tileActionListeners: Record<string, AnyFn> = {};
 
+  private defaultMediaDevices: MediaDeviceSettings = {};
+
   constructor(
     options: Partial<InitOptions> = {},
     instanceProperties: Partial<InstanceProperties> = {},
     loadImmediately = true
   ) {
     super();
+    console.log(`SDK Version: ${PACKAGE_VERSION}`);
 
     this.stored = getDefaultStoredState();
 
@@ -162,19 +169,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
-    settings.mediaDevices ??= {};
-
-    if (settings.mediaDevices) {
-      const availabledevices = await navigator.mediaDevices.enumerateDevices();
-
-      Object.entries(settings.mediaDevices).forEach(([kind, deviceId]) => {
-        const match = availabledevices.find((device) => device.deviceId === deviceId);
-
-        if (match) {
-          settings.mediaDevices![kind as MediaDeviceKind] = match.label;
-        }
-      });
-    }
+    this.defaultMediaDevices = settings.mediaDevices || {};
+    settings.mediaDevices = {};
 
     if (settings.appLanguage) {
       this.stored.roomState.appLanguage = settings.appLanguage;
@@ -577,7 +573,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
-        const devices = await navigator.mediaDevices.enumerateDevices();
+        const devices = await enumerateDevices();
+
+        if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
+          this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
+
+          this.defaultMediaDevices = {};
+        }
+
         const matchingDevice = devices.find(
           (device) => device.kind === data.kind && device.label === data.label
         );
@@ -785,6 +788,22 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     } else {
       this.disableAudio();
     }
+  };
+
+  openWhiteboard = () => {
+    this.sendMessage({ type: 'openWhiteboard' });
+  };
+
+  closeWhiteboard = () => {
+    this.sendMessage({ type: 'closeWhiteboard' });
+  };
+
+  toggleWhiteboard = (show?: boolean) => {
+    this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+  };
+
+  addImageToWhiteboard = (options: AddImageToWhiteboardOptions) => {
+    this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });
   };
 
   startScreenshare = () => {

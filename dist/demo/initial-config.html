@@ -8,7 +8,9 @@
   <script src="./index.js"></script>
   <script src="./helper.js"></script>
   <script defer data-domain="digitalsamba.github.io" src="https://plausible.wbcnf.net/js/script.js"></script>
-  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+  <script>window.plausible = window.plausible || function() {
+    (window.plausible.q = window.plausible.q || []).push(arguments);
+  };</script>
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -16,7 +18,8 @@
 <nav class="topbar">
   <div class="container">
     <img class="logo" src="logo.png" alt="DigitalSamba">
-    <a href="https://github.com/digitalsamba/embedded-sdk" target="_blank" rel="noopener nofollow">View on GitHub</a>
+    <a href="https://github.com/digitalsamba/embedded-sdk" target="_blank" rel="noopener nofollow">View
+      on GitHub</a>
   </div>
 </nav>
 
@@ -26,19 +29,21 @@
       <div class="dynamic-room-block" style="display: flex; justify-content: center; flex-direction: column">
         <button onclick="loadDynamicRoom()">load new room</button>
 
-        <p style="text-align: center"><span class="custom-room-url-switch" onClick="showCustomRoomForm()">or join an existing custom room</span></p>
+        <p style="text-align: center">
+          <span class="custom-room-url-switch" onClick="showCustomRoomForm()">or join an existing custom room</span>
+        </p>
       </div>
       <div class="custom-room-url-form">
-      <label for="custom-room-url">
-        <span><b>Room URL</b></span>
-        <span>Can be found in <a href="https://dashboard.digitalsamba.com/" target="_blank" rel="noopener nofollow">dashboard</a></span>.
-      </label>
-      <div>
-        <input type="text" id="custom-room-url" name="custom-room-url" onkeydown="onURLChange()">
-        <!-- kicks off loading -->
-        <button onclick="loadCustomRoom()">load room</button>
-      </div>
-      <p class="room-url-error"></p>
+        <label for="custom-room-url">
+          <span><b>Room URL</b></span>
+          <span>Can be found in <a href="https://dashboard.digitalsamba.com/" target="_blank" rel="noopener nofollow">dashboard</a></span>.
+        </label>
+        <div>
+          <input type="text" id="custom-room-url" name="custom-room-url" onkeydown="onURLChange()">
+          <!-- kicks off loading -->
+          <button onclick="loadCustomRoom()">load room</button>
+        </div>
+        <p class="room-url-error"></p>
       </div>
       <p style="margin-top: 30px;" class="init-settings-title">Predefined settings</p>
       <p style="margin-bottom: 15px">These options can be applied prior to joining the room. For
@@ -123,7 +128,7 @@
             <input type="checkbox" checked id="initial-settings-kick-confirmation" onchange="initialSettings.requireRemoveUserConfirmation = this.checked" />
           </label>
         </div>
-        <div class="vb-options" style ="display: none">
+        <div class="vb-options" style="display: none">
           <div style="display: flex; align-items: center; justify-content: flex-start">
             <label style="margin-right: 8px;" for="vb-type">Virtual background type</label>
             <select name="vb-type" id="vb-type" onchange="updateVBType(this.value)">
@@ -232,19 +237,36 @@
   };
 
   var VBvalues = {
-    blur: 'balanced',
-    image: 'office',
-    imageUrl: 'string'
-  }
+    blur: "balanced",
+    image: "office",
+    imageUrl: "string"
+  };
 
-  navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+  const fillDeviceOptions = (availableDevices) => {
     availableDevices.forEach(device => {
-      const select = document.querySelector('#' + device.kind);
-      if(select) {
-        select.innerHTML += `<option value="${device.deviceId}">${device.label}</option>`
+      const select = document.querySelector("#" + device.kind);
+      if (select) {
+        const deviceLabel = device.label || `Device (${device.deviceId || device.kind})`;
+        select.innerHTML += `<option value="${device.deviceId}">${deviceLabel}</option>`;
       }
-    })
-  })
+    });
+  };
+
+  try {
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
+      navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+        fillDeviceOptions(availableDevices);
+      });
+
+      stream.getTracks()?.forEach(track => track.stop());
+    });
+  } catch (e) {
+    console.error("could not request user devices, error", e);
+
+    navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
+      fillDeviceOptions(availableDevices);
+    });
+  }
 
   // if room is predefined in search params, skip room URL field;
   checkDynamicRoomURL();
@@ -272,7 +294,7 @@
     }
   }
 
- async function loadRoom() {
+  async function loadRoom() {
     try {
       const parent = document.querySelector(".frame-parent");
       parent.innerHTML = null;
