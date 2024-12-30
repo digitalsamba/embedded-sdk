@@ -35,7 +35,8 @@ import {
   UserTileType,
   VirtualBackgroundOptions,
   MediaDeviceSettings,
-  AddImageToWhiteboardOptions, TemplateParams,
+  AddImageToWhiteboardOptions,
+  TemplateParams,
 } from './types';
 
 import {
