@@ -462,6 +462,11 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.reportErrors = true;
             }
         };
+        this.setTemplateParams = (params) => {
+            if (params && Object.keys(params).length > 0) {
+                this.sendMessage({ type: 'setTemplateParams', data: params });
+            }
+        };
         // commands
         this.enableVideo = () => {
             this.roomSettings.videoEnabled = true;
@@ -701,6 +706,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.logError(INSECURE_CONTEXT);
         }
         this.initOptions = options;
+        this.templateParams = options.templateParams;
         this.prepareRoomSettings(options.roomSettings || {});
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
@@ -727,6 +733,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.queuedEventListeners = [];
                 this.queuedUICallbacks = [];
                 this.queuedTileActions = [];
+                this.setTemplateParams(this.templateParams);
                 clearTimeout(confirmationTimeout);
             });
         });
