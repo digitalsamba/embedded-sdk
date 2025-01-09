@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDefaultStoredState = exports.PermissionTypes = exports.LayoutMode = exports.internalEvents = exports.CONNECT_TIMEOUT = exports.PACKAGE_VERSION = void 0;
-exports.PACKAGE_VERSION = '0.0.42';
+exports.PACKAGE_VERSION = '0.0.43';
 exports.CONNECT_TIMEOUT = 10000;
 exports.internalEvents = {
     roomJoined: true,
