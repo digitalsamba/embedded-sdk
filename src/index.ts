@@ -37,7 +37,6 @@ import {
   MediaDeviceSettings,
   AddImageToWhiteboardOptions,
   TemplateParams,
-  CreateWhiteboardOptions,
 } from './types';
 
 import {
@@ -802,20 +801,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
-  createWhiteboard = (options: CreateWhiteboardOptions) => {
-    this.sendMessage({ type: 'createWhiteboard', data: options });
+  openWhiteboard = () => {
+    this.sendMessage({ type: 'openWhiteboard' });
   };
 
-  openWhiteboard = (id?: string) => {
-    this.sendMessage({ type: 'openWhiteboard', data: { id } });
+  closeWhiteboard = () => {
+    this.sendMessage({ type: 'closeWhiteboard' });
   };
 
-  closeWhiteboard = (id?: string) => {
-    this.sendMessage({ type: 'closeWhiteboard', data: { id } });
-  };
-
-  toggleWhiteboard = (show?: boolean, id?: string) => {
-    this.sendMessage({ type: 'toggleWhiteboard', data: { show, id } });
+  toggleWhiteboard = (show?: boolean) => {
+    this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
   };
 
   addImageToWhiteboard = (options: AddImageToWhiteboardOptions) => {
