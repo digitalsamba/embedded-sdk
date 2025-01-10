@@ -801,6 +801,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
+  openLibraryFile = (id: string) => {
+    this.sendMessage({ type: 'openLibraryFile', data: { id } });
+  };
+
+  closeLibraryFile = (id?: string) => {
+    this.sendMessage({ type: 'closeLibraryFile', data: { id } });
+  };
+
   openWhiteboard = () => {
     this.sendMessage({ type: 'openWhiteboard' });
   };

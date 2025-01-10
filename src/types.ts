@@ -160,6 +160,8 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'openLibraryFile'
+  | 'closeLibraryFile'
   | 'openWhiteboard'
   | 'closeWhiteboard'
   | 'toggleWhiteboard'
@@ -394,6 +396,8 @@ export interface EmbeddedInstance {
   enableAudio: () => void;
   disableAudio: () => void;
   toggleAudio: (enable?: boolean) => void;
+  openLibraryFile: (id: string) => void;
+  closeLibraryFile: (id?: string) => void;
   addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
   openWhiteboard: () => void;
   closeWhiteboard: () => void;
