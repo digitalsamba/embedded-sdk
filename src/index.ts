@@ -36,6 +36,7 @@ import {
   VirtualBackgroundOptions,
   MediaDeviceSettings,
   AddImageToWhiteboardOptions,
+  TemplateParams,
 } from './types';
 
 import {
@@ -49,6 +50,7 @@ import {
 
 export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
   initOptions: Partial<InitOptions>;
+  templateParams?: TemplateParams;
   roomSettings: Partial<InitialRoomSettings> = {};
 
   savedIframeSrc: string = '';
@@ -95,6 +97,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
 
     this.initOptions = options;
+    this.templateParams = options.templateParams;
     this.prepareRoomSettings(options.roomSettings || {});
 
     this.reportErrors = instanceProperties.reportErrors || false;
@@ -689,6 +692,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.queuedUICallbacks = [];
       this.queuedTileActions = [];
 
+      this.setTemplateParams(this.templateParams)
+
       clearTimeout(confirmationTimeout);
     });
   }
@@ -729,6 +734,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.reportErrors = true;
     }
   };
+
+  private setTemplateParams = (params?: TemplateParams) => {
+    if (params && Object.keys(params).length > 0) {
+      this.sendMessage({ type: 'setTemplateParams', data: params });
+    }
+  }
 
   // getters
   get roomState() {

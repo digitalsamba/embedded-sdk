@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.43] - 2025-01-09
+* Add a `templateParams` param to init options ([#c8c5c43e](https://github.com/digitalsamba/embedded-sdk/commit/8f3fb6c678cd285afdf031990d9bdfb8ad3790fe)).
+
 ## [v0.0.42] - 2024-12-27
 * Don't try to request user media to enumerate media devices if no devices were preconfigured ([#cce3487](https://github.com/digitalsamba/embedded-sdk/commit/cce34876ad17935c76d0d94f3472ff822a43bd72)).
 * Add a list of new methods for whiteboard management `openWhiteboard`, `closeWhiteboard`, `toggleWhiteboard` [#cd611f3](https://github.com/digitalsamba/embedded-sdk/commit/cd611f377a64ccaa47273b72bde82c05a3f39212)

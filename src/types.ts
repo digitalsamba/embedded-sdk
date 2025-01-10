@@ -68,6 +68,8 @@ export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
   tileActions: QueuedTileAction[];
 }
 
+export type TemplateParams = { [key: string]: string }
+
 export type InitOptions = {
   root: HTMLElement;
   frame: HTMLIFrameElement;
@@ -79,6 +81,8 @@ export type InitOptions = {
   token?: string;
 
   roomSettings?: Partial<InitialRoomSettings>;
+
+  templateParams?: TemplateParams
 };
 
 export type FrameAttributes = {
@@ -105,6 +109,7 @@ export interface InstanceProperties {
 
 export type SendMessageType =
   | 'connect'
+  | 'setTemplateParams'
   | 'enableVideo'
   | 'enableAudio'
   | 'disableVideo'
