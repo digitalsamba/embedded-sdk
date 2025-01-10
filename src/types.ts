@@ -215,7 +215,7 @@ export const receiveMessagesTypes = [
   'userLeftBatch',
 ] as const;
 
-export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
+export type ReceiveMessageType = typeof receiveMessagesTypes[number];
 
 export type UICallbackName = 'leaveSession';
 
@@ -372,7 +372,12 @@ export type AddImageToWhiteboardOptions = {
   position?: {
     x: number;
     y: number;
-  }
+  };
+};
+
+export type CreateWhiteboardOptions = {
+  personal: boolean;
+  folderId: string;
 };
 
 export interface EmbeddedInstance {
@@ -403,9 +408,10 @@ export interface EmbeddedInstance {
   closeLibraryFile: (id?: string) => void;
   toggleLibraryFile: (id?: string, show?: boolean) => void;
   addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
-  openWhiteboard: () => void;
-  closeWhiteboard: () => void;
-  toggleWhiteboard: (show?: boolean) => void;
+  createWhiteboard: (options: CreateWhiteboardOptions) => void;
+  openWhiteboard: (id?: string) => void;
+  closeWhiteboard: (id?: string) => void;
+  toggleWhiteboard: (show?: boolean, id?: string) => void;
   startScreenshare: () => void;
   stopScreenshare: () => void;
   startRecording: () => void;
