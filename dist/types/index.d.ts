@@ -53,6 +53,9 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     enableAudio: () => void;
     disableAudio: () => void;
     toggleAudio: (enable?: boolean) => void;
+    openLibraryFile: (id: string) => void;
+    closeLibraryFile: (id?: string) => void;
+    toggleLibraryFile: (id?: string, show?: boolean) => void;
     openWhiteboard: () => void;
     closeWhiteboard: () => void;
     toggleWhiteboard: (show?: boolean) => void;

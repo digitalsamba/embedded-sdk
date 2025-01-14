@@ -506,6 +506,15 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.disableAudio();
             }
         };
+        this.openLibraryFile = (id) => {
+            this.sendMessage({ type: 'openLibraryFile', data: { id } });
+        };
+        this.closeLibraryFile = (id) => {
+            this.sendMessage({ type: 'closeLibraryFile', data: { id } });
+        };
+        this.toggleLibraryFile = (id, show) => {
+            this.sendMessage({ type: 'toggleLibraryFile', data: { id, show } });
+        };
         this.openWhiteboard = () => {
             this.sendMessage({ type: 'openWhiteboard' });
         };
