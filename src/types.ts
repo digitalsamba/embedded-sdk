@@ -163,7 +163,6 @@ export type SendMessageType =
   | 'openLibraryFile'
   | 'closeLibraryFile'
   | 'toggleLibraryFile'
-  | 'applyMediaDevices'
   | 'createWhiteboard'
   | 'openWhiteboard'
   | 'closeWhiteboard'
