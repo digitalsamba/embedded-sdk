@@ -2,6 +2,10 @@
 
 Historical list of changes in releases
 
+## [v0.0.44] - 2025-01-23
+* Add new `createWhiteboard` method, and update exist whiteboard methods ([#48058f61](https://github.com/digitalsamba/embedded-sdk/commit/48058f61a85a5f8095a4d8bf7eabd1b4be57ad02)).
+* Add new methods for managing library files ([#870ce040](https://github.com/digitalsamba/embedded-sdk/commit/870ce040e618131106595fd242f2f6b8db4b9cd8)).
+
 ## [v0.0.43] - 2025-01-09
 * Add a `templateParams` param to init options ([#c8c5c43e](https://github.com/digitalsamba/embedded-sdk/commit/8f3fb6c678cd285afdf031990d9bdfb8ad3790fe)).
 
