@@ -509,14 +509,26 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 this.disableAudio();
             }
         };
-        this.openWhiteboard = () => {
-            this.sendMessage({ type: 'openWhiteboard' });
+        this.openLibraryFile = (id) => {
+            this.sendMessage({ type: 'openLibraryFile', data: { id } });
         };
-        this.closeWhiteboard = () => {
-            this.sendMessage({ type: 'closeWhiteboard' });
+        this.closeLibraryFile = (id) => {
+            this.sendMessage({ type: 'closeLibraryFile', data: { id } });
         };
-        this.toggleWhiteboard = (show) => {
-            this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+        this.toggleLibraryFile = (id, show) => {
+            this.sendMessage({ type: 'toggleLibraryFile', data: { id, show } });
+        };
+        this.createWhiteboard = (options) => {
+            this.sendMessage({ type: 'createWhiteboard', data: options });
+        };
+        this.openWhiteboard = (id) => {
+            this.sendMessage({ type: 'openWhiteboard', data: { id } });
+        };
+        this.closeWhiteboard = (id) => {
+            this.sendMessage({ type: 'closeWhiteboard', data: { id } });
+        };
+        this.toggleWhiteboard = (show, id) => {
+            this.sendMessage({ type: 'toggleWhiteboard', data: { show, id } });
         };
         this.addImageToWhiteboard = (options) => {
             this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });

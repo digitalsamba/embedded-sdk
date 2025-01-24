@@ -37,6 +37,7 @@ import {
   MediaDeviceSettings,
   AddImageToWhiteboardOptions,
   TemplateParams,
+  CreateWhiteboardOptions,
 } from './types';
 
 import {
@@ -801,16 +802,32 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
   };
 
-  openWhiteboard = () => {
-    this.sendMessage({ type: 'openWhiteboard' });
+  openLibraryFile = (id: string) => {
+    this.sendMessage({ type: 'openLibraryFile', data: { id } });
   };
 
-  closeWhiteboard = () => {
-    this.sendMessage({ type: 'closeWhiteboard' });
+  closeLibraryFile = (id?: string) => {
+    this.sendMessage({ type: 'closeLibraryFile', data: { id } });
   };
 
-  toggleWhiteboard = (show?: boolean) => {
-    this.sendMessage({ type: 'toggleWhiteboard', data: { show } });
+  toggleLibraryFile = (id?: string, show?: boolean) => {
+    this.sendMessage({ type: 'toggleLibraryFile', data: { id, show } });
+  };
+
+  createWhiteboard = (options: CreateWhiteboardOptions) => {
+    this.sendMessage({ type: 'createWhiteboard', data: options });
+  };
+
+  openWhiteboard = (id?: string) => {
+    this.sendMessage({ type: 'openWhiteboard', data: { id } });
+  };
+
+  closeWhiteboard = (id?: string) => {
+    this.sendMessage({ type: 'closeWhiteboard', data: { id } });
+  };
+
+  toggleWhiteboard = (show?: boolean, id?: string) => {
+    this.sendMessage({ type: 'toggleWhiteboard', data: { show, id } });
   };
 
   addImageToWhiteboard = (options: AddImageToWhiteboardOptions) => {

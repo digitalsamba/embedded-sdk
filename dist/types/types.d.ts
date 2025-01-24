@@ -71,9 +71,9 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'setTemplateParams' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
+export type SendMessageType = 'connect' | 'setTemplateParams' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'openLibraryFile' | 'closeLibraryFile' | 'toggleLibraryFile' | 'createWhiteboard' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
 export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "speakerStoppedTalking", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction", "chatMessageReceived", "userLeftBatch"];
-export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
+export type ReceiveMessageType = typeof receiveMessagesTypes[number];
 export type UICallbackName = 'leaveSession';
 export interface SendMessage<D> {
     type: SendMessageType;
@@ -180,6 +180,10 @@ export type AddImageToWhiteboardOptions = {
         y: number;
     };
 };
+export type CreateWhiteboardOptions = {
+    personal: boolean;
+    folderId: string;
+};
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -199,10 +203,14 @@ export interface EmbeddedInstance {
     enableAudio: () => void;
     disableAudio: () => void;
     toggleAudio: (enable?: boolean) => void;
+    openLibraryFile: (id: string) => void;
+    closeLibraryFile: (id?: string) => void;
+    toggleLibraryFile: (id?: string, show?: boolean) => void;
     addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
-    openWhiteboard: () => void;
-    closeWhiteboard: () => void;
-    toggleWhiteboard: (show?: boolean) => void;
+    createWhiteboard: (options: CreateWhiteboardOptions) => void;
+    openWhiteboard: (id?: string) => void;
+    closeWhiteboard: (id?: string) => void;
+    toggleWhiteboard: (show?: boolean, id?: string) => void;
     startScreenshare: () => void;
     stopScreenshare: () => void;
     startRecording: () => void;
