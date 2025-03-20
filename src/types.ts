@@ -200,7 +200,7 @@ export const receiveMessagesTypes = [
   'userLeftBatch',
 ] as const;
 
-export type ReceiveMessageType = (typeof receiveMessagesTypes)[number];
+export type ReceiveMessageType = typeof receiveMessagesTypes[number];
 
 export type UICallbackName = 'leaveSession';
 
@@ -274,6 +274,8 @@ export interface VirtualBackgroundOptions {
   blur?: 'balanced' | 'strong';
   image?: string;
   imageUrl?: string;
+  video?: string;
+  videoUrl?: string;
 }
 
 export type UsersList = Record<UserId, User>;
@@ -281,7 +283,7 @@ export type UsersList = Record<UserId, User>;
 export interface StoredVBState {
   enabled: boolean;
   enforced?: boolean;
-  type?: 'blur' | 'image' | 'imageUrl';
+  type?: 'blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl';
   name?: string;
   value?: string | { src: string; thumb: string; alt: string };
 }

@@ -8,7 +8,7 @@
   <script src="./index.js"></script>
   <script src="./helper.js"></script>
   <script defer data-domain="digitalsamba.github.io" src="https://plausible.wbcnf.net/js/script.js"></script>
-  <script>window.plausible = window.plausible || function() {
+  <script>window.plausible = window.plausible || function () {
     (window.plausible.q = window.plausible.q || []).push(arguments);
   };</script>
   <link rel="stylesheet" href="./style.css">
@@ -68,11 +68,11 @@
         <div style="display: flex">
           <label class="checkbox-label" for="initial-settings-video">
             <span>Video enabled</span>
-            <input type="checkbox" id="initial-settings-video" checked onchange="initialSettings.videoEnabled = !initialSettings.videoEnabled" />
+            <input type="checkbox" id="initial-settings-video" checked onchange="initialSettings.videoEnabled = !initialSettings.videoEnabled"/>
           </label>
           <label class="checkbox-label" for="initial-settings-audio">
             <span>Audio enabled</span>
-            <input type="checkbox" id="initial-settings-audio" checked onchange="initialSettings.audioEnabled = !initialSettings.audioEnabled" />
+            <input type="checkbox" id="initial-settings-audio" checked onchange="initialSettings.audioEnabled = !initialSettings.audioEnabled"/>
           </label>
         </div>
         <div>
@@ -95,23 +95,23 @@
         <div>
           <label class="checkbox-label" for="initial-settings-toolbar">
             <span>Show toolbar</span>
-            <input type="checkbox" id="initial-settings-toolbar" onchange="initialSettings.showToolbar = !initialSettings.showToolbar" />
+            <input type="checkbox" id="initial-settings-toolbar" onchange="initialSettings.showToolbar = !initialSettings.showToolbar"/>
           </label>
         </div>
         <div>
           <label class="checkbox-label" for="initial-settings-muted">
             <span>Mute frame</span>
-            <input type="checkbox" id="initial-settings-muted" onchange="initialSettings.muteFrame = !initialSettings.muteFrame" />
+            <input type="checkbox" id="initial-settings-muted" onchange="initialSettings.muteFrame = !initialSettings.muteFrame"/>
           </label>
         </div>
         <fieldset style="margin-bottom: 10px;">
           <div style="display: flex;">
             <legend style="margin-right: 8px;">Layout mode</legend>
             <div style="display: flex; align-items: center; justify-content: center">
-              <input type="radio" id="prep-layout-mode-auto" checked name="layout-mode" value="auto" onchange="initialSettings.layoutMode = 'auto'" />
+              <input type="radio" id="prep-layout-mode-auto" checked name="layout-mode" value="auto" onchange="initialSettings.layoutMode = 'auto'"/>
               <label class="radio-label" for="prep-layout-mode-auto">Auto</label>
 
-              <input type="radio" id="prep-layout-mode-tiled" name="layout-mode" value="tiled" onchange="initialSettings.layoutMode = 'tiled'" />
+              <input type="radio" id="prep-layout-mode-tiled" name="layout-mode" value="tiled" onchange="initialSettings.layoutMode = 'tiled'"/>
               <label class="radio-label" for="prep-layout-mode-tiled">Tiled</label>
             </div>
           </div>
@@ -119,13 +119,7 @@
         <div>
           <label class="checkbox-label" for="initial-settings-vb">
             <span>Enable virtual background</span>
-            <input type="checkbox" id="initial-settings-vb" onchange="toggleVirtualBackground(this.checked)" />
-          </label>
-        </div>
-        <div>
-          <label class="checkbox-label" for="initial-settings-vb">
-            <span>Require confirmation to remove participants</span>
-            <input type="checkbox" checked id="initial-settings-kick-confirmation" onchange="initialSettings.requireRemoveUserConfirmation = this.checked" />
+            <input type="checkbox" id="initial-settings-vb" onchange="toggleVirtualBackground(this.checked)"/>
           </label>
         </div>
         <div class="vb-options" style="display: none">
@@ -135,6 +129,8 @@
               <option value="blur">blur</option>
               <option value="image">predefined image</option>
               <option value="imageUrl">custom image</option>
+              <option value="video">predefined video</option>
+              <option value="videoUrl">custom video</option>
             </select>
           </div>
           <div class="vb-value vb-value-blur show">
@@ -169,24 +165,50 @@
               <input type="text" id="vb-image-url" onchange="VBstate.value = this.value; VBvalues.imageUrl = this.value">
             </div>
           </div>
-          <div>
-            <label class="checkbox-label" for="initial-settings-enforce-vb">
-              <span>Allow changing virtual background</span>
-              <input type="checkbox" checked id="initial-settings-enforce-vb" onchange="VBstate.enforce = !this.checked" />
+          <div class="vb-value vb-value-video">
+            <div style="display: flex; align-items: center; justify-content: flex-start">
+              <label style="margin-right: 8px;" for="vb-video-value">Preset name</label>
+              <select name="vb-video-value" id="vb-video-value" onchange="VBstate.value = this.value; VBvalues.video = this.value;">
+                <option value="vbg1">BG 1</option>
+                <option value="vbg2">BG 2</option>
+                <option value="vbg3">BG 3</option>
+                <option value="vbg4">BG 4</option>
+              </select>
+            </div>
+          </div>
+          <div class="vb-value vb-value-videoUrl">
+            <label for="vb-video-url">
+              Custom video URL
             </label>
+            <div>
+              <input type="text" id="vb-video-url" onchange="VBstate.value = this.value; VBvalues.videoUrl = this.value">
+            </div>
           </div>
         </div>
         <div>
-          <label for="initial-settings-appLanguage">
-            App language, leave empty for default.
+          <label class="checkbox-label" for="initial-settings-enforce-vb">
+            <span>Allow changing virtual background</span>
+            <input type="checkbox" checked id="initial-settings-enforce-vb" onchange="VBstate.enforce = !this.checked"/>
           </label>
-          <div>
-            <input type="text" id="initial-settings-appLanguage" onchange="initialSettings.appLanguage = this.value">
-          </div>
+        </div>
+      </div>
+      <div>
+        <label class="checkbox-label" for="initial-settings-kick-confirmation">
+          <span>Require confirmation to remove participants</span>
+          <input type="checkbox" checked id="initial-settings-kick-confirmation" onchange="initialSettings.requireRemoveUserConfirmation = this.checked"/>
+        </label>
+      </div>
+      <div>
+        <label for="initial-settings-appLanguage">
+          App language, leave empty for default.
+        </label>
+        <div>
+          <input type="text" id="initial-settings-appLanguage" onchange="initialSettings.appLanguage = this.value">
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 <div class="screen room-frame">
   <div class="container">
@@ -239,7 +261,9 @@
   var VBvalues = {
     blur: "balanced",
     image: "office",
-    imageUrl: "string"
+    imageUrl: "string",
+    video: "vbg1",
+    videoUrl: "string"
   };
 
   const fillDeviceOptions = (availableDevices) => {
@@ -253,7 +277,7 @@
   };
 
   try {
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
+    navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream) => {
       navigator.mediaDevices.enumerateDevices().then((availableDevices) => {
         fillDeviceOptions(availableDevices);
       });
@@ -309,7 +333,7 @@
           // apply predefined room settings
           roomSettings: initialSettings
         },
-        { reportErrors: true }
+        {reportErrors: true}
       );
 
       // controller instance exposes the frame, so we can customize it a little bit
@@ -379,6 +403,8 @@
     newOption.className += " show";
 
     VBstate.value = VBvalues[newType];
+
+    console.log(VBstate)
   }
 </script>
 </body>
