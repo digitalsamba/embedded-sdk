@@ -462,6 +462,11 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.reportErrors = true;
             }
         };
+        this.setTemplateParams = (params) => {
+            if (params && Object.keys(params).length > 0) {
+                this.sendMessage({ type: 'setTemplateParams', data: params });
+            }
+        };
         // commands
         this.enableVideo = () => {
             this.roomSettings.videoEnabled = true;
@@ -500,6 +505,30 @@ export class DigitalSambaEmbedded extends EventEmitter {
             else {
                 this.disableAudio();
             }
+        };
+        this.openLibraryFile = (id) => {
+            this.sendMessage({ type: 'openLibraryFile', data: { id } });
+        };
+        this.closeLibraryFile = (id) => {
+            this.sendMessage({ type: 'closeLibraryFile', data: { id } });
+        };
+        this.toggleLibraryFile = (id, show) => {
+            this.sendMessage({ type: 'toggleLibraryFile', data: { id, show } });
+        };
+        this.createWhiteboard = (options) => {
+            this.sendMessage({ type: 'createWhiteboard', data: options });
+        };
+        this.openWhiteboard = (id) => {
+            this.sendMessage({ type: 'openWhiteboard', data: { id } });
+        };
+        this.closeWhiteboard = (id) => {
+            this.sendMessage({ type: 'closeWhiteboard', data: { id } });
+        };
+        this.toggleWhiteboard = (show, id) => {
+            this.sendMessage({ type: 'toggleWhiteboard', data: { show, id } });
+        };
+        this.addImageToWhiteboard = (options) => {
+            this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });
         };
         this.startScreenshare = () => {
             this.sendMessage({ type: 'startScreenshare' });
@@ -689,6 +718,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
             this.logError(INSECURE_CONTEXT);
         }
         this.initOptions = options;
+        this.templateParams = options.templateParams;
         this.prepareRoomSettings(options.roomSettings || {});
         this.reportErrors = instanceProperties.reportErrors || false;
         this.frame.allow = 'camera; microphone; display-capture; autoplay;';
@@ -715,6 +745,7 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 this.queuedEventListeners = [];
                 this.queuedUICallbacks = [];
                 this.queuedTileActions = [];
+                this.setTemplateParams(this.templateParams);
                 clearTimeout(confirmationTimeout);
             });
         });

@@ -35,6 +35,9 @@ import {
   UserTileType,
   VirtualBackgroundOptions,
   MediaDeviceSettings,
+  AddImageToWhiteboardOptions,
+  TemplateParams,
+  CreateWhiteboardOptions,
 } from './types';
 
 import {
@@ -48,6 +51,8 @@ import {
 
 export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
   initOptions: Partial<InitOptions>;
+
+  templateParams?: TemplateParams;
 
   roomSettings: Partial<InitialRoomSettings> = {};
 
@@ -95,6 +100,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     }
 
     this.initOptions = options;
+    this.templateParams = options.templateParams;
     this.prepareRoomSettings(options.roomSettings || {});
 
     this.reportErrors = instanceProperties.reportErrors || false;
@@ -689,6 +695,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.queuedUICallbacks = [];
       this.queuedTileActions = [];
 
+      this.setTemplateParams(this.templateParams)
+
       clearTimeout(confirmationTimeout);
     });
   }
@@ -729,6 +737,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.reportErrors = true;
     }
   };
+
+  private setTemplateParams = (params?: TemplateParams) => {
+    if (params && Object.keys(params).length > 0) {
+      this.sendMessage({ type: 'setTemplateParams', data: params });
+    }
+  }
 
   // getters
   get roomState() {
@@ -788,6 +802,38 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     } else {
       this.disableAudio();
     }
+  };
+
+  openLibraryFile = (id: string) => {
+    this.sendMessage({ type: 'openLibraryFile', data: { id } });
+  };
+
+  closeLibraryFile = (id?: string) => {
+    this.sendMessage({ type: 'closeLibraryFile', data: { id } });
+  };
+
+  toggleLibraryFile = (id?: string, show?: boolean) => {
+    this.sendMessage({ type: 'toggleLibraryFile', data: { id, show } });
+  };
+
+  createWhiteboard = (options: CreateWhiteboardOptions) => {
+    this.sendMessage({ type: 'createWhiteboard', data: options });
+  };
+
+  openWhiteboard = (id?: string) => {
+    this.sendMessage({ type: 'openWhiteboard', data: { id } });
+  };
+
+  closeWhiteboard = (id?: string) => {
+    this.sendMessage({ type: 'closeWhiteboard', data: { id } });
+  };
+
+  toggleWhiteboard = (show?: boolean, id?: string) => {
+    this.sendMessage({ type: 'toggleWhiteboard', data: { show, id } });
+  };
+
+  addImageToWhiteboard = (options: AddImageToWhiteboardOptions) => {
+    this.sendMessage({ type: 'addImageToWhiteboard', data: options || {} });
   };
 
   startScreenshare = () => {

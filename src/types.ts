@@ -68,6 +68,8 @@ export interface ConnectToFramePayload extends Partial<InitialRoomSettings> {
   tileActions: QueuedTileAction[];
 }
 
+export type TemplateParams = { [key: string]: string }
+
 export type InitOptions = {
   root: HTMLElement;
   frame: HTMLIFrameElement;
@@ -79,6 +81,8 @@ export type InitOptions = {
   token?: string;
 
   roomSettings?: Partial<InitialRoomSettings>;
+
+  templateParams?: TemplateParams
 };
 
 export type FrameAttributes = {
@@ -105,12 +109,14 @@ export interface InstanceProperties {
 
 export type SendMessageType =
   | 'connect'
+  | 'setTemplateParams'
   | 'enableVideo'
   | 'enableAudio'
   | 'disableVideo'
   | 'disableAudio'
   | 'toggleVideo'
   | 'toggleAudio'
+  | 'addImageToWhiteboard'
   | 'startScreenshare'
   | 'stopScreenshare'
   | 'startRecording'
@@ -154,6 +160,13 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'openLibraryFile'
+  | 'closeLibraryFile'
+  | 'toggleLibraryFile'
+  | 'createWhiteboard'
+  | 'openWhiteboard'
+  | 'closeWhiteboard'
+  | 'toggleWhiteboard'
   | 'applyMediaDevices';
 
 export const receiveMessagesTypes = [
@@ -175,6 +188,7 @@ export const receiveMessagesTypes = [
   'recordingFailed',
   'layoutModeChanged',
   'activeSpeakerChanged',
+  'speakerStoppedTalking',
   'appError',
   'captionsEnabled',
   'captionsDisabled',
@@ -355,6 +369,20 @@ export type TileActionProperties = {
   icon?: string;
 };
 
+export type AddImageToWhiteboardOptions = {
+  base64?: string;
+  url?: string;
+  position?: {
+    x: number;
+    y: number;
+  };
+};
+
+export type CreateWhiteboardOptions = {
+  personal: boolean;
+  folderId: string;
+};
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -379,6 +407,14 @@ export interface EmbeddedInstance {
   enableAudio: () => void;
   disableAudio: () => void;
   toggleAudio: (enable?: boolean) => void;
+  openLibraryFile: (id: string) => void;
+  closeLibraryFile: (id?: string) => void;
+  toggleLibraryFile: (id?: string, show?: boolean) => void;
+  addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
+  createWhiteboard: (options: CreateWhiteboardOptions) => void;
+  openWhiteboard: (id?: string) => void;
+  closeWhiteboard: (id?: string) => void;
+  toggleWhiteboard: (show?: boolean, id?: string) => void;
   startScreenshare: () => void;
   stopScreenshare: () => void;
   startRecording: () => void;

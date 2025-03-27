@@ -2,9 +2,10 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
+    templateParams?: TemplateParams;
     roomSettings: Partial<InitialRoomSettings>;
     savedIframeSrc: string;
     allowedOrigin: string;
@@ -41,6 +42,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     private sendMessage;
     private logError;
     private applyFrameProperties;
+    private setTemplateParams;
     get roomState(): import("./types").RoomState;
     get localUser(): import("./types").User;
     get features(): import("./types").FeatureSet;
@@ -51,6 +53,14 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     enableAudio: () => void;
     disableAudio: () => void;
     toggleAudio: (enable?: boolean) => void;
+    openLibraryFile: (id: string) => void;
+    closeLibraryFile: (id?: string) => void;
+    toggleLibraryFile: (id?: string, show?: boolean) => void;
+    createWhiteboard: (options: CreateWhiteboardOptions) => void;
+    openWhiteboard: (id?: string) => void;
+    closeWhiteboard: (id?: string) => void;
+    toggleWhiteboard: (show?: boolean, id?: string) => void;
+    addImageToWhiteboard: (options: AddImageToWhiteboardOptions) => void;
     startScreenshare: () => void;
     stopScreenshare: () => void;
     startRecording: () => void;
