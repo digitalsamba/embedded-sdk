@@ -276,6 +276,7 @@ export interface VirtualBackgroundOptions {
   imageUrl?: string;
   video?: string;
   videoUrl?: string;
+  thumbnailUrl?: string;
 }
 
 export type UsersList = Record<UserId, User>;
@@ -286,6 +287,7 @@ export interface StoredVBState {
   type?: 'blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl';
   name?: string;
   value?: string | { src: string; thumb: string; alt: string };
+  thumbnailUrl?: string;
 }
 
 export interface BrandingOptionsConfig {

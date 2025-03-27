@@ -932,6 +932,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       type: undefined,
       value: '',
       enforced: options.enforce,
+      thumbnailUrl: options.thumbnailUrl,
     };
 
     const vbOptions: ('blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl')[] = [

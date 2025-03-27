@@ -129,7 +129,6 @@
               <option value="blur">blur</option>
               <option value="image">predefined image</option>
               <option value="imageUrl">custom image</option>
-              <option value="video">predefined video</option>
               <option value="videoUrl">custom video</option>
             </select>
           </div>
@@ -164,16 +163,11 @@
             <div>
               <input type="text" id="vb-image-url" onchange="VBstate.value = this.value; VBvalues.imageUrl = this.value">
             </div>
-          </div>
-          <div class="vb-value vb-value-video">
-            <div style="display: flex; align-items: center; justify-content: flex-start">
-              <label style="margin-right: 8px;" for="vb-video-value">Preset name</label>
-              <select name="vb-video-value" id="vb-video-value" onchange="VBstate.value = this.value; VBvalues.video = this.value;">
-                <option value="vbg1">BG 1</option>
-                <option value="vbg2">BG 2</option>
-                <option value="vbg3">BG 3</option>
-                <option value="vbg4">BG 4</option>
-              </select>
+            <label for="vb-image-thumbnail-url">
+              Custom image thumbnail URL
+            </label>
+            <div>
+              <input type="text" id="vb-image-thumbnail-url" onchange="VBstate.thumbnailUrl = this.value">
             </div>
           </div>
           <div class="vb-value vb-value-videoUrl">
@@ -182,6 +176,12 @@
             </label>
             <div>
               <input type="text" id="vb-video-url" onchange="VBstate.value = this.value; VBvalues.videoUrl = this.value">
+            </div>
+            <label for="vb-video-thumbnail-url">
+              Custom video thumbnail URL
+            </label>
+            <div>
+              <input type="text" id="vb-video-thumbnail-url" onchange="VBstate.thumbnailUrl = this.value">
             </div>
           </div>
         </div>
@@ -403,8 +403,6 @@
     newOption.className += " show";
 
     VBstate.value = VBvalues[newType];
-
-    console.log(VBstate)
   }
 </script>
 </body>
