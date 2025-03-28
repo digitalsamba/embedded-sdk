@@ -288,6 +288,9 @@ export interface VirtualBackgroundOptions {
   blur?: 'balanced' | 'strong';
   image?: string;
   imageUrl?: string;
+  video?: string;
+  videoUrl?: string;
+  thumbnailUrl?: string;
 }
 
 export type UsersList = Record<UserId, User>;
@@ -295,9 +298,10 @@ export type UsersList = Record<UserId, User>;
 export interface StoredVBState {
   enabled: boolean;
   enforced?: boolean;
-  type?: 'blur' | 'image' | 'imageUrl';
+  type?: 'blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl';
   name?: string;
   value?: string | { src: string; thumb: string; alt: string };
+  thumbnailUrl?: string;
 }
 
 export interface BrandingOptionsConfig {
