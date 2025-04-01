@@ -160,6 +160,8 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'addCustomTile'
+  | 'removeCustomTile'
   | 'openLibraryFile'
   | 'closeLibraryFile'
   | 'toggleLibraryFile'
@@ -383,6 +385,14 @@ export type CreateWhiteboardOptions = {
   folderId: string;
 };
 
+export type CustomTilePosition = 'first' | 'last';
+
+export type AddCustomTileOptions = {
+  name: string;
+  html: string;
+  position?: CustomTilePosition;
+};
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -401,6 +411,8 @@ export interface EmbeddedInstance {
 
   featureEnabled(feature: FeatureFlag): boolean;
 
+  addCustomTile: (options: AddCustomTileOptions) => void;
+  removeCustomTile: (name: string) => void;
   enableVideo: () => void;
   disableVideo: () => void;
   toggleVideo: (enable?: boolean) => void;
