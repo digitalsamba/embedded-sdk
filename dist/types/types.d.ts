@@ -71,7 +71,7 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'setTemplateParams' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'openLibraryFile' | 'closeLibraryFile' | 'toggleLibraryFile' | 'createWhiteboard' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
+export type SendMessageType = 'connect' | 'setTemplateParams' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'addCustomTile' | 'removeCustomTile' | 'openLibraryFile' | 'closeLibraryFile' | 'toggleLibraryFile' | 'createWhiteboard' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
 export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "speakerStoppedTalking", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction", "chatMessageReceived", "userLeftBatch"];
 export type ReceiveMessageType = typeof receiveMessagesTypes[number];
 export type UICallbackName = 'leaveSession';
@@ -105,18 +105,22 @@ export interface VirtualBackgroundOptions {
     blur?: 'balanced' | 'strong';
     image?: string;
     imageUrl?: string;
+    video?: string;
+    videoUrl?: string;
+    thumbnailUrl?: string;
 }
 export type UsersList = Record<UserId, User>;
 export interface StoredVBState {
     enabled: boolean;
     enforced?: boolean;
-    type?: 'blur' | 'image' | 'imageUrl';
+    type?: 'blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl';
     name?: string;
     value?: string | {
         src: string;
         thumb: string;
         alt: string;
     };
+    thumbnailUrl?: string;
 }
 export interface BrandingOptionsConfig {
     paletteMode: 'dark' | 'light';
@@ -184,6 +188,12 @@ export type CreateWhiteboardOptions = {
     personal: boolean;
     folderId: string;
 };
+export type CustomTilePosition = 'first' | 'last';
+export type AddCustomTileOptions = {
+    name: string;
+    html: string;
+    position?: CustomTilePosition;
+};
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -197,6 +207,8 @@ export interface EmbeddedInstance {
     get localUser(): User;
     get features(): FeatureSet;
     featureEnabled(feature: FeatureFlag): boolean;
+    addCustomTile: (options: AddCustomTileOptions) => void;
+    removeCustomTile: (name: string) => void;
     enableVideo: () => void;
     disableVideo: () => void;
     toggleVideo: (enable?: boolean) => void;

@@ -50,7 +50,7 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 try {
                     let origString = url || this.frame.src;
                     if (!origString.includes('https://')) {
-                        origString = 'https://' + origString;
+                        origString = `https://${origString}`;
                     }
                     const frameSrc = new URL(origString).toString();
                     this.frame.src = frameSrc;
@@ -198,6 +198,19 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                     name,
                 });
             }
+        };
+        this.addCustomTile = (options) => {
+            var _b;
+            this.sendMessage({
+                type: 'addCustomTile',
+                data: Object.assign(Object.assign({}, options), { position: (_b = options === null || options === void 0 ? void 0 : options.position) !== null && _b !== void 0 ? _b : 'first' })
+            });
+        };
+        this.removeCustomTile = (name) => {
+            this.sendMessage({
+                type: 'removeCustomTile',
+                data: { name }
+            });
         };
         this.setupInternalEventListeners = () => {
             this.on('userJoined', (event) => {
@@ -652,8 +665,15 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 type: undefined,
                 value: '',
                 enforced: options.enforce,
+                thumbnailUrl: options.thumbnailUrl,
             };
-            const vbOptions = ['blur', 'image', 'imageUrl'];
+            const vbOptions = [
+                'blur',
+                'image',
+                'imageUrl',
+                'video',
+                'videoUrl',
+            ];
             vbOptions.forEach((value) => {
                 if (options[value]) {
                     optionsToState.type = value;

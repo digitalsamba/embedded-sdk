@@ -38,6 +38,7 @@ import {
   AddImageToWhiteboardOptions,
   TemplateParams,
   CreateWhiteboardOptions,
+  AddCustomTileOptions,
 } from './types';
 
 import {
@@ -325,6 +326,23 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         name,
       });
     }
+  };
+
+  addCustomTile = (options: AddCustomTileOptions) => {
+    this.sendMessage({
+      type: 'addCustomTile',
+      data: {
+        ...options,
+        position: options?.position ?? 'first'
+      }
+    });
+  };
+
+  removeCustomTile = (name: string) => {
+    this.sendMessage({
+      type: 'removeCustomTile',
+      data: { name }
+    });
   };
 
   private setupInternalEventListeners = () => {
