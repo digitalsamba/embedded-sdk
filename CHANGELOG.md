@@ -2,6 +2,10 @@
 
 Historical list of changes in releases
 
+## [v0.0.45] - 2025-04-14
+* Add video virtual backgrounds support ([#bee6e78e](https://github.com/digitalsamba/embedded-sdk/commit/bee6e78e303b8219a5a26c36bbb45e8549e452cc)).
+* Add new methods for managing custom tiles ([#6f0fa570](https://github.com/digitalsamba/embedded-sdk/commit/6f0fa57028d332d6fd21c5257980e93355ebcb9c)).
+
 ## [v0.0.44] - 2025-01-23
 * Add new `createWhiteboard` method, and update exist whiteboard methods ([#48058f61](https://github.com/digitalsamba/embedded-sdk/commit/48058f61a85a5f8095a4d8bf7eabd1b4be57ad02)).
 * Add new methods for managing library files ([#870ce040](https://github.com/digitalsamba/embedded-sdk/commit/870ce040e618131106595fd242f2f6b8db4b9cd8)).
