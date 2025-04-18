@@ -97,7 +97,8 @@ function vbStateToInitState(originalConfig){
 
   return {
     [originalConfig.type]: originalConfig.value,
-    enforce: originalConfig.enforce
+    enforce: originalConfig.enforce,
+    thumbnailUrl: originalConfig.thumbnailUrl
   }
 }
 

@@ -38,6 +38,7 @@ import {
   AddImageToWhiteboardOptions,
   TemplateParams,
   CreateWhiteboardOptions,
+  AddCustomTileOptions,
 } from './types';
 
 import {
@@ -51,7 +52,9 @@ import {
 
 export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
   initOptions: Partial<InitOptions>;
+
   templateParams?: TemplateParams;
+
   roomSettings: Partial<InitialRoomSettings> = {};
 
   savedIframeSrc: string = '';
@@ -144,7 +147,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         let origString = url || this.frame.src;
 
         if (!origString.includes('https://')) {
-          origString = 'https://' + origString;
+          origString = `https://${origString}`;
         }
 
         const frameSrc = new URL(origString).toString();
@@ -323,6 +326,23 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         name,
       });
     }
+  };
+
+  addCustomTile = (options: AddCustomTileOptions) => {
+    this.sendMessage({
+      type: 'addCustomTile',
+      data: {
+        ...options,
+        position: options?.position ?? 'first'
+      }
+    });
+  };
+
+  removeCustomTile = (name: string) => {
+    this.sendMessage({
+      type: 'removeCustomTile',
+      data: { name }
+    });
   };
 
   private setupInternalEventListeners = () => {
@@ -940,6 +960,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.hideCaptions();
     }
   };
+
   configureCaptions = (options: Partial<CaptionsOptions>) => {
     this.sendMessage({ type: 'configureCaptions', data: options || {} });
   };
@@ -975,9 +996,16 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       type: undefined,
       value: '',
       enforced: options.enforce,
+      thumbnailUrl: options.thumbnailUrl,
     };
 
-    const vbOptions: ('blur' | 'image' | 'imageUrl')[] = ['blur', 'image', 'imageUrl'];
+    const vbOptions: ('blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl')[] = [
+      'blur',
+      'image',
+      'imageUrl',
+      'video',
+      'videoUrl',
+    ];
 
     vbOptions.forEach((value) => {
       if (options[value]) {

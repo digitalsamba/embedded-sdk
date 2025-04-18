@@ -160,6 +160,8 @@ export type SendMessageType =
   | 'changeRole'
   | 'addTileAction'
   | 'removeTileAction'
+  | 'addCustomTile'
+  | 'removeCustomTile'
   | 'openLibraryFile'
   | 'closeLibraryFile'
   | 'toggleLibraryFile'
@@ -288,6 +290,9 @@ export interface VirtualBackgroundOptions {
   blur?: 'balanced' | 'strong';
   image?: string;
   imageUrl?: string;
+  video?: string;
+  videoUrl?: string;
+  thumbnailUrl?: string;
 }
 
 export type UsersList = Record<UserId, User>;
@@ -295,9 +300,10 @@ export type UsersList = Record<UserId, User>;
 export interface StoredVBState {
   enabled: boolean;
   enforced?: boolean;
-  type?: 'blur' | 'image' | 'imageUrl';
+  type?: 'blur' | 'image' | 'imageUrl' | 'video' | 'videoUrl';
   name?: string;
   value?: string | { src: string; thumb: string; alt: string };
+  thumbnailUrl?: string;
 }
 
 export interface BrandingOptionsConfig {
@@ -379,6 +385,14 @@ export type CreateWhiteboardOptions = {
   folderId: string;
 };
 
+export type CustomTilePosition = 'first' | 'last';
+
+export type AddCustomTileOptions = {
+  name: string;
+  html: string;
+  position?: CustomTilePosition;
+};
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -397,6 +411,8 @@ export interface EmbeddedInstance {
 
   featureEnabled(feature: FeatureFlag): boolean;
 
+  addCustomTile: (options: AddCustomTileOptions) => void;
+  removeCustomTile: (name: string) => void;
   enableVideo: () => void;
   disableVideo: () => void;
   toggleVideo: (enable?: boolean) => void;
