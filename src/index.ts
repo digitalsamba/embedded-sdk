@@ -38,7 +38,7 @@ import {
   AddImageToWhiteboardOptions,
   TemplateParams,
   CreateWhiteboardOptions,
-  AddCustomTileOptions,
+  AddCustomTileOptions, BroadcastOptions,
 } from './types';
 
 import {
@@ -973,7 +973,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'lowerHand', data: target });
   };
 
-  allowBroadcast = (userId: UserId) => {
+  allowBroadcast = (userId: UserId | BroadcastOptions) => {
     this.sendMessage({ type: 'allowBroadcast', data: userId });
   };
 

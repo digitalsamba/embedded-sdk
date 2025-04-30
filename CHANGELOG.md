@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.46] - 2025-04-30
+* Update allowBroadcast types to reflect new API ([#71949475](https://github.com/digitalsamba/embedded-sdk/commit/7194947501c83ed40b727f6fd85d4df8fc59881f)).
+
 ## [v0.0.45] - 2025-04-14
 * Add video virtual backgrounds support ([#bee6e78e](https://github.com/digitalsamba/embedded-sdk/commit/bee6e78e303b8219a5a26c36bbb45e8549e452cc)).
 * Add new methods for managing custom tiles ([#6f0fa570](https://github.com/digitalsamba/embedded-sdk/commit/6f0fa57028d332d6fd21c5257980e93355ebcb9c)).

@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     templateParams?: TemplateParams;
@@ -87,7 +87,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     configureCaptions: (options: Partial<CaptionsOptions>) => void;
     raiseHand: () => void;
     lowerHand: (target?: UserId) => void;
-    allowBroadcast: (userId: UserId) => void;
+    allowBroadcast: (userId: UserId | BroadcastOptions) => void;
     disallowBroadcast: (userId: UserId) => void;
     allowScreenshare: (userId: UserId) => void;
     disallowScreenshare: (userId: UserId) => void;
