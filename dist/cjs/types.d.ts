@@ -194,6 +194,11 @@ export type AddCustomTileOptions = {
     html: string;
     position?: CustomTilePosition;
 };
+export interface BroadcastOptions {
+    id: UserId;
+    audio?: boolean;
+    video?: boolean;
+}
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -247,7 +252,9 @@ export interface EmbeddedInstance {
     configureCaptions: (options: Partial<CaptionsOptions>) => void;
     raiseHand: () => void;
     lowerHand: (target?: UserId) => void;
-    allowBroadcast: (userId: UserId) => void;
+    allowBroadcast: /**
+     * @deprecated Use the options-based overload instead
+     */ ((userId: UserId) => void) & ((options: BroadcastOptions) => void);
     disallowBroadcast: (userId: UserId) => void;
     allowScreenshare: (userId: UserId) => void;
     disallowScreenshare: (userId: UserId) => void;
