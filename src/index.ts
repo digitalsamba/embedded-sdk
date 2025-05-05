@@ -39,6 +39,7 @@ import {
   TemplateParams,
   CreateWhiteboardOptions,
   AddCustomTileOptions,
+  BroadcastOptions,
 } from './types';
 
 import {
@@ -333,15 +334,15 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       type: 'addCustomTile',
       data: {
         ...options,
-        position: options?.position ?? 'first'
-      }
+        position: options?.position ?? 'first',
+      },
     });
   };
 
   removeCustomTile = (name: string) => {
     this.sendMessage({
       type: 'removeCustomTile',
-      data: { name }
+      data: { name },
     });
   };
 
@@ -713,7 +714,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       this.queuedUICallbacks = [];
       this.queuedTileActions = [];
 
-      this.setTemplateParams(this.templateParams)
+      this.setTemplateParams(this.templateParams);
 
       clearTimeout(confirmationTimeout);
     });
@@ -760,7 +761,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     if (params && Object.keys(params).length > 0) {
       this.sendMessage({ type: 'setTemplateParams', data: params });
     }
-  }
+  };
 
   // getters
   get roomState() {
@@ -973,8 +974,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'lowerHand', data: target });
   };
 
-  allowBroadcast = (userId: UserId) => {
-    this.sendMessage({ type: 'allowBroadcast', data: userId });
+  allowBroadcast = (options: UserId | BroadcastOptions) => {
+    this.sendMessage({ type: 'allowBroadcast', data: options });
   };
 
   disallowBroadcast = (userId: UserId) => {

@@ -12,6 +12,8 @@ export interface InitialRoomSettings {
     showToolbar: boolean;
     showCaptions: boolean;
     virtualBackground: VirtualBackgroundOptions;
+    virtualBackgrounds?: VirtualBackgroundItem[];
+    replaceVirtualBackgrounds?: boolean;
     appLanguage: string;
     muteFrame: boolean;
     mediaDevices?: MediaDeviceSettings;
@@ -99,6 +101,13 @@ type CaptionsFontSize = 'small' | 'medium' | 'large';
 export interface CaptionsOptions {
     spokenLanguage: CaptionsSpokenLanguage;
     fontSize: CaptionsFontSize;
+}
+export interface VirtualBackgroundItem {
+    id: string;
+    type: 'blur' | 'image' | 'video';
+    value: string;
+    thumbnail?: string;
+    label?: string;
 }
 export interface VirtualBackgroundOptions {
     enforce?: boolean;
@@ -194,6 +203,11 @@ export type AddCustomTileOptions = {
     html: string;
     position?: CustomTilePosition;
 };
+export interface BroadcastOptions {
+    id: UserId;
+    audio?: boolean;
+    video?: boolean;
+}
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -247,7 +261,9 @@ export interface EmbeddedInstance {
     configureCaptions: (options: Partial<CaptionsOptions>) => void;
     raiseHand: () => void;
     lowerHand: (target?: UserId) => void;
-    allowBroadcast: (userId: UserId) => void;
+    allowBroadcast: /**
+     * @deprecated Use the options-based overload instead
+     */ ((userId: UserId) => void) & ((options: BroadcastOptions) => void);
     disallowBroadcast: (userId: UserId) => void;
     allowScreenshare: (userId: UserId) => void;
     disallowScreenshare: (userId: UserId) => void;
