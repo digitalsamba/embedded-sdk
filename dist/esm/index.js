@@ -200,13 +200,13 @@ export class DigitalSambaEmbedded extends EventEmitter {
             var _b;
             this.sendMessage({
                 type: 'addCustomTile',
-                data: Object.assign(Object.assign({}, options), { position: (_b = options === null || options === void 0 ? void 0 : options.position) !== null && _b !== void 0 ? _b : 'first' })
+                data: Object.assign(Object.assign({}, options), { position: (_b = options === null || options === void 0 ? void 0 : options.position) !== null && _b !== void 0 ? _b : 'first' }),
             });
         };
         this.removeCustomTile = (name) => {
             this.sendMessage({
                 type: 'removeCustomTile',
-                data: { name }
+                data: { name },
             });
         };
         this.setupInternalEventListeners = () => {
@@ -643,8 +643,8 @@ export class DigitalSambaEmbedded extends EventEmitter {
         this.lowerHand = (target) => {
             this.sendMessage({ type: 'lowerHand', data: target });
         };
-        this.allowBroadcast = (userId) => {
-            this.sendMessage({ type: 'allowBroadcast', data: userId });
+        this.allowBroadcast = (options) => {
+            this.sendMessage({ type: 'allowBroadcast', data: options });
         };
         this.disallowBroadcast = (userId) => {
             this.sendMessage({ type: 'disallowBroadcast', data: userId });
