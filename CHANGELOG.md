@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.47] - 2025-05-12
+* Add support for multiple virtual backgrounds via initial config ([#05395a7a](https://github.com/digitalsamba/embedded-sdk/commit/05395a7aa07bfb38697464b55897268d7636cb45)).
+
 ## [v0.0.46] - 2025-04-30
 * Update allowBroadcast types to reflect new API ([#71949475](https://github.com/digitalsamba/embedded-sdk/commit/7194947501c83ed40b727f6fd85d4df8fc59881f)).
 

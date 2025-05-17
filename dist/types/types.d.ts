@@ -12,6 +12,8 @@ export interface InitialRoomSettings {
     showToolbar: boolean;
     showCaptions: boolean;
     virtualBackground: VirtualBackgroundOptions;
+    virtualBackgrounds?: VirtualBackgroundItem[];
+    replaceVirtualBackgrounds?: boolean;
     appLanguage: string;
     muteFrame: boolean;
     mediaDevices?: MediaDeviceSettings;
@@ -99,6 +101,13 @@ type CaptionsFontSize = 'small' | 'medium' | 'large';
 export interface CaptionsOptions {
     spokenLanguage: CaptionsSpokenLanguage;
     fontSize: CaptionsFontSize;
+}
+export interface VirtualBackgroundItem {
+    id: string;
+    type: 'blur' | 'image' | 'video';
+    value: string;
+    thumbnail?: string;
+    label?: string;
 }
 export interface VirtualBackgroundOptions {
     enforce?: boolean;
