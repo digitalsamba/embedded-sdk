@@ -166,6 +166,7 @@ export type SendMessageType =
   | 'removeTileAction'
   | 'addCustomTile'
   | 'removeCustomTile'
+  | 'sendMessageToCustomTile'
   | 'openLibraryFile'
   | 'closeLibraryFile'
   | 'toggleLibraryFile'
@@ -411,6 +412,13 @@ export interface BroadcastOptions {
   video?: boolean;
 }
 
+export interface SendMessageToCustomTileOptions {
+  name: string;
+  event?: string;
+  origin?: string;
+  data?: any;
+}
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -431,6 +439,7 @@ export interface EmbeddedInstance {
 
   addCustomTile: (options: AddCustomTileOptions) => void;
   removeCustomTile: (name: string) => void;
+  sendMessageToCustomTile: (options: SendMessageToCustomTileOptions) => void;
   enableVideo: () => void;
   disableVideo: () => void;
   toggleVideo: (enable?: boolean) => void;

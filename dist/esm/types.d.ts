@@ -73,7 +73,7 @@ export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
 }
-export type SendMessageType = 'connect' | 'setTemplateParams' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'addCustomTile' | 'removeCustomTile' | 'openLibraryFile' | 'closeLibraryFile' | 'toggleLibraryFile' | 'createWhiteboard' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
+export type SendMessageType = 'connect' | 'setTemplateParams' | 'enableVideo' | 'enableAudio' | 'disableVideo' | 'disableAudio' | 'toggleVideo' | 'toggleAudio' | 'addImageToWhiteboard' | 'startScreenshare' | 'stopScreenshare' | 'startRecording' | 'stopRecording' | 'showToolbar' | 'hideToolbar' | 'toggleToolbar' | 'changeLayoutMode' | 'leaveSession' | 'endSession' | 'requestToggleAudio' | 'requestMute' | 'requestUnmute' | 'removeUser' | 'showCaptions' | 'hideCaptions' | 'toggleCaptions' | 'configureCaptions' | 'raiseHand' | 'lowerHand' | 'allowBroadcast' | 'disallowBroadcast' | 'allowScreenshare' | 'disallowScreenshare' | 'configureVirtualBackground' | 'disableVirtualBackground' | 'muteFrame' | 'unmuteFrame' | 'toggleMuteFrame' | 'changeToolbarPosition' | 'changeBrandingOptions' | 'minimizeLocalTile' | 'maximizeLocalTile' | 'pinUser' | 'maximizeUser' | 'minimizeContent' | 'connectEventListener' | 'disconnectEventListener' | 'connectUICallback' | 'disconnectUICallback' | 'changeRole' | 'addTileAction' | 'removeTileAction' | 'addCustomTile' | 'removeCustomTile' | 'sendMessageToCustomTile' | 'openLibraryFile' | 'closeLibraryFile' | 'toggleLibraryFile' | 'createWhiteboard' | 'openWhiteboard' | 'closeWhiteboard' | 'toggleWhiteboard' | 'applyMediaDevices';
 export declare const receiveMessagesTypes: readonly ["connected", "frameLoaded", "userJoined", "usersUpdated", "userLeft", "sessionEnded", "roomJoined", "videoEnabled", "videoDisabled", "audioEnabled", "audioDisabled", "screenshareStarted", "screenshareStopped", "recordingStarted", "recordingStopped", "recordingFailed", "layoutModeChanged", "activeSpeakerChanged", "speakerStoppedTalking", "appError", "captionsEnabled", "captionsDisabled", "captionsSpokenLanguageChanged", "captionsFontSizeChanged", "permissionsChanged", "handRaised", "handLowered", "virtualBackgroundChanged", "virtualBackgroundDisabled", "roomStateUpdated", "localTileMaximized", "localTileMinimized", "userMaximized", "internalMediaDeviceChanged", "mediaPermissionsFailed", "documentEvent", "UICallback", "appLanguageChanged", "roleChanged", "tileAction", "chatMessageReceived", "userLeftBatch"];
 export type ReceiveMessageType = typeof receiveMessagesTypes[number];
 export type UICallbackName = 'leaveSession';
@@ -208,6 +208,12 @@ export interface BroadcastOptions {
     audio?: boolean;
     video?: boolean;
 }
+export interface SendMessageToCustomTileOptions {
+    name: string;
+    event?: string;
+    origin?: string;
+    data?: any;
+}
 export interface EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     roomSettings: Partial<InitialRoomSettings>;
@@ -223,6 +229,7 @@ export interface EmbeddedInstance {
     featureEnabled(feature: FeatureFlag): boolean;
     addCustomTile: (options: AddCustomTileOptions) => void;
     removeCustomTile: (name: string) => void;
+    sendMessageToCustomTile: (options: SendMessageToCustomTileOptions) => void;
     enableVideo: () => void;
     disableVideo: () => void;
     toggleVideo: (enable?: boolean) => void;

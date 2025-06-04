@@ -40,6 +40,7 @@ import {
   CreateWhiteboardOptions,
   AddCustomTileOptions,
   BroadcastOptions,
+  SendMessageToCustomTileOptions,
 } from './types';
 
 import {
@@ -345,6 +346,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
       data: { name },
     });
   };
+
+  sendMessageToCustomTile  = (options: SendMessageToCustomTileOptions) => {
+    this.sendMessage({
+      type: 'sendMessageToCustomTile',
+      data: options,
+    });
+  }
 
   private setupInternalEventListeners = () => {
     this.on('userJoined', (event) => {
