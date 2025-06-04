@@ -212,6 +212,12 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 data: { name },
             });
         };
+        this.sendMessageToCustomTile = (options) => {
+            this.sendMessage({
+                type: 'sendMessageToCustomTile',
+                data: options,
+            });
+        };
         this.setupInternalEventListeners = () => {
             this.on('userJoined', (event) => {
                 const { user, type } = event.data;

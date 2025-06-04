@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions, SendMessageToCustomTileOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     templateParams?: TemplateParams;
@@ -33,6 +33,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     removeTileAction: (name: string) => void;
     addCustomTile: (options: AddCustomTileOptions) => void;
     removeCustomTile: (name: string) => void;
+    sendMessageToCustomTile: (options: SendMessageToCustomTileOptions) => void;
     private setupInternalEventListeners;
     private _emit;
     private handleInternalMessage;
