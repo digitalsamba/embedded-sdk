@@ -391,25 +391,19 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
-                    console.log('SDK: data', data);
                     const devices = yield enumerateDevices();
-                    console.log('SDK: devices', devices);
                     if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
-                        console.warn('applyMediaDevices', this.defaultMediaDevices);
                         this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
                         this.defaultMediaDevices = {};
                     }
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
-                    console.log('SDK: matchingDevice', matchingDevice);
                     if (matchingDevice) {
                         const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
-                        console.log('SDK: previousDeviceId', previousDeviceId);
                         this._emit('mediaDeviceChanged', {
                             type: 'mediaDeviceChanged',
                             data: Object.assign(Object.assign({}, data), { previousDeviceId, deviceId: matchingDevice.deviceId }),
                         });
                         this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
-                        console.log('SDK: this.stored.roomState.media.activeDevices', this.stored.roomState.media.activeDevices);
                     }
                     break;
                 }

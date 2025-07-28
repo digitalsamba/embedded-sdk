@@ -246,10 +246,44 @@
     showToolbar: false,
     showCaptions: false,
     layoutMode: "auto",
-    virtualBackground: undefined,
+    // virtualBackground: {
+    //   image: "woman",
+    //   enforce: false,
+    //   // thumbnailUrl: "https://res.cloudinary.com/dvgipbnfm/image/upload/v1741950102/cld-sample.jpg"
+    // },
     appLanguage: undefined,
     requireRemoveUserConfirmation: true,
-    mediaDevices: {}
+    mediaDevices: {},
+    replaceVirtualBackgrounds: true,
+    virtualBackgrounds: [
+      {
+        id: "woman",
+        type: "image",
+        value: "https://res.cloudinary.com/dvgipbnfm/image/upload/v1741950102/cld-sample.jpg",
+        thumbnail: "https://res.cloudinary.com/dvgipbnfm/image/upload/v1741950102/cld-sample.jpg",
+        label: "Woman with a dog"
+      },
+      {
+        id: "mountains",
+        type: "image",
+        value: "https://res.cloudinary.com/dvgipbnfm/image/upload/v1741950102/cld-sample-2.jpg",
+        thumbnail: "https://res.cloudinary.com/dvgipbnfm/image/upload/v1741950102/cld-sample-2.jpg",
+        label: "Mountains"
+      },
+      {
+        id: "video-motion",
+        type: "video",
+        value: "https://res.cloudinary.com/dvgipbnfm/video/upload/v1742312045/Motion_Graphic_1280x720_jbvjxl.mp4",
+        thumbnail: "https://res.cloudinary.com/dvgipbnfm/image/upload/v1746190151/motion_video_thumbnail_wlnsn8.jpg",
+        label: "Video motion "
+      },
+      {
+        id: 'balanced-blur',
+        type: 'blur',
+        value: 'balanced',
+        label: 'Light Blur',
+      },
+    ]
   };
 
   var VBstate = {
@@ -310,7 +344,7 @@
     if (input.value) {
       ROOM_URL = input.value;
 
-      initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
+      // initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
 
       loadRoom();
     } else {
@@ -363,6 +397,8 @@
     // catch all events. Useful for logging or debugging;
     sambaEmbedded.on("*", (data) => {
       const logList = document.querySelector(".log-list");
+
+      console.log('data', data)
 
       if (logList) {
         logList.innerHTML += `<div>
