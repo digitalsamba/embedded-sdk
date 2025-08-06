@@ -2,9 +2,6 @@
 
 Historical list of changes in releases
 
-## [v0.0.49] - 2025-08-04
-* Improved device enumeration to avoid using getUserMedia when not required ([#7238a01f](https://github.com/digitalsamba/embedded-sdk/commit/7238a01fa8a802a5132db4c818f0e735efdd4e32)).
-
 ## [v0.0.48] - 2025-06-09
 * Add new method to send post message events to custom tiles ([#b07141c](https://github.com/digitalsamba/embedded-sdk/commit/b07141c2ae98424dec823d9e487b8caedd8ef0b3)).
 
