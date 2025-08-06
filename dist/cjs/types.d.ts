@@ -18,6 +18,7 @@ export interface InitialRoomSettings {
     muteFrame: boolean;
     mediaDevices?: MediaDeviceSettings;
     requireRemoveUserConfirmation: boolean;
+    baseDomain?: string;
 }
 export interface QueuedEventListener {
     operation: 'connectEventListener' | 'disconnectEventListener';
