@@ -47,6 +47,8 @@ export interface InitialRoomSettings {
   mediaDevices?: MediaDeviceSettings;
 
   requireRemoveUserConfirmation: boolean;
+
+  baseDomain?: string;
 }
 
 export interface QueuedEventListener {
