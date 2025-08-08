@@ -347,12 +347,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     });
   };
 
-  sendMessageToCustomTile  = (options: SendMessageToCustomTileOptions) => {
+  sendMessageToCustomTile = (options: SendMessageToCustomTileOptions) => {
     this.sendMessage({
       type: 'sendMessageToCustomTile',
       data: options,
     });
-  }
+  };
 
   private setupInternalEventListeners = () => {
     this.on('userJoined', (event) => {
@@ -615,7 +615,8 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
         }
 
         const matchingDevice = devices.find(
-          (device) => device.kind === data.kind && device.label === data.label
+          (device: { kind: string; label: string }) =>
+            device.kind === data.kind && device.label === data.label
         );
 
         if (matchingDevice) {
