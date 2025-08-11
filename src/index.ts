@@ -892,6 +892,30 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'hideToolbar' });
   };
 
+  showTopbar = () => {
+    this.roomSettings.showTopbar = true;
+    this.stored.roomState.layout.showTopbar = true;
+    this.sendMessage({ type: 'showTopbar' });
+  };
+
+  hideTopbar = () => {
+    this.roomSettings.showTopbar = false;
+    this.stored.roomState.layout.showTopbar = false;
+    this.sendMessage({ type: 'hideTopbar' });
+  };
+
+  toggleTopbar = (show?: boolean) => {
+    if (typeof show === 'undefined') {
+      this.roomSettings.showTopbar = !this.roomSettings.showTopbar
+      this.stored.roomState.layout.showTopbar = !this.stored.roomState.layout.showTopbar;
+      this.sendMessage({ type: 'toggleTopbar' });
+    } else if (show) {
+      this.showTopbar();
+    } else {
+      this.hideTopbar();
+    }
+  };
+
   changeToolbarPosition = (side: 'left' | 'right' | 'bottom') => {
     this.sendMessage({ type: 'changeToolbarPosition', data: side });
   };

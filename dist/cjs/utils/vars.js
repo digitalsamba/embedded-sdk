@@ -49,6 +49,7 @@ const getDefaultStoredState = () => ({
         layout: {
             mode: LayoutMode.tiled,
             showToolbar: true,
+            showTopbar: true,
             toolbarPosition: 'left',
             localTileMinimized: false,
         },

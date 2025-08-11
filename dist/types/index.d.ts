@@ -70,6 +70,9 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     stopRecording: () => void;
     showToolbar: () => void;
     hideToolbar: () => void;
+    showTopbar: () => void;
+    hideTopbar: () => void;
+    toggleTopbar: (show?: boolean) => void;
     changeToolbarPosition: (side: 'left' | 'right' | 'bottom') => void;
     changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
     changeLayoutMode: (mode: LayoutMode) => void;
