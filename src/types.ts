@@ -33,6 +33,7 @@ export interface InitialRoomSettings {
   // layout config
   layoutMode: LayoutMode;
   showToolbar: boolean;
+  showTopbar?: boolean;
   showCaptions: boolean;
 
   // virtual backgrounds
@@ -128,6 +129,9 @@ export type SendMessageType =
   | 'showToolbar'
   | 'hideToolbar'
   | 'toggleToolbar'
+  | 'showTopbar'
+  | 'hideTopbar'
+  | 'toggleTopbar'
   | 'changeLayoutMode'
   | 'leaveSession'
   | 'endSession'
@@ -343,6 +347,7 @@ export interface RoomState {
   layout: {
     mode: LayoutMode;
     showToolbar: boolean;
+    showTopbar: boolean;
     toolbarPosition: 'left' | 'right' | 'bottom';
     localTileMinimized: boolean;
     contentMode?: 'maximize' | 'pin';
@@ -460,6 +465,9 @@ export interface EmbeddedInstance {
   stopRecording: () => void;
   showToolbar: () => void;
   hideToolbar: () => void;
+  showTopbar: () => void;
+  hideTopbar: () => void;
+  toggleTopbar: (show?: boolean) => void;
   changeToolbarPosition: (side: 'left' | 'right' | 'bottom') => void;
   changeBrandingOptions: (brandingOptionsConfig: Partial<BrandingOptionsConfig>) => void;
   changeLayoutMode: (mode: LayoutMode) => void;
