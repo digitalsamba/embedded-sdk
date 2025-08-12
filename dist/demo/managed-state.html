@@ -55,6 +55,7 @@
           <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
           <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
           <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+          <button onclick="sambaEmbedded.toggleTopbar()">toggle topbar</button>
         </div>
       </div>
       <div class="sidebar">
@@ -100,7 +101,7 @@
       // other init strategies are available, along with more detailed customization
       // see https://docs.digitalsamba.com/reference/sdk/digitalsambaembedded-class
       sambaEmbedded = DigitalSambaEmbedded.createControl(
-        { url: ROOM_URL, root: parent, roomSettings: { showToolbar: false } },
+        { url: ROOM_URL, root: parent, roomSettings: { showToolbar: false, showTopbar: true } },
         { reportErrors: true }
       );
 

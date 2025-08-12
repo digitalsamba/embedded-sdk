@@ -99,6 +99,12 @@
           </label>
         </div>
         <div>
+          <label class="checkbox-label" for="initial-settings-topbar">
+            <span>Show topbar</span>
+            <input type="checkbox" id="initial-settings-topbar" onchange="initialSettings.showTopbar = !initialSettings.showTopbar"/>
+          </label>
+        </div>
+        <div>
           <label class="checkbox-label" for="initial-settings-muted">
             <span>Mute frame</span>
             <input type="checkbox" id="initial-settings-muted" onchange="initialSettings.muteFrame = !initialSettings.muteFrame"/>
@@ -221,6 +227,7 @@
           <button onclick="sambaEmbedded.toggleVideo()">toggle video</button>
           <button onclick="sambaEmbedded.toggleAudio()">toggle audio</button>
           <button onclick="sambaEmbedded.toggleToolbar()">toggle toolbar</button>
+          <button onclick="sambaEmbedded.toggleTopbar()">toggle topbar</button>
           <button onclick="sambaEmbedded.muteFrame()">mute frame</button>
           <button onclick="sambaEmbedded.unmuteFrame()">unmute frame</button>
           <button onclick="sambaEmbedded.toggleMuteFrame()">toggle mute frame</button>
@@ -244,6 +251,7 @@
     audioEnabled: true,
     videoEnabled: true,
     showToolbar: false,
+    showTopbar: false,
     showCaptions: false,
     layoutMode: "auto",
     // virtualBackground: {
