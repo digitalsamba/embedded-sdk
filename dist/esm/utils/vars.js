@@ -1,4 +1,4 @@
-export const PACKAGE_VERSION = '0.0.49';
+export const PACKAGE_VERSION = '0.0.50';
 export const CONNECT_TIMEOUT = 10000;
 export const internalEvents = {
     roomJoined: true,
@@ -46,6 +46,7 @@ export const getDefaultStoredState = () => ({
         layout: {
             mode: LayoutMode.tiled,
             showToolbar: true,
+            showTopbar: true,
             toolbarPosition: 'left',
             localTileMinimized: false,
         },

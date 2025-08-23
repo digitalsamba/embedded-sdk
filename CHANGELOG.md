@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.50] - 2025-08-18
+* Add new methods for managing topbar ([#77c4ffbc](https://github.com/digitalsamba/embedded-sdk/commit/77c4ffbcf6e734d09e670707067ff859f7022caa)).
+
 ## [v0.0.49] - 2025-08-04
 * Improved device enumeration to avoid using getUserMedia when not required ([#7238a01f](https://github.com/digitalsamba/embedded-sdk/commit/7238a01fa8a802a5132db4c818f0e735efdd4e32)).
 
