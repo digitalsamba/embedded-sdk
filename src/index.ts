@@ -178,6 +178,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
+    console.log('SDK prepareRoomSettings settings', settings);
     this.defaultMediaDevices = settings.mediaDevices || {};
     settings.mediaDevices = {};
 
@@ -606,10 +607,13 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
+        console.log('SDK: data', data);
         const devices = await enumerateDevices();
+        console.log('SDK: devices', devices);
 
         if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
           this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
+          console.warn('SDK applyMediaDevices', this.defaultMediaDevices);
 
           this.defaultMediaDevices = {};
         }
@@ -619,8 +623,12 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
             device.kind === data.kind && device.label === data.label
         );
 
+        console.log('SDK: matchingDevice', matchingDevice);
+
         if (matchingDevice) {
           const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+
+          console.log('SDK: previousDeviceId', previousDeviceId);
 
           this._emit('mediaDeviceChanged', {
             type: 'mediaDeviceChanged',
@@ -632,6 +640,11 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
           });
 
           this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+
+          console.log(
+            'SDK: this.stored.roomState.media.activeDevices',
+            this.stored.roomState.media.activeDevices
+          );
         }
 
         break;
@@ -906,7 +919,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   toggleTopbar = (show?: boolean) => {
     if (typeof show === 'undefined') {
-      this.roomSettings.showTopbar = !this.roomSettings.showTopbar
+      this.roomSettings.showTopbar = !this.roomSettings.showTopbar;
       this.stored.roomState.layout.showTopbar = !this.stored.roomState.layout.showTopbar;
       this.sendMessage({ type: 'toggleTopbar' });
     } else if (show) {
