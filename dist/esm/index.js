@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 import { EventEmitter } from 'events';
-import { enumerateDevices } from './utils/enumerateDevices';
 import { PermissionManager } from './utils/PermissionManager';
 import { CONNECT_TIMEOUT, getDefaultStoredState, internalEvents, PACKAGE_VERSION, } from './utils/vars';
 import { createWatchedProxy } from './utils/proxy';
@@ -391,19 +390,24 @@ export class DigitalSambaEmbedded extends EventEmitter {
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
-                    const devices = yield enumerateDevices();
                     if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
                         this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
                         this.defaultMediaDevices = {};
                     }
+                    const devices = data.availableDevices || [];
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
                     if (matchingDevice) {
-                        const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+                        const previousDeviceLabel = this.stored.roomState.media.activeDevices[data.kind];
                         this._emit('mediaDeviceChanged', {
                             type: 'mediaDeviceChanged',
-                            data: Object.assign(Object.assign({}, data), { previousDeviceId, deviceId: matchingDevice.deviceId }),
+                            data: {
+                                previousDeviceLabel,
+                                label: matchingDevice.label,
+                                kind: matchingDevice.kind,
+                                availableDevices: devices,
+                            },
                         });
-                        this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+                        this.stored.roomState.media.activeDevices[data.kind] = data.label;
                     }
                     break;
                 }

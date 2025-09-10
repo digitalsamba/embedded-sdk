@@ -181,6 +181,7 @@ export type MediaDeviceUpdatePayload = {
     previousDeviceId?: string;
     kind: MediaDeviceKind;
     label: string;
+    availableDevices?: MediaDeviceInfo[];
 };
 type TileActionScope = 'all' | 'remote' | 'local' | 'screenshare-local' | 'screenshare-remote';
 export type TileActionProperties = {

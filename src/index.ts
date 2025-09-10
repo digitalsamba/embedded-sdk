@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import { enumerateDevices } from './utils/enumerateDevices';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
@@ -178,7 +177,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
-    console.log('SDK prepareRoomSettings settings', settings);
     this.defaultMediaDevices = settings.mediaDevices || {};
     settings.mediaDevices = {};
 
@@ -607,44 +605,33 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
-        console.log('SDK: data', data);
-        const devices = await enumerateDevices();
-        console.log('SDK: devices', devices);
-
         if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
           this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
-          console.warn('SDK applyMediaDevices', this.defaultMediaDevices);
 
           this.defaultMediaDevices = {};
         }
 
+        const devices = data.availableDevices || [];
+
         const matchingDevice = devices.find(
-          (device: { kind: string; label: string }) =>
+          (device: { kind: string; label: string; deviceId?: string }) =>
             device.kind === data.kind && device.label === data.label
         );
 
-        console.log('SDK: matchingDevice', matchingDevice);
-
         if (matchingDevice) {
-          const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
-
-          console.log('SDK: previousDeviceId', previousDeviceId);
+          const previousDeviceLabel = this.stored.roomState.media.activeDevices[data.kind];
 
           this._emit('mediaDeviceChanged', {
             type: 'mediaDeviceChanged',
             data: {
-              ...data,
-              previousDeviceId,
-              deviceId: matchingDevice.deviceId,
+              previousDeviceLabel,
+              label: matchingDevice.label,
+              kind: matchingDevice.kind,
+              availableDevices: devices,
             },
           });
 
-          this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
-
-          console.log(
-            'SDK: this.stored.roomState.media.activeDevices',
-            this.stored.roomState.media.activeDevices
-          );
+          this.stored.roomState.media.activeDevices[data.kind] = data.label;
         }
 
         break;
