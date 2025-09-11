@@ -179,8 +179,7 @@ export type SendMessageType =
   | 'createWhiteboard'
   | 'openWhiteboard'
   | 'closeWhiteboard'
-  | 'toggleWhiteboard'
-  | 'applyMediaDevices';
+  | 'toggleWhiteboard';
 
 export const receiveMessagesTypes = [
   'connected',
@@ -380,6 +379,7 @@ export type MediaDeviceUpdatePayload = {
   previousDeviceId?: string;
   kind: MediaDeviceKind;
   label: string;
+  availableDevices?: MediaDeviceInfo[];
 };
 
 type TileActionScope = 'all' | 'remote' | 'local' | 'screenshare-local' | 'screenshare-remote';

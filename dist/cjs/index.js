@@ -12,7 +12,6 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DigitalSambaEmbedded = void 0;
 const events_1 = require("events");
-const enumerateDevices_1 = require("./utils/enumerateDevices");
 const PermissionManager_1 = require("./utils/PermissionManager");
 const vars_1 = require("./utils/vars");
 const proxy_1 = require("./utils/proxy");
@@ -31,7 +30,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.queuedUICallbacks = [];
         this.queuedTileActions = [];
         this.tileActionListeners = {};
-        this.defaultMediaDevices = {};
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -72,8 +70,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.frame.style.display = 'block';
         };
         this.prepareRoomSettings = (settings) => __awaiter(this, void 0, void 0, function* () {
-            this.defaultMediaDevices = settings.mediaDevices || {};
-            settings.mediaDevices = {};
             if (settings.appLanguage) {
                 this.stored.roomState.appLanguage = settings.appLanguage;
             }
@@ -394,19 +390,20 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
-                    const devices = yield (0, enumerateDevices_1.enumerateDevices)();
-                    if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
-                        this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
-                        this.defaultMediaDevices = {};
-                    }
+                    const devices = data.availableDevices || [];
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
                     if (matchingDevice) {
-                        const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+                        const previousDeviceLabel = this.stored.roomState.media.activeDevices[data.kind];
                         this._emit('mediaDeviceChanged', {
                             type: 'mediaDeviceChanged',
-                            data: Object.assign(Object.assign({}, data), { previousDeviceId, deviceId: matchingDevice.deviceId }),
+                            data: {
+                                previousDeviceLabel,
+                                label: matchingDevice.label,
+                                kind: matchingDevice.kind,
+                                availableDevices: devices,
+                            },
                         });
-                        this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+                        this.stored.roomState.media.activeDevices[data.kind] = data.label;
                     }
                     break;
                 }
