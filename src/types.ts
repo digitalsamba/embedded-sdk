@@ -179,8 +179,7 @@ export type SendMessageType =
   | 'createWhiteboard'
   | 'openWhiteboard'
   | 'closeWhiteboard'
-  | 'toggleWhiteboard'
-  | 'applyMediaDevices';
+  | 'toggleWhiteboard';
 
 export const receiveMessagesTypes = [
   'connected',

@@ -30,7 +30,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.queuedUICallbacks = [];
         this.queuedTileActions = [];
         this.tileActionListeners = {};
-        this.defaultMediaDevices = {};
         this.mountFrame = (loadImmediately) => {
             const { url, frame, root } = this.initOptions;
             if (root) {
@@ -71,8 +70,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
             this.frame.style.display = 'block';
         };
         this.prepareRoomSettings = (settings) => __awaiter(this, void 0, void 0, function* () {
-            this.defaultMediaDevices = settings.mediaDevices || {};
-            settings.mediaDevices = {};
             if (settings.appLanguage) {
                 this.stored.roomState.appLanguage = settings.appLanguage;
             }
@@ -393,10 +390,6 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
                 }
                 case 'internalMediaDeviceChanged': {
                     const data = message.data;
-                    if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
-                        this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
-                        this.defaultMediaDevices = {};
-                    }
                     const devices = data.availableDevices || [];
                     const matchingDevice = devices.find((device) => device.kind === data.kind && device.label === data.label);
                     if (matchingDevice) {

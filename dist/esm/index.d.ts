@@ -18,7 +18,6 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     queuedUICallbacks: QueuedUICallback[];
     queuedTileActions: QueuedTileAction[];
     private tileActionListeners;
-    private defaultMediaDevices;
     constructor(options?: Partial<InitOptions>, instanceProperties?: Partial<InstanceProperties>, loadImmediately?: boolean);
     static createControl: (initOptions: Partial<InitOptions>, instanceProperties?: InstanceProperties) => DigitalSambaEmbedded;
     private mountFrame;

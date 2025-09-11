@@ -33,7 +33,6 @@ import {
   UserId,
   UserTileType,
   VirtualBackgroundOptions,
-  MediaDeviceSettings,
   AddImageToWhiteboardOptions,
   TemplateParams,
   CreateWhiteboardOptions,
@@ -79,8 +78,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   queuedTileActions: QueuedTileAction[] = [];
 
   private tileActionListeners: Record<string, AnyFn> = {};
-
-  private defaultMediaDevices: MediaDeviceSettings = {};
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -177,9 +174,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
-    this.defaultMediaDevices = settings.mediaDevices || {};
-    settings.mediaDevices = {};
-
     if (settings.appLanguage) {
       this.stored.roomState.appLanguage = settings.appLanguage;
     }
@@ -605,12 +599,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
-        if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
-          this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
-
-          this.defaultMediaDevices = {};
-        }
-
         const devices = data.availableDevices || [];
 
         const matchingDevice = devices.find(
