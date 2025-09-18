@@ -39,6 +39,7 @@ import {
   AddCustomTileOptions,
   BroadcastOptions,
   SendMessageToCustomTileOptions,
+  MobileScreenshareOptions,
 } from './types';
 
 import {
@@ -1104,6 +1105,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   changeRole = (userId: UserId, role: string) => {
     this.sendMessage({ type: 'changeRole', data: { userId, role } });
   };
+
+  startMobileScreenshare = (data: MobileScreenshareOptions) => {
+    this.sendMessage({ type: 'startMobileScreenshare', data });
+  }
+
+  stopMobileScreenshare = (data: MobileScreenshareOptions) => {
+    this.sendMessage({ type: 'stopMobileScreenshare', data });
+  }
 }
 
 export default DigitalSambaEmbedded;
