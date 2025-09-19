@@ -49,6 +49,8 @@ export interface InitialRoomSettings {
   requireRemoveUserConfirmation: boolean;
 
   baseDomain?: string;
+
+  mobileScreenshare?: boolean;
 }
 
 export interface QueuedEventListener {
@@ -115,6 +117,8 @@ export interface InstanceProperties {
 }
 
 export type SendMessageType =
+  | 'startMobileScreenshare'
+  | 'stopMobileScreenshare'
   | 'connect'
   | 'setTemplateParams'
   | 'enableVideo'
@@ -404,6 +408,16 @@ export type CreateWhiteboardOptions = {
   personal: boolean;
   folderId: string;
 };
+
+export type Stream = {
+  type: 'video' | 'audio';
+  mid: string;
+}
+
+export type MobileScreenshareOptions = {
+  feedId: string;
+  streams: Stream[];
+}
 
 export type CustomTilePosition = 'first' | 'last';
 

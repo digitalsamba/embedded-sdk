@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions, SendMessageToCustomTileOptions } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions, SendMessageToCustomTileOptions, MobileScreenshareOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     templateParams?: TemplateParams;
@@ -108,5 +108,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     minimizeUser: () => void;
     minimizeContent: () => void;
     changeRole: (userId: UserId, role: string) => void;
+    startMobileScreenshare: (data: MobileScreenshareOptions) => void;
+    stopMobileScreenshare: (data: MobileScreenshareOptions) => void;
 }
 export default DigitalSambaEmbedded;
