@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.51] - 2025-08-18
+* Batch multiple enumeration calls into a shared promise ([#2b666c9e](https://github.com/digitalsamba/embedded-sdk/commit/63a1e03d4e3da93d2051bc4ad6bae39546400184)).
+
 ## [v0.0.50] - 2025-08-18
 * Add new methods for managing topbar ([#77c4ffbc](https://github.com/digitalsamba/embedded-sdk/commit/77c4ffbcf6e734d09e670707067ff859f7022caa)).
 

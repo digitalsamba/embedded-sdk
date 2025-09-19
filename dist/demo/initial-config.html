@@ -262,7 +262,7 @@
     appLanguage: undefined,
     requireRemoveUserConfirmation: true,
     mediaDevices: {},
-    replaceVirtualBackgrounds: true,
+    // replaceVirtualBackgrounds: true,
     virtualBackgrounds: [
       {
         id: "woman",
@@ -313,7 +313,7 @@
       const select = document.querySelector("#" + device.kind);
       if (select) {
         const deviceLabel = device.label || `Device (${device.deviceId || device.kind})`;
-        select.innerHTML += `<option value="${device.deviceId}">${deviceLabel}</option>`;
+        select.innerHTML += `<option value="${deviceLabel}">${deviceLabel}</option>`;
       }
     });
   };
@@ -352,7 +352,7 @@
     if (input.value) {
       ROOM_URL = input.value;
 
-      // initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
+      initialSettings.virtualBackground = vbStateToInitState(initialSettings.virtualBackground);
 
       loadRoom();
     } else {
@@ -406,7 +406,7 @@
     sambaEmbedded.on("*", (data) => {
       const logList = document.querySelector(".log-list");
 
-      console.log('data', data)
+      console.log('SDK Event:', data)
 
       if (logList) {
         logList.innerHTML += `<div>

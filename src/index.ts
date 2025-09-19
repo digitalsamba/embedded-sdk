@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import { enumerateDevices } from './utils/enumerateDevices';
 import { PermissionManager } from './utils/PermissionManager';
 import {
   CONNECT_TIMEOUT,
@@ -34,13 +33,13 @@ import {
   UserId,
   UserTileType,
   VirtualBackgroundOptions,
-  MediaDeviceSettings,
   AddImageToWhiteboardOptions,
   TemplateParams,
   CreateWhiteboardOptions,
   AddCustomTileOptions,
   BroadcastOptions,
   SendMessageToCustomTileOptions,
+  MobileScreenshareOptions,
 } from './types';
 
 import {
@@ -80,8 +79,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   queuedTileActions: QueuedTileAction[] = [];
 
   private tileActionListeners: Record<string, AnyFn> = {};
-
-  private defaultMediaDevices: MediaDeviceSettings = {};
 
   constructor(
     options: Partial<InitOptions> = {},
@@ -178,9 +175,6 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   };
 
   private prepareRoomSettings = async (settings: Partial<InitialRoomSettings>) => {
-    this.defaultMediaDevices = settings.mediaDevices || {};
-    settings.mediaDevices = {};
-
     if (settings.appLanguage) {
       this.stored.roomState.appLanguage = settings.appLanguage;
     }
@@ -606,32 +600,27 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
       case 'internalMediaDeviceChanged': {
         const data = message.data as MediaDeviceUpdatePayload;
-        const devices = await enumerateDevices();
-
-        if (this.defaultMediaDevices && Object.keys(this.defaultMediaDevices).length > 0) {
-          this.sendMessage({ type: 'applyMediaDevices', data: this.defaultMediaDevices });
-
-          this.defaultMediaDevices = {};
-        }
+        const devices = data.availableDevices || [];
 
         const matchingDevice = devices.find(
-          (device: { kind: string; label: string }) =>
+          (device: { kind: string; label: string; deviceId?: string }) =>
             device.kind === data.kind && device.label === data.label
         );
 
         if (matchingDevice) {
-          const previousDeviceId = this.stored.roomState.media.activeDevices[data.kind];
+          const previousDeviceLabel = this.stored.roomState.media.activeDevices[data.kind];
 
           this._emit('mediaDeviceChanged', {
             type: 'mediaDeviceChanged',
             data: {
-              ...data,
-              previousDeviceId,
-              deviceId: matchingDevice.deviceId,
+              previousDeviceLabel,
+              label: matchingDevice.label,
+              kind: matchingDevice.kind,
+              availableDevices: devices,
             },
           });
 
-          this.stored.roomState.media.activeDevices[data.kind] = matchingDevice.deviceId;
+          this.stored.roomState.media.activeDevices[data.kind] = data.label;
         }
 
         break;
@@ -906,7 +895,7 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   toggleTopbar = (show?: boolean) => {
     if (typeof show === 'undefined') {
-      this.roomSettings.showTopbar = !this.roomSettings.showTopbar
+      this.roomSettings.showTopbar = !this.roomSettings.showTopbar;
       this.stored.roomState.layout.showTopbar = !this.stored.roomState.layout.showTopbar;
       this.sendMessage({ type: 'toggleTopbar' });
     } else if (show) {
@@ -1116,6 +1105,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
   changeRole = (userId: UserId, role: string) => {
     this.sendMessage({ type: 'changeRole', data: { userId, role } });
   };
+
+  startMobileScreenshare = (data: MobileScreenshareOptions) => {
+    this.sendMessage({ type: 'startMobileScreenshare', data });
+  }
+
+  stopMobileScreenshare = (data: MobileScreenshareOptions) => {
+    this.sendMessage({ type: 'stopMobileScreenshare', data });
+  }
 }
 
 export default DigitalSambaEmbedded;
