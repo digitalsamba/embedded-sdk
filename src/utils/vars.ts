@@ -43,6 +43,7 @@ export const getDefaultStoredState: () => Stored = () => ({
   roomState: {
     appLanguage: 'en',
     frameMuted: false,
+    audioOnly: false,
     media: {
       audioEnabled: false,
       videoEnabled: false,
