@@ -1,5 +1,5 @@
 import { Stored } from '../types';
-export declare const PACKAGE_VERSION = "0.0.51";
+export declare const PACKAGE_VERSION = "0.0.52";
 export declare const CONNECT_TIMEOUT = 10000;
 export declare const internalEvents: Record<string, boolean>;
 export declare enum LayoutMode {
