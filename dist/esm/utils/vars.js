@@ -1,4 +1,4 @@
-export const PACKAGE_VERSION = '0.0.51';
+export const PACKAGE_VERSION = '0.0.52';
 export const CONNECT_TIMEOUT = 10000;
 export const internalEvents = {
     roomJoined: true,
@@ -38,6 +38,7 @@ export const getDefaultStoredState = () => ({
     roomState: {
         appLanguage: 'en',
         frameMuted: false,
+        audioOnly: false,
         media: {
             audioEnabled: false,
             videoEnabled: false,

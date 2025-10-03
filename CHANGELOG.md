@@ -2,6 +2,10 @@
 
 Historical list of changes in releases
 
+## [v0.0.52] - 2025-09-29
+* Add `audioOnly` property to RoomState interface ([#5c5731a7](https://github.com/digitalsamba/embedded-sdk/commit/5c5731a7047b7991c801ab0e309fcad95aa0d125)).
+* Add new methods for managing mobile app screenshare ([#0842fb09](https://github.com/digitalsamba/embedded-sdk/commit/abc94b67d0151d6dbd704b8e90054c0933a8400e)).
+
 ## [v0.0.51] - 2025-08-18
 * Batch multiple enumeration calls into a shared promise ([#2b666c9e](https://github.com/digitalsamba/embedded-sdk/commit/63a1e03d4e3da93d2051bc4ad6bae39546400184)).
 

@@ -342,6 +342,7 @@ export type ActiveMediaDevices = Partial<Record<MediaDeviceKind, string>>;
 export interface RoomState {
   frameMuted: boolean;
   appLanguage: string;
+  audioOnly: boolean;
 
   media: {
     videoEnabled: boolean;
