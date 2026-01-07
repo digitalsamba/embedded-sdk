@@ -132,6 +132,8 @@ export type SendMessageType =
   | 'stopScreenshare'
   | 'startRecording'
   | 'stopRecording'
+  | 'startRestreaming'
+  | 'stopRestreaming'
   | 'showToolbar'
   | 'hideToolbar'
   | 'toggleToolbar'
@@ -413,12 +415,12 @@ export type CreateWhiteboardOptions = {
 export type Stream = {
   type: 'video' | 'audio';
   mid: string;
-}
+};
 
 export type MobileScreenshareOptions = {
   feedId: string;
   streams: Stream[];
-}
+};
 
 export type CustomTilePosition = 'first' | 'last';
 
@@ -480,6 +482,8 @@ export interface EmbeddedInstance {
   stopScreenshare: () => void;
   startRecording: () => void;
   stopRecording: () => void;
+  startRestreaming: () => void;
+  stopRestreaming: () => void;
   showToolbar: () => void;
   hideToolbar: () => void;
   showTopbar: () => void;
