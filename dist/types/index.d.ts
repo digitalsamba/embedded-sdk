@@ -67,6 +67,8 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     stopScreenshare: () => void;
     startRecording: () => void;
     stopRecording: () => void;
+    startRestreaming: () => void;
+    stopRestreaming: () => void;
     showToolbar: () => void;
     hideToolbar: () => void;
     showTopbar: () => void;
