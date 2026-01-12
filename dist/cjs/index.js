@@ -561,6 +561,12 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.stopRecording = () => {
             this.sendMessage({ type: 'stopRecording' });
         };
+        this.startRestreaming = () => {
+            this.sendMessage({ type: 'startRestreaming' });
+        };
+        this.stopRestreaming = () => {
+            this.sendMessage({ type: 'stopRestreaming' });
+        };
         this.showToolbar = () => {
             this.roomSettings.showToolbar = true;
             this.stored.roomState.layout.showToolbar = true;

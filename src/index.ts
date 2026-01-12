@@ -869,6 +869,14 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'stopRecording' });
   };
 
+  startRestreaming = () => {
+    this.sendMessage({ type: 'startRestreaming' });
+  };
+
+  stopRestreaming = () => {
+    this.sendMessage({ type: 'stopRestreaming' });
+  };
+
   showToolbar = () => {
     this.roomSettings.showToolbar = true;
     this.stored.roomState.layout.showToolbar = true;
@@ -1108,11 +1116,11 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   startMobileScreenshare = (data: MobileScreenshareOptions) => {
     this.sendMessage({ type: 'startMobileScreenshare', data });
-  }
+  };
 
   stopMobileScreenshare = (data: MobileScreenshareOptions) => {
     this.sendMessage({ type: 'stopMobileScreenshare', data });
-  }
+  };
 }
 
 export default DigitalSambaEmbedded;
