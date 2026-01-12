@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.53] - 2026-01-12
+* Add restreaming events ([#6c839585](https://github.com/digitalsamba/embedded-sdk/commit/6c839585476ab8e2bb2348d3386400bd674f9b2d)).
+
 ## [v0.0.52] - 2025-09-29
 * Add `audioOnly` property to RoomState interface ([#5c5731a7](https://github.com/digitalsamba/embedded-sdk/commit/5c5731a7047b7991c801ab0e309fcad95aa0d125)).
 * Add new methods for managing mobile app screenshare ([#0842fb09](https://github.com/digitalsamba/embedded-sdk/commit/abc94b67d0151d6dbd704b8e90054c0933a8400e)).
