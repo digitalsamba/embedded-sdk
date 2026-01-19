@@ -31,12 +31,12 @@ jobs:
         run: yarn
 
       - name: Configure npm authentication
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.EMBEDDED_SDK_NPM_TOKEN }}" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: Debug - Check npm token
         run: cat ~/.npmrc
 
       - name: yarn publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.EMBEDDED_SDK_NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
 
