@@ -299,6 +299,7 @@ type CaptionsFontSize = 'small' | 'medium' | 'large';
 export interface CaptionsOptions {
   spokenLanguage: CaptionsSpokenLanguage;
   fontSize: CaptionsFontSize;
+  applySpokenLanguageToAll?: boolean;
 }
 
 export interface VirtualBackgroundItem {
