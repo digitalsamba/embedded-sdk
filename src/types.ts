@@ -49,6 +49,7 @@ export interface InitialRoomSettings {
   requireRemoveUserConfirmation: boolean;
 
   baseDomain?: string;
+  publicRoomUrl?: string;
 
   mobileScreenshare?: boolean;
 }

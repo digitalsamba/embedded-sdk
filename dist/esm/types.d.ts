@@ -20,6 +20,7 @@ export interface InitialRoomSettings {
     mediaDevices?: MediaDeviceSettings;
     requireRemoveUserConfirmation: boolean;
     baseDomain?: string;
+    publicRoomUrl?: string;
     mobileScreenshare?: boolean;
 }
 export interface QueuedEventListener {
