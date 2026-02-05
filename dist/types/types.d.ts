@@ -57,22 +57,7 @@ export type InitOptions = {
     roomSettings?: Partial<InitialRoomSettings>;
     templateParams?: TemplateParams;
 };
-export type FrameAttributes = {
-    align: string;
-    allow: string;
-    allowFullscreen: boolean;
-    frameBorder: string;
-    height: string;
-    longDesc: string;
-    marginHeight: string;
-    marginWidth: string;
-    name: string;
-    referrerPolicy: ReferrerPolicy;
-    scrolling: string;
-    src: string;
-    srcdoc: string;
-    width: string;
-} & HTMLElement;
+export type FrameAttributes = Partial<HTMLIFrameElement>;
 export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
