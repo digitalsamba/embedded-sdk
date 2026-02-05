@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.54] - 2026-02-05
+* Add proper typing for iframe html attributes ([#8d06a79e](https://github.com/digitalsamba/embedded-sdk/commit/8d06a79e3cb4861b8769594ffd76208028187c50)).
+
 ## [v0.0.53] - 2026-01-12
 * Add restreaming events ([#6c839585](https://github.com/digitalsamba/embedded-sdk/commit/6c839585476ab8e2bb2348d3386400bd674f9b2d)).
 
