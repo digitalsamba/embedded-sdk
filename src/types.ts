@@ -95,7 +95,9 @@ export type InitOptions = {
   templateParams?: TemplateParams;
 };
 
-export type FrameAttributes = Partial<HTMLIFrameElement>
+export type FrameAttributes = {
+  class?: string;
+} & Partial<HTMLIFrameElement>
 
 export interface InstanceProperties {
   frameAttributes?: Partial<FrameAttributes>;

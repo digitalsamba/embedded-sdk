@@ -57,7 +57,9 @@ export type InitOptions = {
     roomSettings?: Partial<InitialRoomSettings>;
     templateParams?: TemplateParams;
 };
-export type FrameAttributes = Partial<HTMLIFrameElement>;
+export type FrameAttributes = {
+    class?: string;
+} & Partial<HTMLIFrameElement>;
 export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
