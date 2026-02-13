@@ -20,6 +20,7 @@ export interface InitialRoomSettings {
     mediaDevices?: MediaDeviceSettings;
     requireRemoveUserConfirmation: boolean;
     baseDomain?: string;
+    publicRoomUrl?: string;
     mobileScreenshare?: boolean;
 }
 export interface QueuedEventListener {
@@ -57,21 +58,8 @@ export type InitOptions = {
     templateParams?: TemplateParams;
 };
 export type FrameAttributes = {
-    align: string;
-    allow: string;
-    allowFullscreen: boolean;
-    frameBorder: string;
-    height: string;
-    longDesc: string;
-    marginHeight: string;
-    marginWidth: string;
-    name: string;
-    referrerPolicy: ReferrerPolicy;
-    scrolling: string;
-    src: string;
-    srcdoc: string;
-    width: string;
-} & HTMLElement;
+    class?: string;
+} & Partial<HTMLIFrameElement>;
 export interface InstanceProperties {
     frameAttributes?: Partial<FrameAttributes>;
     reportErrors?: boolean;
@@ -104,6 +92,7 @@ type CaptionsFontSize = 'small' | 'medium' | 'large';
 export interface CaptionsOptions {
     spokenLanguage: CaptionsSpokenLanguage;
     fontSize: CaptionsFontSize;
+    applySpokenLanguageToAll?: boolean;
 }
 export interface VirtualBackgroundItem {
     id: string;

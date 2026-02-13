@@ -2,6 +2,11 @@
 
 Historical list of changes in releases
 
+## [v0.0.54] - 2026-02-09
+* Add proper typing for iframe class attributes ([#8d06a79e](https://github.com/digitalsamba/embedded-sdk/commit/8d06a79e3cb4861b8769594ffd76208028187c50)).
+* Support optional "publicRoomUrl" for invite overrides ([#5f9c7fb5](https://github.com/digitalsamba/embedded-sdk/commit/5f9c7fb52da37aea473876162298d13f9f7afe38)).
+* Add new applySpokenLanguageToAll param to captions options ([#21f2bd54](https://github.com/digitalsamba/embedded-sdk/commit/21f2bd54e26c5541d23d89253b04d9f27bfc1c0b)).
+
 ## [v0.0.53] - 2026-01-12
 * Add restreaming events ([#6c839585](https://github.com/digitalsamba/embedded-sdk/commit/6c839585476ab8e2bb2348d3386400bd674f9b2d)).
 
