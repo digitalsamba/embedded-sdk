@@ -1,0 +1,346 @@
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+button {
+  cursor: pointer;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  color: rgb(50, 63, 102);
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+ background: #f4f5f8;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.topbar {
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(34,35,38,.05), 0 4px 8px rgba(34,35,38,.05);
+}
+
+a {
+  font-size: 16px;
+  color: rgb(55, 113, 224);
+  text-decoration: none;
+}
+
+.user-list-row {
+  display: flex;
+  margin: 12px 0 8px;
+  align-items: center;
+}
+
+.user-list-avatar {
+  width: 24px;
+  height: 24px;
+  display: block;
+  border-radius: 50%;
+  margin-right: 8px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+}
+
+.speaker-indicator {
+  width: 8px;
+  height: 8px;
+  display: block;
+  border-radius: 50%;
+  margin-right: 8px;
+  background: #4cd964;
+  opacity: 0;
+  margin-left: 8px;
+}
+
+.speaker-indicator.show {
+  opacity: 1
+}
+
+.container {
+  padding: 0 15px;
+  display: flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.topbar .container {
+  padding: 7.5px 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 327px;
+  border-width: 0px;
+  border: 0px;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.room-content {
+  display: flex;
+}
+
+.screen {
+  display: none;
+  min-height: calc(100vh - 75px);
+}
+
+.screen.show {
+  display: flex;
+}
+
+.room-url-field .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-url-field label {
+  margin-bottom: 10px;
+  display: block;
+}
+.room-url-field label b {
+  font-size: 18px;
+
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.room-url-field label.radio-label {
+  margin: 0;
+  margin-right: 8px;
+}
+
+.init-settings-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.room-url-field input[type=text] {
+  border: 2px solid rgb(50, 63, 102);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  width: 420px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.room-url-field select {
+  border: 2px solid rgb(50, 63, 102);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.room-url-error {
+  color: crimson;
+}
+
+.room-url-field button {
+  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background: rgb(55, 113, 224);
+  border: 2px solid rgb(55, 113, 224);
+  color: #fff;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.room-url-field .vertical {
+  display: flex;
+  flex-direction: column;
+}
+.room-content {
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.room-frame {
+  align-items: flex-start;
+}
+
+.frame-area {
+  justify-self: center;
+  grid-column: span 7 / span 7;
+}
+
+.room-frame .container {
+  padding: 15px 15px;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+.sidebar {
+  grid-column: span 5 / span 5;
+}
+
+@media (max-width: 1023px) {
+  .frame-area {
+    grid-column: 1 / -1;
+  }
+
+  .sidebar {
+    grid-column: 1 / -1;
+  }
+}
+
+.sidebar-block {
+  border: 1px solid #dfdfdf;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+.hint-title {
+  margin-bottom: 10px;
+}
+.hint-link-url {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  line-height: 1.25;
+}
+
+.logs-toggle {
+  background: none;
+  border: none;
+  color: rgb(55, 113, 224);
+  margin-bottom: 7.5px;
+}
+
+.log-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  word-wrap: break-word;
+}
+
+.log-list div {
+  max-width: 90%;
+}
+
+.log-list p {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.log-list b {
+  font-weight: 700;
+}
+
+.branding-controls {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.frame-controls, .branding-controls {
+  margin-top: 15px;
+}
+
+.frame-controls button, .branding-controls button {
+  border-radius: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  border: 2px solid rgb(55, 113, 224);
+  color: rgb(55, 113, 224);
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-right: 8px;
+}
+
+.vb-value {
+  display: none;
+}
+.vb-value.show {
+  display: block;
+}
+
+.participants {
+  display: none;
+}
+.participants.show {
+  display: block
+}
+
+.user-list-row button {
+  margin: 0px 4px;
+  font-size: 14px;
+  border: none;
+  background: none;
+  font-weight: 700;
+  color: rgb(55, 113, 224);
+}
+
+.branding-control-parent.disabled {
+  opacity: .5;
+  pointer-events:  none;
+}
+
+.custom-room-url-form {
+  display: none;
+}
+.custom-room-url-form.show {
+  display: block;;
+}
+
+.custom-room-url-switch {
+  font-size: 14px;
+  color: #777;
+  cursor: pointer;
+}
