@@ -65,6 +65,14 @@
         <div>
           <input type="text" id="initial-settings-initials" onchange="initialSettings.initials = this.value">
         </div>
+        <div style="display: flex; align-items: center; justify-content: flex-start">
+          <label style="margin-right: 8px;" for="initial-settings-join-screen">Join screen</label>
+          <select name="initial-settings-join-screen" id="initial-settings-join-screen" onchange="initialSettings.joinScreenEnabled = this.value === '' ? undefined : this.value === 'true'">
+            <option value="">Room default</option>
+            <option value="true">Enabled</option>
+            <option value="false">Hidden</option>
+          </select>
+        </div>
         <div style="display: flex">
           <label class="checkbox-label" for="initial-settings-video">
             <span>Video enabled</span>

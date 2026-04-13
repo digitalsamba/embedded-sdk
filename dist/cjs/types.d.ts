@@ -12,6 +12,7 @@ export interface InitialRoomSettings {
     showToolbar: boolean;
     showTopbar?: boolean;
     showCaptions: boolean;
+    joinScreenEnabled?: boolean;
     virtualBackground: VirtualBackgroundOptions;
     virtualBackgrounds?: VirtualBackgroundItem[];
     replaceVirtualBackgrounds?: boolean;
