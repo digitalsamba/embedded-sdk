@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.55] - 2026-04-20
+* Add joinScreenEnabled to InitialRoomSettings to override room default ([#8d09915a](https://github.com/digitalsamba/embedded-sdk/commit/8d09915a4bea05ad69bb4cf8bd64985cd957721d)).
+
 ## [v0.0.54] - 2026-02-09
 * Add proper typing for iframe class attributes ([#8d06a79e](https://github.com/digitalsamba/embedded-sdk/commit/8d06a79e3cb4861b8769594ffd76208028187c50)).
 * Support optional "publicRoomUrl" for invite overrides ([#5f9c7fb5](https://github.com/digitalsamba/embedded-sdk/commit/5f9c7fb52da37aea473876162298d13f9f7afe38)).
