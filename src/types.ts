@@ -197,6 +197,7 @@ export const receiveMessagesTypes = [
   'activeSpeakerChanged',
   'speakerStoppedTalking',
   'appError',
+  'mediaConnectionFailed',
   'captionsEnabled',
   'captionsDisabled',
   'captionsSpokenLanguageChanged',
