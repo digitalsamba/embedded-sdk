@@ -35,6 +35,7 @@ export interface InitialRoomSettings {
   showToolbar: boolean;
   showTopbar?: boolean;
   showCaptions: boolean;
+  joinScreenEnabled?: boolean;
 
   // virtual backgrounds
   virtualBackground: VirtualBackgroundOptions;
@@ -196,6 +197,7 @@ export const receiveMessagesTypes = [
   'activeSpeakerChanged',
   'speakerStoppedTalking',
   'appError',
+  'mediaConnectionFailed',
   'captionsEnabled',
   'captionsDisabled',
   'captionsSpokenLanguageChanged',
