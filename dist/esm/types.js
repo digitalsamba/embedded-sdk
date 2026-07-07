@@ -42,4 +42,6 @@ export const receiveMessagesTypes = [
     'tileAction',
     'chatMessageReceived',
     'userLeftBatch',
+    'waitingUsersJoined',
+    'waitingUsersLeft',
 ];
