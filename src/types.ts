@@ -220,6 +220,8 @@ export const receiveMessagesTypes = [
   'tileAction',
   'chatMessageReceived',
   'userLeftBatch',
+  'waitingUsersJoined',
+  'waitingUsersLeft',
 ] as const;
 
 export type ReceiveMessageType = typeof receiveMessagesTypes[number];
@@ -311,6 +313,16 @@ export interface VirtualBackgroundOptions {
 }
 
 export type UsersList = Record<UserId, User>;
+
+export type WaitingUser = Pick<User, 'id' | 'name' | 'role' | 'avatarColor'>;
+
+export interface WaitingUsersJoinedPayload {
+  users: WaitingUser[];
+}
+
+export interface WaitingUsersLeftPayload {
+  userIds: UserId[];
+}
 
 export interface StoredVBState {
   enabled: boolean;
