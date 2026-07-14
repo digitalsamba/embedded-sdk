@@ -2,6 +2,10 @@
 
 Historical list of changes in releases
 
+## [v0.0.56] - 2026-07-14
+* Add waiting room entry events ([#c86657ff](https://github.com/digitalsamba/embedded-sdk/commit/c86657ff34274edafd22ef4826b47b7bd140e7bc)).
+* New media connection failed event ([#712c14c6](https://github.com/digitalsamba/embedded-sdk/commit/712c14c67bad9d1ee2c25f8a56773d137066c273)).
+
 ## [v0.0.55] - 2026-04-20
 * Add joinScreenEnabled to InitialRoomSettings to override room default ([#8d09915a](https://github.com/digitalsamba/embedded-sdk/commit/8d09915a4bea05ad69bb4cf8bd64985cd957721d)).
 
