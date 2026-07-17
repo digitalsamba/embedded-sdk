@@ -45,4 +45,6 @@ exports.receiveMessagesTypes = [
     'tileAction',
     'chatMessageReceived',
     'userLeftBatch',
+    'waitingUsersJoined',
+    'waitingUsersLeft',
 ];
