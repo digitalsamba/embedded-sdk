@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.57] - 2026-07-20
+* Migrate to OIDC tokens ([#0ff8ba36](https://github.com/digitalsamba/embedded-sdk/commit/0ff8ba368a82697b08b5ba44bcb9e98233609423)).
+
 ## [v0.0.56] - 2026-07-14
 * Add waiting room entry events ([#c86657ff](https://github.com/digitalsamba/embedded-sdk/commit/c86657ff34274edafd22ef4826b47b7bd140e7bc)).
 * New media connection failed event ([#712c14c6](https://github.com/digitalsamba/embedded-sdk/commit/712c14c67bad9d1ee2c25f8a56773d137066c273)).
