@@ -15,6 +15,7 @@ export const receiveMessagesTypes = [
     'recordingStarted',
     'recordingStopped',
     'recordingFailed',
+    'recordingBookmarkCreated',
     'layoutModeChanged',
     'activeSpeakerChanged',
     'speakerStoppedTalking',

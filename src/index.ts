@@ -40,6 +40,7 @@ import {
   BroadcastOptions,
   SendMessageToCustomTileOptions,
   MobileScreenshareOptions,
+  AddRecordingBookmarkOptions,
 } from './types';
 
 import {
@@ -867,6 +868,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
 
   stopRecording = () => {
     this.sendMessage({ type: 'stopRecording' });
+  };
+
+  addRecordingBookmark = (options?: AddRecordingBookmarkOptions) => {
+    this.sendMessage({ type: 'addRecordingBookmark', data: options || {} });
   };
 
   startRestreaming = () => {

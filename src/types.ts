@@ -121,6 +121,7 @@ export type SendMessageType =
   | 'stopScreenshare'
   | 'startRecording'
   | 'stopRecording'
+  | 'addRecordingBookmark'
   | 'startRestreaming'
   | 'stopRestreaming'
   | 'showToolbar'
@@ -193,6 +194,7 @@ export const receiveMessagesTypes = [
   'recordingStarted',
   'recordingStopped',
   'recordingFailed',
+  'recordingBookmarkCreated',
   'layoutModeChanged',
   'activeSpeakerChanged',
   'speakerStoppedTalking',
@@ -446,6 +448,10 @@ export interface SendMessageToCustomTileOptions {
   data?: any;
 }
 
+export interface AddRecordingBookmarkOptions {
+  bookmark?: string;
+}
+
 export interface EmbeddedInstance {
   initOptions: Partial<InitOptions>;
   roomSettings: Partial<InitialRoomSettings>;
@@ -485,6 +491,7 @@ export interface EmbeddedInstance {
   stopScreenshare: () => void;
   startRecording: () => void;
   stopRecording: () => void;
+  addRecordingBookmark: (options?: AddRecordingBookmarkOptions) => void;
   startRestreaming: () => void;
   stopRestreaming: () => void;
   showToolbar: () => void;

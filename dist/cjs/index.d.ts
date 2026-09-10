@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events';
 import { PermissionManager } from './utils/PermissionManager';
 import { LayoutMode } from './utils/vars';
-import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions, SendMessageToCustomTileOptions, MobileScreenshareOptions } from './types';
+import { AnyFn, BrandingOptionsConfig, CaptionsOptions, EmbeddedInstance, FeatureFlag, InitialRoomSettings, InitOptions, InstanceProperties, QueuedEventListener, QueuedUICallback, QueuedTileAction, Stored, TileActionProperties, UICallbackName, UserId, UserTileType, VirtualBackgroundOptions, AddImageToWhiteboardOptions, TemplateParams, CreateWhiteboardOptions, AddCustomTileOptions, BroadcastOptions, SendMessageToCustomTileOptions, MobileScreenshareOptions, AddRecordingBookmarkOptions } from './types';
 export declare class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstance {
     initOptions: Partial<InitOptions>;
     templateParams?: TemplateParams;
@@ -67,6 +67,7 @@ export declare class DigitalSambaEmbedded extends EventEmitter implements Embedd
     stopScreenshare: () => void;
     startRecording: () => void;
     stopRecording: () => void;
+    addRecordingBookmark: (options?: AddRecordingBookmarkOptions) => void;
     startRestreaming: () => void;
     stopRestreaming: () => void;
     showToolbar: () => void;
