@@ -869,6 +869,10 @@ export class DigitalSambaEmbedded extends EventEmitter implements EmbeddedInstan
     this.sendMessage({ type: 'stopRecording' });
   };
 
+  addRecordingBookmark = (bookmark: string) => {
+    this.sendMessage({ type: 'addRecordingBookmark', data: { bookmark } });
+  };
+
   startRestreaming = () => {
     this.sendMessage({ type: 'startRestreaming' });
   };
