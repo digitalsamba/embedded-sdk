@@ -561,6 +561,9 @@ class DigitalSambaEmbedded extends events_1.EventEmitter {
         this.stopRecording = () => {
             this.sendMessage({ type: 'stopRecording' });
         };
+        this.addRecordingBookmark = (bookmark) => {
+            this.sendMessage({ type: 'addRecordingBookmark', data: { bookmark } });
+        };
         this.startRestreaming = () => {
             this.sendMessage({ type: 'startRestreaming' });
         };
