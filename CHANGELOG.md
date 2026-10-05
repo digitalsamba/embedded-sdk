@@ -2,6 +2,9 @@
 
 Historical list of changes in releases
 
+## [v0.0.58] - 2026-10-05
+* Add addRecordingBookmark method ([#81c0b5c2](https://github.com/digitalsamba/embedded-sdk/commit/81c0b5c21947803e2d60b7285cacd7652a2f0d42)).
+
 ## [v0.0.57] - 2026-07-20
 * Migrate to OIDC tokens ([#0ff8ba36](https://github.com/digitalsamba/embedded-sdk/commit/0ff8ba368a82697b08b5ba44bcb9e98233609423)).
 

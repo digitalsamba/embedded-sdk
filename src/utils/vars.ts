@@ -1,6 +1,6 @@
 import { Stored } from '../types';
 
-export const PACKAGE_VERSION = '0.0.57';
+export const PACKAGE_VERSION = '0.0.58';
 
 export const CONNECT_TIMEOUT = 10000;
 
