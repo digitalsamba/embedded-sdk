@@ -5,6 +5,9 @@ dist
 
 coverage
 
+# Hand-maintained; keeps its existing bullet style and small bump diffs
+CHANGELOG.md
+
 .github
 .yarn/*
 
