@@ -8,7 +8,7 @@ on:
 
 permissions:
   id-token: write                 # REQUIRED for OIDC
-  contents: read
+  contents: write                 # REQUIRED to create the version tag and GitHub Release
 
 jobs:
   publish:
@@ -41,5 +41,30 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          awk -v heading="## [v${VERSION}]" '
+            index($0, heading) == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > "${RUNNER_TEMP}/release-notes.md"
+          if ! grep -q '[^[:space:]]' "${RUNNER_TEMP}/release-notes.md"; then
+            echo "::error::No entry for v${VERSION} found in CHANGELOG.md"
+            exit 1
+          fi
+
       - name: Publish to npm
         run: npm publish --access public              # no NODE_AUTH_TOKEN here — OIDC handles it
+
+      - name: Tag and create GitHub Release
+        if: github.event_name == 'push'               # manual test runs must not tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if gh release view "v${VERSION}" > /dev/null 2>&1; then
+            echo "Release v${VERSION} already exists, skipping"
+          else
+            gh release create "v${VERSION}" --target "${GITHUB_SHA}" --title "Release v${VERSION}" --notes-file "${RUNNER_TEMP}/release-notes.md"
+          fi

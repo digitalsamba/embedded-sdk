@@ -121,6 +121,7 @@ export type SendMessageType =
   | 'stopScreenshare'
   | 'startRecording'
   | 'stopRecording'
+  | 'addRecordingBookmark'
   | 'startRestreaming'
   | 'stopRestreaming'
   | 'showToolbar'
@@ -485,6 +486,7 @@ export interface EmbeddedInstance {
   stopScreenshare: () => void;
   startRecording: () => void;
   stopRecording: () => void;
+  addRecordingBookmark: (bookmark: string) => void;
   startRestreaming: () => void;
   stopRestreaming: () => void;
   showToolbar: () => void;
