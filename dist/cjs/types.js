@@ -18,6 +18,7 @@ exports.receiveMessagesTypes = [
     'recordingStarted',
     'recordingStopped',
     'recordingFailed',
+    'transcriptionFailed',
     'layoutModeChanged',
     'activeSpeakerChanged',
     'speakerStoppedTalking',
